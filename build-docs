@@ -3,7 +3,7 @@ docker -i js  -o docs/
 if [ ! -d README/img ]; then
 	mkdir -p README/img
 fi
-cat README.no-conflict-feed.dot | dot -Gdpi=64 -Tpng:cairo:cairo > README/img/no-conflict-feed.png
-cat README.overall-diagram.dot | dot -Gdpi=64 -Tpng:cairo:cairo > README/img/overall-diagram.png
+cat README.no-conflict-feed.dot | dot -Gdpi=64 -Tpng:cairo:cairo > bin/README/img/no-conflict-feed.png
+cat README.overall-diagram.dot | dot -Gdpi=64 -Tpng:cairo:cairo > bin/README/img/overall-diagram.png
 pandoc README.md > README.html
 refresh_chromium.sh
