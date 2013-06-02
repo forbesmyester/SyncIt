@@ -64,7 +64,7 @@ var getErrorDisplayer = function(method) {
 dialogShowText(
 	"Isn't this screen rather complicated?",
 	(function() {
-	var node = dojo.byId("help-download");
+	var node = dojo.byId("help-demo-overview");
 	return (node === null) ?
 		'Cannot find content' : 
 		node.innerHTML;
