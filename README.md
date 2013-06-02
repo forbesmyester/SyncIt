@@ -17,7 +17,8 @@ SyncIt is designed to do the following things:
 
 As important as what it does, is what it does not do. I have tried to make SyncIt as unintrusive as possible but still easy to use, so it does not:
 
- * Force you to use any specific server or server API though it does have a data format.
+ * Force you to use any specific server or server API though it does have it's own data format.
+ * Make you use jQuery, Dojo or anything else, it's pure portable JS.
  * SyncIt will not manage your connection to the server or tell you when you are connected.
  * Subordinate your code to SyncIt. You can put data into it and you can get data out of it, but it will happen when you want it to happen.
 
@@ -247,6 +248,7 @@ I need to do the following:
  * I want to make ServerPersist for both MongoDB and DynamoDB.
  * Add SyncIt.purge() methods to free space from SyncIt. This should be sufficient to make sure that if SyncIt runs out of space locally (in LocalStorage for example) space can be freed to enable it to work again.
  * Use this in a real project with a Browser and mobile (Phonegap based) clients.
+ * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
 
 ## Dictionary
 
