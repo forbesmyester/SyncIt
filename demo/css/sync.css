@@ -1,0 +1,518 @@
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+video {
+  display: inline-block;
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden] {
+  display: none;
+}
+html {
+  font-family: sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+}
+a:focus {
+  outline: thin dotted;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, serif;
+  font-size: 1em;
+}
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+q {
+  quotes: "\201C" "\201D" "\2018" "\2019";
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 0;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0;
+  padding: 0;
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  margin: 0;
+}
+button,
+input {
+  line-height: normal;
+}
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+button[disabled],
+input[disabled] {
+  cursor: default;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+input[type="search"] {
+  -webkit-appearance: textfield;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+textarea {
+  overflow: auto;
+  vertical-align: top;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+body {
+  font-size: 1em;
+  line-height: 1.38em;
+  font-family: Helvetica, Verdana, Arial;
+}
+p {
+  margin: 24px 28px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0.825em 24px;
+}
+h1 {
+  font-size: 1.8em;
+}
+h2 {
+  font-size: 1.6em;
+}
+h3 {
+  font-size: 1.4em;
+}
+h4 {
+  font-size: 1.2em;
+}
+h5 {
+  font-size: 1.1em;
+}
+h6 {
+  font-size: 1em;
+}
+b,
+strong {
+  font-weight: bold;
+}
+i,
+em {
+  font-style: italic;
+  letter-spacing: 0.065em;
+}
+address,
+blockquote {
+  display: block;
+  margin: 48px;
+  line-height: 1.38em;
+}
+address:first-line {
+  font-weight: bold;
+}
+blockquote {
+  font-size: 1.15em;
+  text-align: center;
+  margin: 24px;
+}
+blockquote cite {
+  font-style: italic;
+  text-align: right;
+  margin: 0;
+}
+blockquote cite:before {
+  content: "\2014\00a0";
+}
+blockquote cite:after {
+  content: "";
+}
+blockquote p {
+  margin: 0 20px;
+}
+blockquote p:before {
+  content: "\201C\00a0";
+}
+blockquote p:after {
+  content: "\00a0\201D";
+}
+q {
+  quotes: none;
+}
+q:before {
+  content: "\201C\00a0";
+}
+q:after {
+  content: "\00a0\201D";
+}
+cite,
+cite a {
+  font-style: italic;
+}
+cite:before {
+  content: "(";
+}
+cite:after {
+  content: ")";
+}
+pre,
+code {
+  display: block;
+  margin: 0.5em 24px 24px 24px;
+  border-radius: 0;
+  padding: 1em;
+  background-color: #e2e2e2;
+  border: 1px solid #b3b3b3;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: none;
+  font-size: 0.975em;
+  font-family: "Courier New", Courier, monospace, sans-serif;
+  overflow: auto;
+  color: #414141;
+}
+ul,
+ol,
+dl {
+  margin: 0 48px;
+  padding: 0;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 100%;
+  font-family: inherit;
+}
+ul ul,
+ol ol,
+dl dl {
+  margin: 0 24px;
+}
+ul {
+  list-style-type: disc;
+}
+ul ul {
+  list-style-type: circle;
+}
+ol {
+  list-style-type: decimal;
+}
+ol ol {
+  list-style-type: lower-alpha;
+}
+dl {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 100%;
+  font-family: inherit;
+  list-style-type: none;
+  margin: 0 24px;
+}
+dl dt {
+  font-weight: bold;
+}
+dl dd {
+  margin: 20px 24px;
+}
+header,
+footer,
+section {
+  display: block;
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  clear: both;
+}
+.box-cell {
+  border-left: solid 4px #808080;
+  position: relative;
+}
+.box-cell > div {
+  height: 200px;
+}
+.box-cell > div#lhs-log,
+.box-cell div#rhs-log {
+  height: 120px;
+}
+#consLog {
+  height: 120px;
+  border-top: solid 4px #808080;
+}
+.box-cell h2,
+#consLog h2 {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  color: #d3d3d3;
+  font-size: 2em;
+  font-weight: bold;
+}
+.box-cell:first-child {
+  border-left-width: 0px;
+}
+.box-row {
+  border-top: solid 4px #808080;
+}
+.box-row-bottom {
+  border-bottom: solid 4px #808080;
+}
+nav.tabs {
+  margin-top: 1em;
+}
+div.dgrid .removed {
+  text-decoration: line-through;
+}
+.hidden {
+  display: none;
+}
+a.apihelp {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #808080;
+  border-bottom-left-radius: 10px;
+  padding: 2px 7px 5px 10px;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+#io {
+  position: relative;
+  width: 100%;
+  min-width: 960px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+#io .api {
+  display: block;
+  position: relative;
+  float: left;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 30%;
+}
+#io .server-view {
+  display: block;
+  position: relative;
+  float: left;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 40%;
+  background-color: #000;
+  color: #808080;
+}
+#io .server-view div.dgrid-header-row {
+  background-color: #000;
+}
+.client {
+  position: relative;
+  width: 100%;
+  min-width: 960px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.client .queue,
+.client .store {
+  display: block;
+  position: relative;
+  float: left;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 25%;
+}
+.client .queue > div,
+.client .store > div {
+  height: 300px;
+}
+.client .jrec,
+.client .log {
+  display: block;
+  position: relative;
+  float: left;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 50%;
+}
+.syncit-update-conflicts {
+  background-color: #fff;
+}
+.syncit-update-conflicts h5 {
+  margin: 0;
+}
+.syncit-update-conflicts ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.syncit-update-conflicts footer {
+  text-align: right;
+  float: none;
+}
+.syncit-update-conflicts div.null {
+  background-color: #ddd;
+  margin: 0.2em 0;
+  padding: 0.3em;
+}
+.syncit-update-conflicts dl {
+  background-color: #ddd;
+  margin: 0.2em 0;
+  padding: 0.3em 0;
+  position: relative;
+  width: 100%;
+  min-width: 960px;
+  margin: 0 auto;
+  overflow: hidden;
+  min-width: 200px;
+}
+.syncit-update-conflicts dl dt {
+  display: block;
+  position: relative;
+  float: left;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 30%;
+  padding-left: 0.3em;
+}
+.syncit-update-conflicts dl dd {
+  display: block;
+  position: relative;
+  float: left;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 70%;
+  padding-left: 0.3em;
+}
+div.popup-content-template {
+  display: none;
+}

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SyncItStore.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../", thisFile = "home/fozz/Projects/syncit//Unsupported/SyncItStore.js", defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>SyncItStore.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="cm">/*jshint smarttabs:true */</span>
+<span class="nx">define</span><span class="p">(</span>
+<span class="p">[</span><span class="s1">&#39;syncit/SyncIt&#39;</span><span class="p">,</span><span class="s1">&#39;syncit/Constant&#39;</span><span class="p">,</span><span class="s1">&#39;dojo/_base/declare&#39;</span><span class="p">,</span><span class="s1">&#39;dojo/Deferred&#39;</span><span class="p">,</span><span class="s2">&quot;dojo/promise/all&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;dojo/_base/array&quot;</span><span class="p">,</span><span class="s1">&#39;dojo/store/util/QueryResults&#39;</span><span class="p">],</span>
+<span class="kd">function</span><span class="p">(</span><span class="nx">SyncItLib</span><span class="p">,</span><span class="nx">SyncIt_Constant</span><span class="p">,</span><span class="nx">declare</span><span class="p">,</span><span class="nx">Deferred</span><span class="p">,</span><span class="nx">promiseAll</span><span class="p">,</span><span class="nx">dojoBaseArray</span><span class="p">,</span><span class="nx">QueryResults</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="k">return</span> <span class="nx">declare</span><span class="p">(</span><span class="s1">&#39;syncit.Unsupported.SyncItStore&#39;</span><span class="p">,[],</span> <span class="p">{</span>
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Constructor.</p>
+  </div>
+  <div class="body"><p>You must call SyncItStore.startup() afterwards.</p>
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">syncIt</span>
+      <span class="dox_type">SyncIt</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">dataset</span>
+      <span class="dox_type">String</span>
+      <span>The dataset this grid represents, null implies all dataset(!)</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">indexes</span>
+      <span class="dox_type">Array</span>
+      <span>Extra indexes to maintain, id will always be Indexed</span>
+    </div>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">constructor</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">syncIt</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">indexes</span><span class="p">,</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_syncIt</span> <span class="o">=</span> <span class="nx">syncIt</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_dataset</span> <span class="o">=</span> <span class="nx">dataset</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_jreadCache</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_lastOptions</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_hideDeleted</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_index</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">id</span><span class="o">:</span><span class="p">{},</span>
+      <span class="nx">s</span><span class="o">:</span><span class="p">{},</span>
+      <span class="nx">k</span><span class="o">:</span><span class="p">{},</span>
+      <span class="nx">v</span><span class="o">:</span><span class="p">{},</span>
+      <span class="nx">m</span><span class="o">:</span><span class="p">{},</span>
+      <span class="nx">r</span><span class="o">:</span><span class="p">{},</span>
+      <span class="nx">t</span><span class="o">:</span><span class="p">{}</span>
+    <span class="p">};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">indexes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">indexes</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">((</span><span class="k">typeof</span> <span class="nx">options</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;hideDeleted&#39;</span><span class="p">)))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_hideDeleted</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">hideDeleted</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nx">startup</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">startupCompleteCallback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">inQueueAndStore</span> <span class="o">=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Location</span><span class="p">.</span><span class="nx">IN_QUEUE</span> <span class="o">+</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Location</span><span class="p">.</span><span class="nx">IN_STORE</span><span class="p">;</span>
+    
+    <span class="kd">var</span> <span class="nx">indexItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+      
+      <span class="kd">var</span> <span class="nx">perform</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jrec</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="nx">inst</span><span class="p">.</span><span class="nx">_jreadCache</span><span class="p">[</span><span class="nx">inst</span><span class="p">.</span><span class="nx">getIdentity</span><span class="p">(</span><span class="nx">jrec</span><span class="p">)]</span> <span class="o">=</span> <span class="nx">jrec</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">index</span> <span class="k">in</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_index</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_index</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">index</span><span class="p">))</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">indKey</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_navigateToPath</span><span class="p">(</span><span class="nx">jrec</span><span class="p">,</span><span class="nx">index</span><span class="p">);</span>
+          <span class="nx">indKey</span> <span class="o">=</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">indKey</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;:&#39;</span><span class="o">+</span><span class="nx">indKey</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">indKey</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">inst</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="nx">indKey</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+          <span class="p">}</span>
+          <span class="nx">inst</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="nx">indKey</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">dataset</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nx">datakey</span><span class="p">);</span>
+          
+        <span class="p">}}</span>
+        
+      <span class="p">};</span>
+      
+      <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getFull</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">jread</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">wasAlreadyThere</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_removeFromIndexes</span><span class="p">(</span><span class="nx">dataset</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nx">datakey</span><span class="p">);</span>
+        <span class="nx">perform</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_makeFullStoreRecord</span><span class="p">(</span><span class="nx">jread</span><span class="p">,</span><span class="nx">dataset</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nx">datakey</span><span class="p">));</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;notify&#39;</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">inst</span><span class="p">.</span><span class="nx">notify</span><span class="p">(</span>
+            <span class="nx">inst</span><span class="p">.</span><span class="nx">_hideDeleted</span> <span class="o">&amp;&amp;</span> <span class="nx">jread</span><span class="p">.</span><span class="nx">removed</span> <span class="o">?</span> <span class="kc">undefined</span> <span class="o">:</span> <span class="nx">jread</span><span class="p">,</span>
+            <span class="nx">wasAlreadyThere</span> <span class="o">?</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">getIdentity</span><span class="p">(</span><span class="nx">jread</span><span class="p">)</span> <span class="o">:</span> <span class="kc">undefined</span>
+          <span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nx">done</span><span class="p">();</span>
+      <span class="p">});</span>
+      
+    <span class="p">};</span>
+    
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForAddedToQueue</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForApplied</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">indexItem</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForFed</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">indexItem</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="kd">var</span> <span class="nx">indexDataset</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getDatakeysInDataset</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">inQueueAndStore</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="kd">var</span> <span class="nx">indexesToCreate</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">indexesToCreate</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">startupCompleteCallback</span><span class="p">();</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">allKeyPromises</span> <span class="o">=</span> <span class="p">[];</span>
+        
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>Fired when all indexes have been created for one jrec.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="kd">var</span> <span class="nx">indexed</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">--</span><span class="nx">indexesToCreate</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">startupCompleteCallback</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+              <span class="nx">startupCompleteCallback</span><span class="p">();</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">};</span>
+        
+        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="nx">l</span><span class="o">=</span><span class="nx">keys</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">keys</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span><span class="nx">indexed</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+      <span class="p">});</span>
+    <span class="p">};</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_dataset</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">indexDataset</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_dataset</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getDatasetNames</span><span class="p">(</span><span class="nx">inQueueAndStore</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">datasets</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+          <span class="nx">l</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="nx">l</span><span class="o">=</span><span class="nx">datasets</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">indexDataset</span><span class="p">(</span><span class="nx">datasets</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+    
+  <span class="p">},</span>
+  <span class="nx">_removeFromIndexes</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jrecId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">index</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="nx">indKey</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="nx">oldLength</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">removed</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    
+    <span class="kd">var</span> <span class="nx">filterFunc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">indJrecId</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">indJrecId</span> <span class="o">==</span> <span class="nx">jrecId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">};</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="nx">index</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">index</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">indKey</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">])</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">indKey</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">oldLength</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="nx">indKey</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="nx">indKey</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="nx">indKey</span><span class="p">].</span><span class="nx">filter</span><span class="p">(</span><span class="nx">filterFunc</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">oldLength</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">index</span><span class="p">][</span><span class="nx">indKey</span><span class="p">].</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">removed</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}}</span>
+    <span class="p">}}</span>
+    
+    <span class="k">return</span> <span class="nx">removed</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">_navigateToPath</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">parsePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">ob</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">ob</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+      <span class="p">}</span>
+      <span class="nx">ob</span> <span class="o">=</span> <span class="nx">ob</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">_makeFullStoreRecord</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jread</span><span class="p">,</span><span class="nx">newId</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">jread</span><span class="p">.</span><span class="nx">s</span> <span class="o">=</span> <span class="nx">newId</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="nx">jread</span><span class="p">.</span><span class="nx">k</span> <span class="o">=</span> <span class="nx">newId</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="nx">jread</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">newId</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">jread</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">_getDatasetFromId</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">id</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\..*/</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="nx">_getDatakeyFromId</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">id</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/.*\./</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Deferred</span><span class="p">(),</span>
+      <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getFull</span><span class="p">(</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_getDatasetFromId</span><span class="p">(</span><span class="nx">id</span><span class="p">),</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_getDatakeyFromId</span><span class="p">(</span><span class="nx">id</span><span class="p">),</span>
+        <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">jread</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nx">inst</span><span class="p">.</span><span class="nx">_makeFullStoreRecord</span><span class="p">(</span><span class="nx">jread</span><span class="p">,</span><span class="nx">id</span><span class="p">);</span>
+        <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">jread</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">);</span>
+    <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">getIdentity</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jread</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">jread</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">queryEngine</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    
+    <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    
+    <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+      
+      
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>First of all, if the query comes from an adding notify, make sure to add
+the supplied new objects to the jread cache.
+if ((query instanceof Array) &amp;&amp; (options === undefined)) {
+    (function(objs) {
+        var jreadCacheIds = dojoBaseArray.map(
+            inst.<em>jreadCache,
+            function(jread) {
+                return jread.id;
+            }
+        );
+        for (var i=0;i<objs.length;i++) {
+            if ((objs[i].hasOwnProperty('id')) &amp;&amp; jreadCacheIds.indexOf(objs[i].id) == -1) {
+                inst.</em>jreadCache.push(objs[i]);
+            }
+        }
+    })(query);
+}</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      
+      <span class="kd">var</span> <span class="nx">getFromLastResultSet</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jrecId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_jreadCache</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">jrecId</span><span class="p">))</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_jreadCache</span><span class="p">[</span><span class="nx">jrecId</span><span class="p">];</span>
+        <span class="p">}</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>var obIds = Object.getOwnPropertyNames(inst.<em>jreadCache);
+for (var i=0;i<inst.</em>jreadCache.length;i++) {
+    if (inst.<em>jreadCache[i].id == jrecId) {
+        return inst.</em>jreadCache[i];
+    }
+}</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">};</span>
+    
+      <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      
+      <span class="kd">var</span> <span class="nx">sort</span> <span class="o">=</span> <span class="p">{</span><span class="nx">attribute</span><span class="o">:</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="nx">descending</span><span class="o">:</span><span class="kc">false</span><span class="p">},</span>
+        <span class="nx">i</span><span class="p">,</span><span class="nx">j</span><span class="p">,</span><span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="nx">options</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span> <span class="o">=</span> <span class="nx">options</span><span class="p">;</span>
+      <span class="p">}</span>
+      
+      
+      <span class="k">if</span> <span class="p">(</span> <span class="p">(</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;sort&#39;</span><span class="p">)</span> <span class="p">)</span>
+      <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span><span class="p">.</span><span class="nx">sort</span> <span class="k">instanceof</span> <span class="nb">Array</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span><span class="p">.</span><span class="nx">sort</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">sort</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span><span class="p">.</span><span class="nx">sort</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      
+      
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_index</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">sort</span><span class="p">.</span><span class="nx">attribute</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="p">(</span><span class="s1">&#39;No Index&#39;</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="kd">var</span> <span class="nx">keys</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">getOwnPropertyNames</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">sort</span><span class="p">.</span><span class="nx">attribute</span><span class="p">]).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="nx">keys</span><span class="p">.</span><span class="nx">sort</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">sort</span><span class="p">.</span><span class="nx">descending</span><span class="p">)</span> <span class="p">{</span> <span class="nx">keys</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">reverse</span><span class="p">();</span> <span class="p">}</span>
+      
+      
+      <span class="kd">var</span> <span class="nx">resultIds</span> <span class="o">=</span> <span class="p">[];</span>
+      
+      <span class="kd">var</span> <span class="nx">doingPromise</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span>
+        <span class="nx">i</span><span class="o">=</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span><span class="p">.</span><span class="nx">start</span> <span class="o">:</span> <span class="mi">0</span><span class="p">,</span><span class="nx">l</span><span class="o">=</span><span class="nx">keys</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+        <span class="p">(</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span> <span class="o">&amp;&amp;</span> <span class="p">(</span>
+          <span class="o">!</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span> <span class="o">||</span>
+          <span class="nx">resultIds</span><span class="p">.</span><span class="nx">length</span><span class="o">&lt;</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_lastOptions</span><span class="p">.</span><span class="nx">count</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="nx">i</span><span class="o">++</span>
+      <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">jRecIds</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_index</span><span class="p">[</span><span class="nx">sort</span><span class="p">.</span><span class="nx">attribute</span><span class="p">][</span><span class="nx">keys</span><span class="p">[</span><span class="nx">i</span><span class="p">]];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">j</span><span class="o">&lt;</span><span class="nx">jRecIds</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">resultIds</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">jRecIds</span><span class="p">[</span><span class="nx">j</span><span class="p">]);</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">getFromLastResultSet</span><span class="p">(</span><span class="nx">jRecIds</span><span class="p">[</span><span class="nx">j</span><span class="p">])</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">doingPromise</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+       
+      <span class="kd">var</span> <span class="nx">filterOutDeleted</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jread</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_hideDeleted</span> <span class="o">&amp;&amp;</span> <span class="nx">jread</span><span class="p">.</span><span class="nx">removed</span> <span class="o">?</span> <span class="kc">false</span> <span class="o">:</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">};</span>
+      
+      <span class="kd">var</span> <span class="nx">getDataFromLastResultSet</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">dojoBaseArray</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span>
+          <span class="nx">dojoBaseArray</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">jrecId</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">getFromLastResultSet</span><span class="p">(</span><span class="nx">jrecId</span><span class="p">);</span>
+          <span class="p">}),</span>
+          <span class="nx">filterOutDeleted</span>
+        <span class="p">);</span>
+      <span class="p">};</span>
+      
+      <span class="kd">var</span> <span class="nx">getPromiseResultSet</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Deferred</span><span class="p">();</span>
+        
+        <span class="kd">var</span> <span class="nx">promises</span> <span class="o">=</span> <span class="nx">dojoBaseArray</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">jrecId</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">jrecId</span><span class="p">);</span>
+        <span class="p">});</span>
+        
+        <span class="nx">promiseAll</span><span class="p">(</span><span class="nx">promises</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">jrecs</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">inst</span><span class="p">.</span><span class="nx">_jreadCache</span> <span class="o">=</span> <span class="nx">jrecs</span><span class="p">;</span>
+          <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span>
+            <span class="nx">dojoBaseArray</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">jrecs</span><span class="p">,</span><span class="nx">filterOutDeleted</span><span class="p">)</span>
+          <span class="p">);</span>
+        <span class="p">},</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span> <span class="p">});</span>
+        
+        <span class="k">return</span> <span class="nx">deferred</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">doingPromise</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">QueryResults</span><span class="p">(</span><span class="nx">getDataFromLastResultSet</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">QueryResults</span><span class="p">(</span><span class="nx">getPromiseResultSet</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">));</span>
+    <span class="p">};</span>
+  <span class="p">},</span>
+  <span class="nx">query</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">queryEngine</span><span class="p">())(</span><span class="nx">query</span><span class="p">,</span><span class="nx">options</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="p">});</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

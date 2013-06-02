@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+
+<!--[if lt IE 7 ]> <html class="ie ie6 no-js" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="ie ie7 no-js" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="ie ie8 no-js" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="ie ie9 no-js" lang="en"> <![endif]-->
+<!--[if gt IE 9]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!-- the "no-js" class is for Modernizr. -->
+
+<head id="www-sitename-com" data-template-set="html5-reset">
+
+	<meta charset="utf-8">
+	
+	<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+	<title>{{title}}</title>
+	
+	<meta name="title" content="SyncIt Demo">
+	<meta 
+		name="description"
+		content="SyncIt is a library for developing Apps in Javascript that can synchronize with a server.">
+	<!-- Google will often use this as its description of your page/site. Make it good. -->
+	
+	<meta name="google-site-verification" content="">
+	<!-- Speaking of Google, don't forget to set your site up: http://google.com/webmasters -->
+	
+	<meta name="author" content="&#109;&#097;&#116;&#116;&#064;&#107;&#101;&#121;&#098;&#111;&#097;&#114;&#100;&#119;&#114;&#105;&#116;&#101;&#115;&#099;&#111;&#100;&#101;&#046;&#099;&#111;&#109;">
+	<meta name="Copyright" content="Copyright Matthew Forrester 2013. Licensed under MIT, BSD-style and GPL">
+
+	<!-- Dublin Core Metadata : http://dublincore.org/ -->
+	<meta name="DC.title" content="SyncIt Demo">
+	<meta name="DC.subject" content="SyncIt is a library for developing Apps in Javascript that can synchronize with a server.">
+	<meta name="DC.creator" content="Matthew Forrester">
+	
+	<!--  Mobile Viewport Fix
+	j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag 
+	device-width : Occupy full width of the screen in its current orientation
+	initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
+	maximum-scale = 1.0 retains dimensions instead of zooming in if page width < device width
+	-->
+	<!-- Uncomment to use; use thoughtfully!
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	-->
+
+	<link rel="stylesheet" href="css/sync.css"></link>
+	<link rel="stylesheet" href="css/TabControl/main.css"></link>
+	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit/themes/claro/claro.css"></link>
+
+</head>
+
+	<body class="claro">
+		
+		<header>
+			<h1>SyncIt Demo</h1>
+		</header>
+		
+		<div id="io" class="box-row">
+			<div class="api box-cell tab-holder" id="lhs-tab-holder">
+				<a href="apihelp.html" class="apihelp">?</a>
+				<nav class="tabs">
+					<dl>
+						<dd class="active tab download"><a href="#lhs-tab=download">
+							Download</a></dd>
+						<dd class="tab upload"><a href="#lhs-tab=upload">Upload</a></dd>
+						<dd class="tab apply"><a href="#lhs-tab=apply">Apply</a></dd>
+						<dd class="tab set"><a href="#lhs-tab=set">Set</a></dd>
+						<dd class="tab update"><a href="#lhs-tab=update">Update</a></dd>
+						<dd class="tab remove"><a href="#lhs-tab=remove">Remove</a></dd>
+					</dl>
+				</nav>
+				<ul class="tab-bodies">
+					<li class="download tab-body active" style="position:relative">
+						<form class="form-get-datset-names">
+							Press to <input type="submit" value="get Dataset names" />
+						</form>
+						<form class="form-updates-in-dataset hidden">
+							Check for updates in dataset
+							<select name="dataset" class="updates-in-dataset">
+							</select>
+							from position
+							<input type="text" name="from" value=""/>
+							then <input type="submit" value="downloading it and feed them into SyncIt"/>
+						</form>
+					</li>
+					<li class="tab-body upload">
+						<form class="upload-dataset-datakey">
+							upload one queued item
+							<input type="submit" value="to the server"/>
+						</form>
+					</li>
+					<li class="tab-body apply">
+						<form class="form-apply">
+							I would like to 
+							<input type="submit" value="apply" class="apply-btn"/>
+							the oldest change in my Queue
+						</form>
+					</li>
+					<li class="tab-body set">
+						<form class="form-set">
+							<label>
+								The dataset 
+								<input type="text" value="xxx" name="dataset"/>
+							</label>
+							<label>
+								and datakey
+								<input type="text" value="yyy" name="datakey"/>
+							</label>
+							with the JSON encoded string:
+							<input type="text"  name="json" value='{"aaa":"bbb"}'/>
+							should be 
+							<input type="submit" value="put into the Queue"/>.
+						</form>
+					</li>
+					<li class="tab-body update">
+						<form class="form-update">
+							<label>
+								The dataset 
+								<input type="text" value="xxx" name="dataset"/>
+							</label>
+							<label>
+								and datakey
+								<input type="text" value="yyy" name="datakey"/>
+							</label>
+							with this update in a JSON encoded string:
+							<input type="text"  name="json" value='{"$set":{"path.to":"data"}}'/>
+							should be 
+							<input type="submit" value="put into the Queue"/>.
+						</form>
+					</li>
+					<li class="tab-body remove">
+						<form class="form-remove">
+							The data at 
+							<input type="text" name="dataset" value="xxx"/> / 
+							<input type="text" name="datakey" value="yyy"/>
+							should be <input type="submit" value="removed"/>
+						</form>
+					</li>
+				</ul>
+			</div>
+			<div class="server-view box-cell">
+				<div id="server-view"></div>
+			</div>
+			<div class="api box-cell tab-holder" id="rhs-tab-holder">
+			</div>
+		</div>
+		
+		<div class="client box-row">
+			<div class="jrec box-cell">
+				<h2>LHS: SyncIt.get([Dataset],[Datakey])</h2>
+				<div id="lhs-jrec"></div>
+			</div>
+			<div class="jrec box-cell">
+				<h2>RHS: SyncIt.get([Dataset],[Datakey])</h2>
+				<div id="rhs-jrec"></div>
+			</div>
+		</div>
+		
+		<div class="client box-row">
+			<div class="queue box-cell">
+				<h2>LHS: Queue</h2>
+				<div id="lhs-queue"></div>
+			</div>
+			<div class="store box-cell">
+				<h2>LHS: Store</h2>
+				<div id="lhs-store"></div>
+			</div>
+			<div class="queue box-cell">
+				<h2>RHS: Queue</h2>
+				<div id="rhs-queue"></div>
+			</div>
+			<div class="store box-cell">
+				<h2>RHS: Store</h2>
+				<div id="rhs-store"></div>
+			</div>
+		</div>
+		
+		<div class="client box-row">
+			<div class="log box-cell">
+				<h2>LHS: Log</h2>
+				<div id="lhs-log"></div>
+			</div>
+			<div class="log box-cell">
+				<h2>RHS: Log</h2>
+				<div id="rhs-log"></div>
+			</div>
+		</div>
+
+		<div id="consLog">
+			<h2>Simulated AJAX Request Log</h2>
+		</div>
+		
+		<div class="popup-content-template" id="conflict-resolution-dialog">
+			<form class="syncit-update-conflicts">
+				<div class="syncit-base-version">
+					<h5>Base Update</h5>
+					<div></div>
+				</div>
+				<div class="syncit-update-from-server">
+					<h5>Updates on Server</h5>
+					<ul>
+					</ul>
+				</div>
+				<div class="syncit-update-from-local">
+					<h5>Updates on Local</h5>
+					<ul>
+					</ul>
+				</div>
+				<div class="syncit-apply-updates-after">
+					<h5>Apply these Updates after Server</h5>
+					<ul>
+						<li>
+							dataset: <input type="text" name="dataset"/>
+						</li>
+						<li>
+							datakey: <input type="text" name="datakey"/>
+						</li>
+						<li>
+							operation: 
+							<select name="operation">
+								<option value="set">set</option>
+								<option value="update">update</option>
+								<option value="remove">remove</option>
+							</select>
+						</li>
+						<li>
+							update (JSON): <input type="text" name="update" value=""/> (Blank means no Queueitem after conflict resolution)
+						</li>
+					</ul>
+				</div>
+				<footer>
+					<input type="submit" value="Resolved"/>
+				</footer>
+			</div>
+		</div>
+		
+		<div id="help-download" class="popup-content-template">
+			<h2>SyncIt.feed()</h2>
+			<p>Downloading updates from the server is out-of-scope for SyncIt but once you have downloaded the updates from the server you can use the SyncIt.feed() method to put them into SyncIt.</p>
+			<p>Example code for doing this is:</p>
+			<code>
+var syncIt = new SyncIt(...);
+syncIt.feed(
+	[{queueitem},{queueitem}],
+	function(dataset ,datakey ,jrec ,localQueueItems, serverQueueItems ,resolved) {
+		// This function will be called when there is a new
+		// version of the dataset/datakey on the server as well
+		// as in the local Queue. The server version will 
+		// __always__ overwrite the local one, but you can call
+		// resolved with your own updates to apply local changes 
+		// aftewards. 
+		resolved(true,[{myNewQueueitem},{myNewQueueitem}]);
+	},
+	function(err,outstandingQueueitems) {
+		// If you did not resolve changes are there was some
+		// other error feeding data err will not by
+		// SyncIt_Constant.Error.OK and the queueitem which 
+		// still need to be applied locally we be in 
+		// outstandingQueueitems
+	}
+);
+			</code>
+			<p>If all Queueitem have been dowloaded from the server, fed into SyncIt.feed() and the last callback has been called with an OK Errorcode then all changes that are on the server have been applied locally.</p>
+			<h3>This Tab: Download</h3>
+			<p>The "get Dataset names" button will reveal another form that will enable you to download updates for different Datasets from the Server.</p>
+			<p>The "downloading it and feed them into SyncIt" button in the second form will download the updates from the simulated SyncItTestServer and perform a SyncIt.feed() operation.</p>
+		</div>
+		
+		<div id="help-upload" class="popup-content-template">
+			<h2>SyncIt.getFirst()</h2>
+            <p>SyncIt, by design, has no method to upload data to the Server, that is code you need to write, but it will give you the very first Queueitem in the Queue if you use the SyncIt.getFirst() function. If the Server accepts the Queueitem it should be Applied to the local Store (see the Apply tab), at which point it cannot be changed. When SyncIt.getFirst() passes the ErrorCode NO_DATA_FOUND all data has been uploaded. An example of the API call can be seen below...</p>
+<code>
+    jamesSyncIt.getFirst(function(err,queueitem) {
+        if (err !== SyncIt_Constant.Error.OK) {
+            // throw?
+        }
+        xhr(
+            'http://server/' + queueitem.s + '/' + queueitem.k,
+            {
+                method: 'PATCH',
+                data: JSON.stringify(first),
+                ...
+            }
+        ).then(
+            function() {
+                // data now stored on server
+                jamesSyncIt.apply(function(err) {
+                    ...
+                });
+            },
+            function(err) {
+                // something went wrong... throw err?
+            }
+        );
+    });
+</code>
+			<h3>This Tab: Upload</h3>
+                <p>The "to the server" button will call the SyncIt.getFirst() method and do a simulated AJAX call to the SyncItTestServer, you can see the result of this in the "Simulated AJAX Request Log" at the bottom of the page.</p>
+                <p>If the request was successfully added to the Server you should proceed to the Apply tab.</p>
+            </div>
+
+		<div id="help-apply" class="popup-content-template">
+			<h2>SyncIt.apply()</h2>
+            <p>The SyncIt.apply() function will take the first Queueitem from the Queue and Apply it to the relevant Jrec in the Store. Once this is done it will remove the Queueitem from the Queue.</p>
+<code>
+    jamesSyncIt.getFirst(function(err,queueitem) {
+        if (err !== SyncIt_Constant.Error.OK) {
+            // throw?
+        }
+        xhr(
+            'http://server/' + queueitem.s + '/' + queueitem.k,
+            {
+                method: 'PATCH',
+                data: JSON.stringify(first),
+                ...
+            }
+        ).then(
+            function() {
+                // data now stored on server
+                jamesSyncIt.apply(function(err) {
+                    ...
+                });
+            },
+            function(err) {
+                // something went wrong... throw err?
+            }
+        );
+    });
+</code>
+            <h3>This Tab: Apply</h3>
+            <p>This tab will do nothing except apply the first Queueitem. If you have not uploaded a Queueitem before applying it, the Queueitem will be effectively unretrievable.</p>
+		</div>
+
+		<div id="help-set" class="popup-content-template">
+			<h2>SyncIt.set()</h2>
+            <p>A set operation is a request to completely replace the data at a Dataset / Datakey with new data, once Applied none of the old data will survive, at least locally. This works by adding a Queueitem to the Queue.</p>
+<code>
+    jamesSyncIt.set(
+        'cars',
+        'Subaru',
+        { color: 'blue' }
+        function(err) { if (err === SyncIt_Constant.Error.OK) {  success(); } }
+    );
+</code>
+            <h3>This Tab: Set</h3>
+            <p>This tab will perform a `set` operation. Please make sure that you fill in a valid Dataset and Datakey and use well formed JSON (which is more restrictive than JavaScript objects).</p>
+		</div></p>
+            <p></p>
+		</div>
+
+		<div id="help-update" class="popup-content-template">
+			<h2>SyncIt.update()</h2>
+            <p>Like SyncIt.set(), a SyncIt.update() will add a Queueitem to the Queue. Unlike SyncIt.set() it does not have to completely overwrite all data stored at that Dataset / Datakey as it is able to selectively update any number of fields or subfields. This will be very useful if your user interface can apply updates to very specific data fields making conflict resolution simpler (a "like" button would be super easy to implement).</p>
+<code>
+    jamesSyncIt.update(
+        'cars',
+        'Subaru',
+        { $set: { pluspoints: ['has 4WD'] }, $inc { votes: 1 } },
+        function(err) { if (err === SyncIt_Constant.Error.OK) {  success(); } }
+    );
+</code>
+            <h3>This Tab: Update</h3>
+            <p>This tab will perform an `update` operation. Please make sure that you fill in a valid Dataset and Datakey and use well formed JSON (which is more restrictive than JavaScript objects).</p>
+		</div>
+
+		<div id="help-remove" class="popup-content-template">
+			<h2>SyncIt.remove()</h2>
+            <p>This operation enables removal of data stored at a Dataset / Datakey, it does this by adding a Queueitem. The data is really only ever marked as deleted, however once it has been deleted there is no way to set or update it at a later point.</p>
+<code>
+    jamesSyncIt.remove(
+        'cars',
+        'Subaru',
+        function(err) { if (err === SyncIt_Constant.Error.OK) {  success(); } }
+    );
+</code>
+            <h3>This Tab: Remove</h3>
+            <p>This tab will perform a remove operation. Please make sure that you fill in the a valid Dataset and Datakey.</p>
+		</div>
+		
+	</body>
+<script type="text/javascript" src="vendor/sinon-1.6.0.js"></script>
+<script>
+	var loc = (window.location+"");
+	loc = loc.replace(/[a-z0-9]+[\.\#].*$/,'')+'/js'
+	dojoConfig = {
+		async:true,
+		parseOnLoad: false,
+		cacheBust: false,
+		baseUrl: './',
+		has: {
+			"dojo-firebug": true,
+			"dojo-debug-messages": true,
+			'native-xhr2': false // Sinon.JS does not support XHR2
+		},
+		packages: [
+			{name:'dojo',location:'//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo'},
+			{name:'dijit',location:'//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dijit'},
+			{name:'dojox',location:'//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojox'},
+			{name:'util',location:'//ajax.googleapis.com/ajax/libs/dojo/1.9.0/util'},
+			{name:'dgrid',location:'vendor/dgrid'},
+			{name:'xstyle',location:'vendor/xstyle'},
+			{name:'put-selector',location:'vendor/put-selector'},
+			{name:'syncit',location:'vendor/syncit'},
+			{name:'syncitserv',location:'js'}
+		]
+	};
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/dojo/1.9.0/dojo/dojo.js"></script>
+<script type="text/javascript">
+	require(['syncitserv/sync',"dojo/ready"]);
+</script>
+
+</html>
