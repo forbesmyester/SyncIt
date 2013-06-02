@@ -1,0 +1,114 @@
+@import "fluidity/normalize"
+@import "fluidity/type"
+@import "fluidity/semantic-grid"
+@import "fluidity/css3"
+
+@import "fluidity/gradients"
+@import "fluidity/vendorize"
+
+.box-cell 
+	border-left: solid 4px grey
+	position: relative
+	> div
+		height: 200px
+	> div#lhs-log, div#rhs-log
+		height: 120px
+
+#consLog
+	height: 120px
+	border-top: solid 4px grey
+
+.box-cell, #consLog
+	h2
+		position: absolute
+		top: 20%
+		left: 5%
+		color: lightgray
+		font-size: 2em
+		font-weight: bold
+
+.box-cell:first-child
+	border-left-width: 0px
+
+.box-row
+	border-top: solid 4px grey
+.box-row-bottom
+	border-bottom: solid 4px grey
+
+nav.tabs
+	margin-top: 1em
+
+div.dgrid .removed {
+	text-decoration: line-through
+}
+
+.hidden {
+	display: none
+}
+
+a.apihelp {
+	position:absolute
+	top: 0
+	right: 0
+	background-color: #808080
+	border-bottom-left-radius: 10px
+	padding: 2px 7px 5px 10px
+	color: white
+	font-weight: bold
+	text-decoration: none
+}
+
+#io
+	grid()
+	.api
+		grid-space: 30%
+		clearfix();
+	.server-view
+		grid-space: 40%
+		background-color: black
+		color: gray
+		clearfix();
+		div.dgrid-header-row
+			background-color: black
+.client
+	grid()
+	.queue, .store
+		grid-space: 25%
+		clearfix();
+		> div
+			height: 300px
+	.jrec, .log
+		grid-space: 50%
+		clearfix();
+
+.syncit-update-conflicts
+	background-color: white
+	h5
+		margin: 0
+	ul
+		list-style-type: none
+		padding: 0
+		margin: 0
+	footer
+		text-align: right
+		float: none
+	div.null
+		background-color: #DDD
+		margin: 0.2em 0
+		padding: 0.3em
+	dl
+		background-color: #DDD
+		margin: 0.2em 0
+		padding: 0.3em 0
+		grid()
+		min-width: 200px
+		dt
+			grid-space: 30%
+			padding-left: 0.3em
+		dd
+			grid-space: 70%
+			padding-left: 0.3em
+		
+		
+div.popup-content-template
+	display: none

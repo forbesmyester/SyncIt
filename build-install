@@ -1,0 +1,22 @@
+#!/bin/sh
+npm -s install
+
+if [ ! -d vendor ]; then
+	mkdir vendor
+fi
+
+sh extract_github_archive 'http://download.dojotoolkit.org/release-1.8.3/dojo-release-1.8.3-src.zip' 'vendor'
+
+wget http://code.jquery.com/jquery-1.9.1.js -O vendor/jquery-1.9.1.js
+
+if [ ! -d test/vendor ]; then
+	mkdir test/vendor
+fi
+
+ln -s ${PWD}/node_modules/mocha/mocha.js test/vendor/
+ln -s ${PWD}/node_modules/expect.js/expect.js test/vendor/
+ln -s ${PWD}/node_modules/mocha/mocha.css test/vendor/
+
+#mkdir -p vendor/lawnchair/adapters
+#wget https://raw.github.com/brianleroux/lawnchair/master/src/Lawnchair.js -O vendor/lawnchair/Lawnchair.js
+#wget https://raw.github.com/brianleroux/lawnchair/master/src/adapters/memory.js -O vendor/lawnchair/adapters/memory.js

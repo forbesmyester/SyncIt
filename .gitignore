@@ -1,0 +1,12 @@
+node_modules
+*.sublime-project
+*.sublime-workspace
+docs
+vendor
+demo/public/css/sync.css
+demo/public/css/TabControl/main.css
+demo/public/vendor
+alltests.sh
+README.html
+README
+*.swp

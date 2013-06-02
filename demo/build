@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# # Install Node packages
+npm -s install
+
+# # Location for client side external libraries
+if [ ! -d public/vendor ]; then
+ 	mkdir -p public/vendor
+fi
+
+# # Dojo Framework - Main Dojo now loaded from Google CDN
+#sh ../extract_github_archive 'http://download.dojotoolkit.org/release-1.8.3/dojo-release-1.8.3-src.zip' 'public/vendor'
+sh ../extract_github_archive 'https://github.com/kriszyp/xstyle/archive/master.zip' 'public/vendor/xstyle'
+sh ../extract_github_archive 'https://github.com/kriszyp/put-selector/archive/master.zip' 'public/vendor/put-selector'
+sh ../extract_github_archive 'https://github.com/SitePen/dgrid/archive/master.zip' 'public/vendor/dgrid'
+sh ../extract_github_archive 'https://github.com/SitePen/dgrid/archive/master.zip' 'public/vendor/dgrid'
+
+wget http://sinonjs.org/releases/sinon-1.6.0.js -O public/vendor/sinon-1.6.0.js
+
+stylus -I node_modules/fluidity/lib/  public/css/sync.styl
+stylus -I node_modules/fluidity/lib/  public/css/TabControl/main.styl
+
+
+if [ ! -r public/vendor/syncit ]; then
+  if [ "$1" == "test" ]; then
+    ln -s $PWD/../js public/vendor/syncit
+  else
+    cp -R ../js public/vendor/syncit
+  fi
+fi

@@ -1,0 +1,6 @@
+digraph a { 
+	Server -> App;
+	App -> SyncIt;
+	SyncIt -> Queue [dir=back]; 
+	SyncIt -> Store;
+} 

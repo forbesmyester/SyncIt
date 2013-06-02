@@ -1,0 +1,195 @@
+/*jshint smarttabs:true */
+(function (root, factory) {
+    if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+        module.exports = factory(
+            require('../node_modules/expect.js/expect.js'),
+            require('../js/SyncIt.js'),
+            require('../js/SyncItTestServ.js'),
+            require('../js/ServerPersist/MemoryAsync.js'),
+            require('../js/Constant.js')
+        );
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(
+            ['expect.js','syncit/SyncIt','syncIt/SyncItTestServer',
+            'syncIt/ServerPersist/MemoryAsync','syncit/Constant'],
+            factory
+        );
+    } else {
+        // Browser globals (root is window)
+        root.returnExports = factory(
+            root.expect,
+            root.SyncItLib,
+            root.SyncItTestServ,
+            root.SyncIt_ServerPersist_MemoryAsync,
+            root.SyncIt_Constant
+        );
+    }
+})(this, function (expect, SyncItLib, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync, SyncIt_Constant) {
+
+SyncIt = SyncItLib.SyncIt;
+SyncItError = SyncItLib.SyncItError;
+Queue = SyncItLib.Queue;
+QueueWithHistory = SyncItLib.QueueWithHistory;
+Store = SyncItLib.Store;
+SyncItError = SyncItLib.SyncItError;
+Persist = SyncItLib.Persist;
+
+
+var di = {SyncItError: SyncItLib.SyncItError, getUpdateResult: SyncItLib.getUpdateResult};
+
+describe('When SyncItTestServ responds to a getDatasetNames request',function() {
+    
+    var syncItTestServer = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
+    
+    it('should respond with an empty object, when it is',function(done) {
+        syncItTestServer.getDatasetNames({},function(status,data) {
+            expect(status).to.eql('ok');
+            expect(data).to.eql({});
+            done();
+        });
+    });
+});
+
+describe('When SyncItTestServ responds to a PATCH request',function() {
+    
+    var syncItTestServer = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
+    var emitCount = 0;
+    var lastEmitQueueitem = null;
+    var lastEmitJrec = null;
+    syncItTestServer.listenForFed(function(queueitem,jrec) {
+        emitCount = emitCount + 1;
+        lastEmitJrec = jrec;
+        lastEmitQueueitem = queueitem;
+    });
+    
+    it('will respond with created when creating data',function(done) {
+        var testCount = 0;
+        var req = {
+            body:{ s:'xx', k:'yy', b:0, m:'aa', r:false, t:new Date().getTime(), u:{b:'c'}, o:'set' }
+        };
+        var test = function(status,data) {
+            expect(status).to.equal('created');
+            syncItTestServer.getValue(
+                {params:{s:'xx',k:'yy'}},
+                
+                function(err,jrec) {
+                    expect(err).to.equal('ok');
+                    expect(jrec.i).to.eql({b:'c'});
+                    expect(jrec.m).to.equal('aa');
+                    if (++testCount == 2) {
+                        expect(emitCount).to.equal(1);
+                        expect(lastEmitJrec.v).to.equal(1);
+                        expect(lastEmitJrec.m).to.equal('aa');
+                        expect(lastEmitQueueitem.u.b).to.equal('c');
+                        expect(lastEmitQueueitem.b).to.equal(0);
+                        expect(lastEmitQueueitem.m).to.equal('aa');
+                        done();
+                    }
+                }
+            );
+        };
+        syncItTestServer.PUT(req,  test );
+        syncItTestServer.PUT(req,  test );
+    });
+    it('will respond with ok when updating data',function(done) {
+        var testCount = 0;
+        var req = {
+            params:{s:'xx',k:'yy'},
+            body:{ s:'xx', k:'yy', b:1, m:'aa', r:false, t:new Date().getTime(), u:{c:'d'}, o:'set' }
+        };
+        var test = function(status,data) {
+            syncItTestServer.getValue(req,function(err,jrec) {
+                expect(status).to.equal('ok');
+                expect(jrec.m).to.equal('aa');
+                expect(jrec.i).to.eql({c:'d'});
+                if (++testCount == 2) {
+                    done();
+                }
+            });
+        };
+        syncItTestServer.PUT(req,  test );
+        syncItTestServer.PUT(req,  test );
+    });
+    it('will respond with out_of_date when trying to update with out of date patch',function(done) {
+        var testCount = 0;
+        var req = {
+            body:{ s:'xx', k:'yy', b:1, m:'bb', r:false, t:new Date().getTime(), u:{c:'d'},o:'set' } // the time will be wrong
+        };
+        var test = function(status,data) {
+            syncItTestServer.getValue({params:{s:'xx',k:'yy'}},function(err,jrec) {
+                expect(status).to.equal('out_of_date');
+                expect(jrec.m).to.equal('aa');
+                expect(jrec.i).to.eql({c:'d'});
+                if (++testCount == 2) {
+                    done();
+                }
+            });
+        };
+        syncItTestServer.PUT(req,  test );
+        syncItTestServer.PUT(req,  test );
+    });
+    it('will respond when deleting',function(done) {
+        var testCount = 0;
+        var req = {
+            params:{s:'xx',k:'yy'},
+            body:{ s:'xx', k:'yy', b:2, m:'aa', r:false, t:new Date().getTime(), u:{t:'t'}, o:'remove' } // the time will be wrong
+        };
+        var test = function(status,data) {
+            expect(status).to.equal('ok');
+            syncItTestServer.getValue(req,function(err,jrec) {
+                expect(status).to.equal('ok');
+                expect(jrec.m).to.equal('aa');
+                expect(jrec.r).to.equal(true);
+                expect(jrec.i).to.eql({c:'d'});
+                if (++testCount == 2) {
+                    done();
+                }
+            });
+        };
+        syncItTestServer.DELETE(req, test );
+        syncItTestServer.DELETE(req, test );
+    });
+    it('will respond with gone, if already deleted',function(done) {
+        var testCount = 0;
+        var req = {
+            params:{s:'xx',k:'yy'},
+            body:{ s:'xx', k:'yy', b:3, m:'aa', r:false, t:new Date().getTime(), u:{t:'t'}, o:'set' } // the time will be wrong
+        };
+        var test = function(status,data) {
+            expect(status).to.equal('gone');
+            syncItTestServer.getValue(req,function(err) {
+                expect(err).to.equal('gone');
+                if (++testCount == 2) {
+                    done();
+                }
+            });
+        };
+        syncItTestServer.PUT(req,  test );
+        syncItTestServer.PUT(req,  test );
+    });
+    it('will respond with validation error if using the wrong method',function(done) {
+        var testCount = 0;
+        var req1 = {
+            params:{s:'xx',k:'yy'},
+            body:{ b:3, m:'aa', r:false, t:new Date().getTime(), u:{t:'t'}, o:'set' } // the time will be wrong
+        };
+        var req2 = {
+            params:{s:'xx',k:'yy'},
+            body:{ b:3, m:'aa', r:false, t:new Date().getTime(), u:{t:'t'}, o:'remove' } // the time will be wrong
+        };
+        var test = function(status,data) {
+            expect(status).to.equal('validation_error');
+            if (++testCount == 2) {
+                done();
+            }
+        };
+        syncItTestServer.DELETE(req1,  test );
+        syncItTestServer.PUT(req2,  test );
+    });
+});
+
+});
