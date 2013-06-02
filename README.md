@@ -52,6 +52,14 @@ The App should download (or be pushed) Queueitem from the Server and then [Feed]
 
 The App can access outstanding Queueitem for the purpose of uploading them to the server, so once all Queueitem on the Server have been Fed the App can try and push the outstanding local Queueitem to the Server. At this point the Queueitem will either be rejected (because someone/something else has pushed in the meantime) or accepted. If it is accepted there is a single API call to [Apply](#apply) the Queueitem in the Queue to the Store. Once all Queueitem have been applied the App is fully synchronized with the server and the Queue is empty.
 
+## Is there a demo
+
+There sure is. It's located [here](http://forbesmyester.github.io/SyncIt/demo/index.html).
+
+## Have you got API Documentation?
+
+There is a (reasonably) complete set of [API Docs](http://forbesmyester.github.io/SyncIt/docs/SyncIt.js.html).
+
 ## Lets take a closer look at an example how this may work in real life.
 
 ### James changes data while offline
