@@ -236,6 +236,17 @@
 		</div>
 		
 		<div id="help-download" class="popup-content-template">
+			<h2>SyncIt Demo Introduction</h2>
+			<p>This big and rather confusing screen is designed to show you how SyncIt works, it is broken up into many different areas!</p>
+			<p>On the top row in the middle there is a SyncItTestServer which is running on simulated AJAX calls (through Sinon.JS), the Server is the single point of truth for SyncIt.</p>
+			<p>Either side of the Server view and the next three rows the screen can be thought of as being in two halves, each is a simulation of a seperate client and can be used to test out different scenarios for synchronization. In the top row beside the Server view are two tabbed areas for executing different API calls, note the "?" icon at the top right of them, it will explain in more detail what every tab does.</p>
+			<p>The row beneath the Server is the data which is available to each client through the SyncIt API. It is probably the data that you will use to draw the screen for the client.</p>
+			<p>Next up the screen becomes split into four, but it is really split into two halves, with each half split into two. There is a Queue and a Store, the Queue is information that still needs to be sent to the Server, while the Store should be data which is confirmed to be on the Server. The Server and the client are not tightly coupled however and you need to tell it that a particular update has been sent to the server using the Apply function. Do try and do silly things however, I think I have designed it to be pretty robust!</p>
+			<p>The rest of the screen is made up of log output. The first being a log which is tied to the individual client and the second is a log of requests recieved by the Server.</p>
+			<p>For more information on SyncIt and the reasons for it's existance please see the <a href="https://github.com/forbesmyester/SyncIt/blob/master/README.md">README.md</a> on GitHub.</p>
+		</div>
+
+		<div id="help-download" class="popup-content-template">
 			<h2>SyncIt.feed()</h2>
 			<p>Downloading updates from the server is out-of-scope for SyncIt but once you have downloaded the updates from the server you can use the SyncIt.feed() method to put them into SyncIt.</p>
 			<p>Example code for doing this is:</p>

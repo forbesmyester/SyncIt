@@ -61,6 +61,17 @@ var getErrorDisplayer = function(method) {
 	}
 }
 
+dialogShowText(
+	"Isn't this screen rather complicated?",
+	(function() {
+	var node = dojo.byId("help-download");
+	return (node === null) ?
+		'Cannot find content' : 
+		node.innerHTML;
+	})(),
+	'900px'
+);
+
 var conflictResolutionFunc = function(dataset ,datakey ,jrec ,localQueueItems, serverQueueItems ,resolved) {
 		
 	var myDialog = new dijitDialog({
