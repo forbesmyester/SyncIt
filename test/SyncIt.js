@@ -289,7 +289,7 @@ describe('Queue',function() {
 	dataToAdd.push({s:'car',k:'bmw',i:7});
 	
 	var prepareForTest = function(next) {
-		var queue = new QueueWithHistory(new Persist()),
+		var queue = new Queue(new Persist()),
 			i = 0;
 		
 		var doIt = function() {
@@ -318,7 +318,7 @@ describe('Queue',function() {
 				expect(err).to.equal(SyncIt_Constant.Error.OK);
 				var expectedMangled = filterToJustDatasetAndDataKey(dataToAdd);
 				expectedMangled.shift();
-				queue.getQueue({},function(err,queueitems) {
+				queue.getFullQueue(function(err,queueitems) {
 					expect(err).to.equal(SyncIt_Constant.Error.OK);
 					var resultMangled = filterToJustDatasetAndDataKey(queueitems);
 					expect(resultMangled).to.eql(expectedMangled);
@@ -329,7 +329,7 @@ describe('Queue',function() {
 		prepareForTest(check);
 	});
 	
-	it('can list queueitems in a dataset or dataset and datakey (after advance)',function(done) {
+	it('can list queueitems in dataset and datakey (after advance)',function(done) {
 		var check = function(queue) {
 			queue.advance(function(err) {
 				expect(err).to.equal(SyncIt_Constant.Error.OK);
@@ -341,21 +341,16 @@ describe('Queue',function() {
 					}
 					return true;
 				});
-				queue.getQueue({dataset:'car'},function(err,queueitems) {
-					expect(err).to.equal(SyncIt_Constant.Error.OK);
+				queue.getItemsForDatasetAndDatakey('car', 'bmw', function(err,queueitems) {
+					expectedMangled = expectedMangled.filter(function(itm) {
+						if ((itm.s == 'car') && (itm.k == 'bmw')) {
+							return true;
+						}
+						return false;
+					});
 					var resultMangled = filterToJustDatasetAndDataKey(queueitems);
 					expect(resultMangled).to.eql(expectedMangled);
-					queue.getQueue({dataset:'car',datakey:'bmw'},function(err,queueitems) {
-						expectedMangled = expectedMangled.filter(function(itm) {
-							if ((itm.s == 'car') && (itm.k == 'bmw')) {
-								return true;
-							}
-							return false;
-						});
-						var resultMangled = filterToJustDatasetAndDataKey(queueitems);
-						expect(resultMangled).to.eql(expectedMangled);
-						done();
-					});
+					done();
 				});
 			});
 		};
@@ -366,7 +361,7 @@ describe('Queue',function() {
 		
 		var check = function(queue) {
 			
-			queue.getQueue({},function(err,queueitems) {
+			queue.getFullQueue(function(err,queueitems) {
 				
 				var expected = filterToJustDatasetAndDataKey(dataToAdd);
 				var unfiltered = filterToJustDatasetAndDataKey(queueitems);
@@ -374,13 +369,13 @@ describe('Queue',function() {
 				expect(unfiltered).to.eql(expected);
 				
 				queue.advance(function() {
-					queue.getQueue({},function(err,newQueueitems) {
+					queue.getFullQueue(function(err,newQueueitems) {
 						expected.shift();
 						var unfiltered = filterToJustDatasetAndDataKey(newQueueitems);
 						expect(unfiltered).to.eql(expected);
 						queue.push({s:'car',k:'lotus',i:9},function() {
 							expected.push({s:'car',k:'lotus'});
-							queue.getQueue({},function(err,newNewQueueitems) {
+							queue.getFullQueue(function(err,newNewQueueitems) {
 								expect(
 									filterToJustDatasetAndDataKey(newNewQueueitems)
 								).to.eql(expected);
@@ -396,33 +391,6 @@ describe('Queue',function() {
 		
 		prepareForTest(check);
 		
-	});
-
-	it('QueueWithHistory can get items from any position and filters are applied correctly',function(done) {
-		
-		var check = function(queue) {
-			
-			if (!queue.getPosition) {
-				done();
-				return;
-			}
-			
-			queue.advance(function(err) {
-				queue.advance(function(err) {
-					queue.getQueue({from: 1},function(err,queueitems) {
-						expect(err).to.equal(SyncIt_Constant.Error.OK);
-						expect(queueitems.length).to.equal(6);
-						queue.getQueue({from:3,dataset:'animal'},function(err,queueitems) {
-							expect(err).to.equal(SyncIt_Constant.Error.OK);
-							expect(queueitems.length).to.equal(3);
-							done();
-						});
-					});
-				});
-			});
-		};
-		
-		prepareForTest(check);
 	});
 
 });
@@ -511,7 +479,6 @@ describe('SyncIt',function() {
 							if (err != (k == 's' ?
 								SyncIt_Constant.Error.INVALID_DATASET :
 								SyncIt_Constant.Error.INVALID_DATAKEY)) {
-								console.log(err,k,ob);
 							}
 							expect(err).to.equal(
 								k == 's' ?
@@ -636,7 +603,7 @@ describe('SyncIt',function() {
 
 				dupQueue.insertAt = function(value,index,whenAdded) {
 					var inst = this;
-					inst.getQueue({},function(e,queue) {
+					inst.getFullQueue(function(e,queue) {
 						var newQueue = queue.slice(0,index);
 						newQueue.push(value);
 						var applyItems = queue.slice(index);
@@ -651,11 +618,11 @@ describe('SyncIt',function() {
 				
 				dupSyncIt.set('user','jack',{'hair':'brown'},function(e,dataset,datakey,firstQueueitem) {
 					dupSyncIt.apply(function(e) {
-						dupQueue.getQueue({},function(e,items) {
+						dupQueue.getFullQueue(function(e,items) {
 						expect(e).to.equal(SyncIt_Constant.Error.OK);
 							var length = items.length;
 							dupQueue.insertAt(firstQueueitem,0,function() {
-								dupQueue.getQueue({},function(e,items) {
+								dupQueue.getFullQueue(function(e,items) {
 									expect(e).to.equal(SyncIt_Constant.Error.OK);
 									expect(items.length).to.equal(length + 1);
 									next();
@@ -771,7 +738,7 @@ describe('SyncIt',function() {
 				prepare(dupSyncIt,function() {
 					dupSyncIt.apply(function(err) {
 						expect(err).to.equal(SyncIt_Constant.Error.STALE_FOUND_QUEUE_ADVANCED);
-						dupSyncIt._queue.getQueue({},function(e,queueitems) {
+						dupSyncIt._queue.getFullQueue(function(e,queueitems) {
 							expect(e).to.equal(SyncIt_Constant.Error.OK);
 							expect(queueitems.length).to.equal(0);
 							done();
@@ -1403,7 +1370,7 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 					expect(err).to.equal(SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_BASED_ON_OLD_VERSION);
 					store.get('cars','bmw',function(err,jrec) {
 						expect(jrec.v).to.equal(2);
-						queue.getQueue({dataset:'cars', datakey:'bmw'},function(err,queueitem) {
+						queue.getItemsForDatasetAndDatakey('cars', 'bmw', function(err,queueitem) {
 							expect(queueitem.length).to.equal(1);
 							done();
 						});

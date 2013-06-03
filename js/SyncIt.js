@@ -662,8 +662,9 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			return addConflictResolvingQueueitemToQueue(allLocalToApplyAfterwards);
 		}
 		
-		inst._queue.getQueue(
-			{dataset: applyQueue[0].s, datakey: applyQueue[0].k},
+		inst._queue.getItemsForDatasetAndDatakey(
+			applyQueue[0].s,
+			applyQueue[0].k,
 			function(err, queueitemInQueue) {
 				queueitemsRetrieved(
 					err,
@@ -779,8 +780,7 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 			alreadyDone: false,
 			removed: jrec.r,
 			version: jrec.v,
-			feedVersion: jrec.v,
-			lastFeedIndex: 0
+			feedVersion: jrec.v
 		};
 		
 		(function(queue) {
@@ -788,16 +788,12 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 				i = 0;
 			
 			for (i=0, l=queue.length; i<l; i++) {
-				if ((queue[i].s != queueitem.s) || (queue[i].k != queueitem.k)) {
-					continue;
-				}
 				info.version = queue[i].b + 1;
 				if (queue[i].o == 'remove') {
 					info.removed = true;
 				}
 				if (queue[i].m != inst.getModifier()) {
 					info.feedVersion = queue[i].b + 1;
-					info.lastFeedIndex = i;
 					if (
 						(queue[i].m == queueitem.m) &&
 						(queue[i].b == queueitem.b)
@@ -908,7 +904,7 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 			return whenAddedToQueue(err);
 		}
 			
-		inst._queue.getQueue({}, function(err, existingQueueitems) {
+		inst._queue.getItemsForDatasetAndDatakey(dataset, datakey, function(err, existingQueueitems) {
 			
 			if (err !== SyncIt_Constant.Error.OK) {
 				inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
@@ -1145,7 +1141,7 @@ SyncIt.prototype.getFull = function(dataset, datakey, whenDataRetrieved) {
 	
 	var inst = this;
 	
-	inst._queue.getQueue({dataset:dataset, datakey: datakey}, function(e, queue) {
+	inst._queue.getItemsForDatasetAndDatakey(dataset, datakey, function(e, queue) {
 		
 		inst._store.get(dataset, datakey, function(e, r) {
 			var len = queue.length,
@@ -1293,7 +1289,7 @@ SyncIt.prototype.getDatakeysInDataset = function(datasetName, inWhere, whenDatak
 	if (inWhere & SyncIt_Constant.Location.IN_STORE) {
 		this._store.getDatakeyNames(datasetName, function(err, names) {
 			if (err !== SyncIt_Constant.Error.OK) {
-				whenDatakeysKnown(err);
+				return whenDatakeysKnown(err);
 			}
 			resolved = resolved + SyncIt_Constant.Location.IN_STORE;
 			rs.push(names);
@@ -1302,18 +1298,12 @@ SyncIt.prototype.getDatakeysInDataset = function(datasetName, inWhere, whenDatak
 	}
 	
 	if (inWhere & SyncIt_Constant.Location.IN_QUEUE) {
-		this._queue.getQueue({dataset:datasetName}, function(err, queueitems) {
-			var i = 0,
-				l = 0,
-				r = [];
-			if (err) {
+		this._queue.getDatakeyInDataset(datasetName, function(err, datakeys) {
+			if (err !== SyncIt_Constant.Error.OK) {
 				return whenDatakeysKnown(err);
 			}
-			for (i=0, l=queueitems.length; i<l; i++) {
-				r.push(queueitems[i].k);
-			}
 			resolved = resolved + SyncIt_Constant.Location.IN_QUEUE;
-			rs.push(r);
+			rs.push(datakeys);
 			possiblySend();
 		});
 	}
@@ -1400,7 +1390,66 @@ Queue.prototype._basicFilterMethod = function(filter, queueitems) {
 };
 
 /**
- * ### Queue.getQueue()
+ * ### Queue.getFullQueue()
+ * 
+ * Gets all items from the Queue.
+ * 
+ * #### Parameters
+ * 
+ * * **@param {Function} `callback`** To get the results. Signature `function(err, results)`.
+ *   * **@param {ErrorCode} `callback.err`** See SyncIt_Constant.Error.
+ *   * **@param {Array} `callback.results`** An array of `queueitem`
+ */
+Queue.prototype.getFullQueue = function(callback) {
+	return this._getQueue({}, callback);
+};
+
+/**
+ * ### Queue.getItemsForDatasetAndDatakey()
+ * 
+ * Gets the items from the Queue which match both the Dataset and Datakey.
+ * 
+ * #### Parameters
+ * 
+ * * **@param {String} `dataset`**
+ * * **@param {String} `datakey`**
+ * * **@param {Function} `callback`** To get the results. Signature `function(err, results)`.
+ *   * **@param {ErrorCode} `callback.err`** See SyncIt_Constant.Error.
+ *   * **@param {Array} `callback.results`** An array of `queueitem`
+ */
+Queue.prototype.getItemsForDatasetAndDatakey = function(dataset, datakey, callback) {
+	return this._getQueue({dataset: dataset, datakey: datakey}, callback);
+};
+
+/**
+ * ### Queue.getDatakeyInDataset()
+ * 
+ * List all the Datakeys from a specific Dataset
+ * 
+ * #### Parameters
+ * 
+ * * **@param {String} `dataset`**
+ * * **@param {Function} `callback`** To get the results. Signature `function(err, results)`.
+ *   * **@param {ErrorCode} `callback.err`** See SyncIt_Constant.Error.
+ *   * **@param {Array} `callback.results`** An array of Datakey
+ */
+Queue.prototype.getDatakeyInDataset = function(dataset, callback) {
+	return this._getQueue({dataset: dataset}, function(err,queueitems) {
+		if (err) {
+			callback(err);
+		};
+		var i = 0,
+			l = 0,
+			r = [];
+		for (i=0, l=queueitems.length; i<l; i++) {
+			r.push(queueitems[i].k);
+		}
+		callback(err,r);
+	});
+};
+
+/**
+ * ### Queue._getQueue()
  * 
  * Gets the items from the Queue, respecting the supplied filter
  * 
@@ -1411,7 +1460,7 @@ Queue.prototype._basicFilterMethod = function(filter, queueitems) {
  *   * **@param {ErrorCode} `callback.err`** See SyncIt_Constant.Error.
  *   * **@param {Array} `callback.results`** An array of `queueitem`
  */
-Queue.prototype.getQueue = function(filter, callback) {
+Queue.prototype._getQueue = function(filter, callback) {
 	this._persist.get('_queue', function(err, queueitems) {
 		
 		if (err == SyncIt_Constant.Error.NO_DATA_FOUND) {
@@ -1460,7 +1509,7 @@ Queue.prototype._setQueue = function(queueitem, callback) {
  *   * **@param {Number} `retrieved.length`** The amount of items in the list matching the filter
  */
 Queue.prototype.getCountInQueue = function(filter, retrieved) {
-	this.getQueue(filter, function(e, queue) {
+	this._getQueue(filter, function(e, queue) {
 		if (e !== SyncIt_Constant.Error.OK) {
 			retrieved(e);
 		}
@@ -1482,7 +1531,7 @@ Queue.prototype.getCountInQueue = function(filter, retrieved) {
  */
 Queue.prototype._removeByDatasetAndDatakey = function(dataset, datakey, whenRemoved) {
 	var inst = this;
-	inst.getQueue({}, function(e, queue) {
+	inst._getQueue({}, function(e, queue) {
 		if (e == SyncIt_Constant.Error.NO_DATA_FOUND) {
 			return whenRemoved(e);
 		}
@@ -1514,7 +1563,7 @@ Queue.prototype._removeByDatasetAndDatakey = function(dataset, datakey, whenRemo
  */
 Queue.prototype.push = function(value, whenAddedAtEnd) {
 	var inst = this;
-	inst.getQueue({}, function(e, queue) {
+	inst._getQueue({}, function(e, queue) {
 		if (e) {
 			whenAddedAtEnd(e);
 		}
@@ -1537,7 +1586,7 @@ Queue.prototype.push = function(value, whenAddedAtEnd) {
  */
 Queue.prototype.advance = function(done) {
 	var inst = this;
-	inst.getQueue({}, function(e, queue) {
+	inst._getQueue({}, function(e, queue) {
 		queue.shift();
 		return inst._setQueue(queue, done);
 	});
@@ -1556,7 +1605,7 @@ Queue.prototype.advance = function(done) {
  *   * **@param {Queueitem} `whenFirstElementRetrieved.queueitem`**
  */
 Queue.prototype.getFirst = function(whenFirstElementRetrieved) {
-	this.getQueue({}, function(e, queue) {
+	this._getQueue({}, function(e, queue) {
 		if (queue.length > 0) {
 			return whenFirstElementRetrieved(e, queue[0]);
 		}
@@ -1577,7 +1626,7 @@ Queue.prototype.getFirst = function(whenFirstElementRetrieved) {
  *   * **@param {Array} `whenRetrieved.datasets`** An array of Dataset names.
  */
 Queue.prototype.getDatasetNames = function(whenRetrieved) {
-	this.getQueue({}, function(err, queue) {
+	this._getQueue({}, function(err, queue) {
 		if (err) {
 			return whenRetrieved(err);
 		}
@@ -1591,170 +1640,6 @@ Queue.prototype.getDatasetNames = function(whenRetrieved) {
 		return whenRetrieved(err, r);
 	});
 };
-
-/**
- * ## QueueWithHistory
- * 
- * *QueueWithHistory* should perform identically to *Queue* except that it will also keep records of the *Queueitem* which have would have been discarded when *Queue* has [Queue.advance()](#queue.advance--) called.
- * 
- * The methods that have Filters attached to them include an additional property which can be read, it is called `from`. If this is passed the *Queueitem* will be read from that index, instead of the current position.
- */
-
-var QueueWithHistory = function(persist) {
-	this._persist = persist;
-	this._position = null;
-};
-
-/**
- * ### QueueWithHistory.getPosition()
- * 
- * Gets the current position where the QueueWithHistory has been advanced to.
- * 
- * #### Parameters
- * 
- * * **@param {Function} `found`** Called when got. Signature: `function(err, position)`.
- *   * **@param {ErrorCode} `found.err`**
- *   * **@param {Array} `found.position`**
- */
-QueueWithHistory.prototype.getPosition = function(found) {
-	this._persist.get('_queue_position', function(err, position) {
-		if (err === SyncIt_Constant.Error.NO_DATA_FOUND) {
-			return found(SyncIt_Constant.Error.OK, 0);
-		}
-		if (err !== SyncIt_Constant.Error.OK) {
-			throw "QueueWithHistory: Could not get initial position";
-		}
-		return found(err, position);
-	});
-};
-
-/**
- * Function for getting all *Queueitem* and the position simultaneously, it is shared between two functions.
- * 
- * * **@param {Function} `callback`** Signature: `function(err, ob)
- *   * **@param {Errorcode} `callback.err`**
- *   * **@param {Object} `callback.ob`** Includes the keys allQueueitem and position.
- */
-QueueWithHistory.prototype._getQueueAndPosition = function(callback) {
-	var working = {};
-	var haveError = false;
-	var doIHave = function() {
-		if (!working.hasOwnProperty('allQueueitems') || !working.hasOwnProperty('position')) {
-			return false;
-		}
-		callback(SyncIt_Constant.Error.OK, working);
-	};
-	
-	Queue.prototype.getQueue.call(this, {}, function(err, allQueueitems) {
-		if (err !== SyncIt_Constant.Error.OK) {
-			if (haveError) { return false; }
-			haveError =  true;
-			return callback(err);
-		}
-		working.allQueueitems = allQueueitems;
-		doIHave();
-	});
-	
-	this.getPosition(function(err, position) {
-		if (err !== SyncIt_Constant.Error.OK) {
-			if (haveError) { return false; }
-			haveError =  true;
-			return callback(err);
-		}
-		working.position = position;
-		doIHave();
-	});
-};
-
-/**
- * ### QueueWithHistory.getQueue()
- * 
- * See the corresponding function on [Queue](SyncIt.js.html#queue)
- */
-QueueWithHistory.prototype.getQueue = function(filter, callback) {
-	this._getQueueAndPosition(function(err, result) {
-		
-		var position = result.position,
-			nonProcessed = ['from'],
-			k = '',
-			newFilter = {};
-		
-		if (err !== SyncIt_Constant.Error.OK) {
-			callback(err);
-		}
-		if (filter.hasOwnProperty('from')) {
-			position = parseInt(filter.from, 10);
-		}
-		
-		for (k in filter) { if (filter.hasOwnProperty(k)) {
-			if (nonProcessed.indexOf(k) == -1) {
-				newFilter[k] = filter[k];
-			}
-		} }
-		
-		return callback(
-			err,
-			Queue.prototype._basicFilterMethod(
-				newFilter,
-				result.allQueueitems.slice(position)
-			)
-		);
-	});
-};
-
-/**
- * **QueueWithHistory._setQueue()**
- * 
- * See the corresponding function on [Queue](SyncIt.js.html#queue)
- */
-QueueWithHistory.prototype._setQueue = function(newQueueItems, callback) {
-	var inst = this;
-	inst._getQueueAndPosition(function(err, result) {
-		if (err !== SyncIt_Constant.Error.OK) {
-			callback(err);
-		}
-		var r = result.allQueueitems.slice(0, result.position);
-		newQueueItems.unshift(0);
-		newQueueItems.unshift(result.position);
-		r.splice.apply(r, newQueueItems);
-		return inst._persist.set(
-			'_queue',
-			r,
-			callback
-		);
-	});
-};
-
-/**
- * ### QueueWithHistory.advance()
- * 
- * See the corresponding function on [Queue](SyncIt.js.html#queue)
- */
-QueueWithHistory.prototype.advance = function(done) {
-	var inst = this;
-	this.getPosition(function(err, pos) {
-		if (err !== SyncIt_Constant.Error.OK) {
-			done(err);
-		}
-		return inst._persist.set(
-			'_queue_position',
-			pos+1,
-			done
-		);
-	});
-};
-
-var methods = ['getCountInQueue', '_removeByDatasetAndDatakey', 'push', 'getFirst', 'getDatasetNames'];
-
-var getInheritFunc = function(func) {
-	return function() {
-		func.apply(this, arguments);
-	};
-};
-
-for (var i = 0; i<methods.length; i++) {
-	QueueWithHistory.prototype[methods[i]] = getInheritFunc(Queue.prototype[methods[i]]);
-}
 
 /**
  * ## Store
@@ -1918,7 +1803,6 @@ Store.prototype.getDatakeyNames = function(dataset, keysRetrieved) {
 return {
 	SyncIt: SyncIt,
 	Queue: Queue,
-	QueueWithHistory: QueueWithHistory,
 	Store: Store
 };
 
