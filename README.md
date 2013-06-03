@@ -249,6 +249,7 @@ I need to do the following:
  * Add SyncIt.purge() methods to free space from SyncIt. This should be sufficient to make sure that if SyncIt runs out of space locally (in LocalStorage for example) space can be freed to enable it to work again.
  * Use this in a real project with a Browser and mobile (Phonegap based) clients.
  * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
+ * Use a pluginable function for object cloning in manip
 
 ## Dictionary
 
