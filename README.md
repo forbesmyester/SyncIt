@@ -250,6 +250,7 @@ I need to do the following:
  * Use this in a real project with a Browser and mobile (Phonegap based) clients.
  * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
  * Use a pluginable function for object cloning in manip
+ * Add a license to all files (It'll be MIT/BSD and GPL)
 
 ## Dictionary
 
