@@ -251,6 +251,7 @@ I need to do the following:
  * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
  * Use a pluginable function for object cloning in manip
  * Add a license to all files (It'll be MIT/BSD and GPL)
+ * Auto Build of GitHub pages
 
 ## Dictionary
 
