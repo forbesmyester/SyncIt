@@ -21,6 +21,10 @@
 	}
 })(this, function(SyncIt_Constant, updateResult) {
 
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: Matthew Forrester
+// License: MIT/BSD-style
+
 "use strict";
 
 /**
@@ -323,9 +327,7 @@ SyncIt.prototype.set = function(dataset, datakey, update, whenAddedToQueue) {
 		dataset,
 		datakey,
 		update,
-		this.getModifier(),
-		null,
-		null,
+		new Date().getTime(),
 		false,
 		whenAddedToQueue
 	);
@@ -348,9 +350,7 @@ SyncIt.prototype.remove = function(dataset, datakey, whenAddedToQueue) {
 		dataset,
 		datakey,
 		{},
-		this.getModifier(),
-		null,
-		null,
+		new Date().getTime(),
 		false,
 		whenAddedToQueue
 	);
@@ -388,9 +388,7 @@ SyncIt.prototype.update = function(dataset, datakey, update, whenAddedToQueue) {
 		dataset,
 		datakey,
 		update,
-		this.getModifier(),
-		null,
-		null,
+		new Date().getTime(),
 		false,
 		whenAddedToQueue
 	);
@@ -636,8 +634,6 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			allLocalToApplyAfterwards[0].s,
 			allLocalToApplyAfterwards[0].k,
 			allLocalToApplyAfterwards[0].u,
-			allLocalToApplyAfterwards[0].m,
-			allLocalToApplyAfterwards[0].b,
 			allLocalToApplyAfterwards[0].t,
 			true,
 			function(err) {
@@ -728,18 +724,21 @@ SyncIt.prototype._emit = function(event /*, other arguments */) {
 	}
 };
 
-SyncIt.prototype._basicValidationForQueueitem = function(queueitem) {
+SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
 	if (queueitem.s.match(SyncIt_Constant.Validation.DATASET_REGEXP) === null) {
 		return SyncIt_Constant.Error.INVALID_DATASET;
 	}
 	if (queueitem.k.match(SyncIt_Constant.Validation.DATAKEY_REGEXP) === null) {
 		return SyncIt_Constant.Error.INVALID_DATAKEY;
 	}
-	if (queueitem.m.match(SyncIt_Constant.Validation.MODIFIER_REGEXP) === null) {
-		return SyncIt_Constant.Error.INVALID_MODIFIER;
-	}
 	if (queueitem.o.match(SyncIt_Constant.Validation.OPERATION_REGEXP) === null) {
 		return SyncIt_Constant.Error.INVALID_OPERATION;
+	}
+	if ( (skips !== undefined) && (skips.indexOf('m') != -1) ) {
+		return SyncIt_Constant.Error.OK;
+	}
+	if (queueitem.m.match(SyncIt_Constant.Validation.MODIFIER_REGEXP) === null) {
+		return SyncIt_Constant.Error.INVALID_MODIFIER;
 	}
 	return SyncIt_Constant.Error.OK;
 };
@@ -765,7 +764,7 @@ SyncIt.prototype._basicValidationForQueueitem = function(queueitem) {
  *   * **@param {Datakey} `whenAddedToQueue.datakey`** The Datakey of the Queueitem.
  *   * **@param {Queueitem} `whenAddedToQueue.queueitem`** The Queueitem that has just been added.
  */
-SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, modifier, basedonversion, modificationtime, allowFeedLock, whenAddedToQueue) {
+SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, modificationtime, allowFeedLock, whenAddedToQueue) {
 	var inst = this;
 	
 	var amILocked = function() {
@@ -779,8 +778,7 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 		var info = {
 			alreadyDone: false,
 			removed: jrec.r,
-			version: jrec.v,
-			feedVersion: jrec.v
+			version: jrec.v
 		};
 		
 		(function(queue) {
@@ -793,7 +791,6 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 					info.removed = true;
 				}
 				if (queue[i].m != inst.getModifier()) {
-					info.feedVersion = queue[i].b + 1;
 					if (
 						(queue[i].m == queueitem.m) &&
 						(queue[i].b == queueitem.b)
@@ -838,38 +835,7 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 			return whenAddedToQueue(SyncIt_Constant.Error.DATA_ALREADY_REMOVED);
 		}
 		
-		if (queueitem.m != inst.getModifier()) {
-			
-			if (typeof queueitem.b !== 'number') {
-				inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-				return whenAddedToQueue(SyncIt_Constant.Error.FEED_REQUIRES_BASED_ON_VERSION);
-			}
-			
-			if (info.feedVersion != queueitem.b) {
-				inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-				return whenAddedToQueue(
-					(queueitem.b < info.feedVersion) ?
-						SyncIt_Constant.Error.TRYING_TO_ADD_ALREADY_ADDED_QUEUEITEM :
-						SyncIt_Constant.Error.TRYING_TO_ADD_FUTURE_QUEUEITEM,
-					queueitem.s,
-					queueitem.k,
-					queueitem
-				);
-			}
-			
-		} else {
-			queueitem.b = info.version;
-		}
-		
-		if (
-			(queueitem.m !== inst.getModifier()) && 
-			(info.version != info.feedVersion)
-		) {
-			
-			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-			return whenAddedToQueue(SyncIt_Constant.Error.FEED_ATTEMPTED_WHILE_LOCAL_IN_QUEUE);
-		}
-
+		queueitem.b = info.version;
 		
 		storeIt(queueitem);
 		
@@ -882,10 +848,9 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 	}
 	
 	
-	var queueitem = {o:operation, s:dataset, k:datakey, u:update, m: modifier,
-		t:modificationtime, b: basedonversion};
+	var queueitem = {o:operation, s:dataset, k:datakey, u:update, t:modificationtime, m:this.getModifier()};
 
-	var validateQueueitemErr = inst._basicValidationForQueueitem(queueitem);
+	var validateQueueitemErr = inst._basicValidationForQueueitem(queueitem,['m']);
 	if (validateQueueitemErr !== SyncIt_Constant.Error.OK) {
 		return whenAddedToQueue(validateQueueitemErr);
 	}
@@ -903,7 +868,7 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
 			return whenAddedToQueue(err);
 		}
-			
+		
 		inst._queue.getItemsForDatasetAndDatakey(dataset, datakey, function(err, existingQueueitems) {
 			
 			if (err !== SyncIt_Constant.Error.OK) {
@@ -1158,6 +1123,9 @@ SyncIt.prototype.getFull = function(dataset, datakey, whenDataRetrieved) {
 					r = updateResult(r, queue[i], inst._cloneObj);
 				}
 			}
+
+			r.s = dataset;
+			r.k = datakey;
 
 			if (r.v == 0) {
 				return whenDataRetrieved(SyncIt_Constant.Error.NO_DATA_FOUND,null);

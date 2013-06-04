@@ -17,6 +17,3 @@ ln -s ${PWD}/node_modules/mocha/mocha.js test/vendor/
 ln -s ${PWD}/node_modules/expect.js/expect.js test/vendor/
 ln -s ${PWD}/node_modules/mocha/mocha.css test/vendor/
 
-#mkdir -p vendor/lawnchair/adapters
-#wget https://raw.github.com/brianleroux/lawnchair/master/src/Lawnchair.js -O vendor/lawnchair/Lawnchair.js
-#wget https://raw.github.com/brianleroux/lawnchair/master/src/adapters/memory.js -O vendor/lawnchair/adapters/memory.js

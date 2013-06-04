@@ -18,6 +18,10 @@
 	}
 })(this, function (SyncItLib,SyncIt_Constant,Persist_Memory) {
 
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: 2013 Matthew Forrester
+// License: MIT/BSD-style
+
 "use strict";
 
 /**

@@ -1,3 +1,8 @@
+
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: Matthew Forrester
+// License: MIT/BSD-style
+
 /**
  * ## Persist
  * 

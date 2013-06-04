@@ -18,6 +18,10 @@
 	}
 }(this, function (SyncIt_Constant,SyncIt_Persist_Memory) {
 
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: Matthew Forrester
+// License: MIT/BSD-style
+
 var makeLaggy = function(func,factor) {
 	return function() {
 		var args = Array.prototype.slice.call(arguments);

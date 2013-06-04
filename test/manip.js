@@ -12,7 +12,6 @@ var manip = require('../js/manip.js'),
 describe('manip',function() {
 	it('can manipulate',function() {
 		
-		var xmanip = manip.create();
 		var i = 0;
 		var ob = {hi:'there'};
 		var steps = [
@@ -22,7 +21,7 @@ describe('manip',function() {
 			{cmd:{'$inc':{'car.wheels':1},'$set':{z:1}},expected:{hi:'there',car:{wheels:4},z:1}}
 		];
 		for (i=0;i<steps.length;i++) {
-			ob = xmanip(ob,steps[i].cmd);
+			ob = manip(ob,steps[i].cmd);
 			expect(ob).to.eql(steps[i].expected);
 		}
 

@@ -4,6 +4,10 @@ define(
 	"dojo/_base/array",'dojo/store/util/QueryResults'],
 function(SyncItLib,SyncIt_Constant,declare,Deferred,promiseAll,dojoBaseArray,QueryResults) {
 
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: 2013 Matthew Forrester
+// License: MIT/BSD-style
+
 return declare('syncit.Unsupported.SyncItStore',[], {
 	
 	/**

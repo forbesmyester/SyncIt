@@ -1,0 +1,4 @@
+#!/bin/sh
+docker -i js  -o docs/
+rm -rf $1/docs
+tar -c docs | tar -x -C $1
