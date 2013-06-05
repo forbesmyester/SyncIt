@@ -28,17 +28,26 @@ var Lsq = function(namespace,localStorage) {
 	this._listening = false;
 };
 
-Lsq.prototype._serialize = function(ob) {
-	return JSON.stringify(ob);
-};
+	Lsq.prototype._serialize = function(queueitem) {
+		return {
+			u: queueitem.u,
+			t: queueitem.t,
+			m: queueitem.m,
+			z: 0
+		};
+	};
 
-Lsq.prototype._unserialize = function(ob,dataset,datakey,basedonversion) {
-	var r = JSON.parse(ob);
-	r.s = dataset;
-	r.k = datakey
-	r.b = basedonversion;
-	return r;
-};
+	Lsq.prototype._unserialize = function(stored,key) {
+		var info = key.split('.');
+		return {
+			u: stored.u,
+			t: stored.t,
+			m: stored.m,
+			s: info[1],
+			k: info[2],
+			b: info[3]
+		};
+	};
 
 Lsq.prototype._getLocalStorageRanges = function() {
     
@@ -93,7 +102,7 @@ Lsq.prototype.advance = function(next) {
 		return next(SyncIt_Constant.Error.NO_DATA_FOUND,null);
 	}
 	this._ls.removeItem(k);
-	return next(SyncIt_Constant.Error.OK,this._ls.getItem(k));
+	return next(SyncIt_Constant.Error.OK);
 };
 
 Lsq.prototype.getFirst = function(next) {
@@ -104,7 +113,13 @@ Lsq.prototype.getFirst = function(next) {
 	for (i=0, l=this._ls.length; i<l; i++) {
 		k = this._ls.key(i);
 		if (k.substr(0,this._ns.length+1) == this._ns+'.') {
-			next(SyncIt_Constant.Error.OK,this._ls.getItem(k));
+			next(
+				SyncIt_Constant.Error.OK,
+				this._unserialize(
+					this._ls.getItem(k),
+					k
+				)
+			);
 			return k;
 		}
 	}
@@ -139,25 +154,23 @@ Lsq.prototype.getItemsForDatasetAndDatakey = function(dataset,datakey,next) {
 		k = '',
 		tmp = '',
 		l = 0,
-		i = 0;
+		i = 0,
+		storeKey = '';
 	
 	for (k in struct) {
 		if (struct.hasOwnProperty(k)) {
 			tmp = k.split('.');
 			if ((tmp[0] == dataset) && (tmp[1] == datakey)){
 				for (var i=struct[k][0]; i<=struct[k][1]; i++) {
+					storeKey = this._ns +
+						'.' +
+						tmp[0] + '.' +
+						tmp[1] + '.' +
+						i;
 					r.push(
 						this._unserialize(
-							this._ls.getItem(
-								this._ns +
-								'.' +
-								tmp[0] + '.' +
-								tmp[1] + '.' +
-								i
-							),
-							tmp[0],
-							tmp[1],
-							i
+							this._ls.getItem(storeKey),
+							storeKey
 						)
 					);
 				}

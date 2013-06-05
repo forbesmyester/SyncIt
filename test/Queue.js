@@ -92,7 +92,7 @@ LocalStorage.prototype.removeItem = function(key) {
 
 describe('Queue',function() {
 
-	var INSTANCE_COUNT = 1;
+	var INSTANCE_COUNT = 3;
 	
 	var dataToAdd = [];
 	dataToAdd.push({s:'car',k:'skoda',b:0});
@@ -118,8 +118,8 @@ describe('Queue',function() {
 		var queueSync = new SyncIt_Queue_Persist(new SyncIt_Persist_Memory());
 		var queueLocalStorage = new SyncIt_Queue_LocalStorage('aabbcc',new LocalStorage());
 
-		//addArrayToQueue(queueAsync,JSON.parse(JSON.stringify(dataToAdd)),next);
-		//addArrayToQueue(queueSync,JSON.parse(JSON.stringify(dataToAdd)),next);
+		addArrayToQueue(queueAsync,JSON.parse(JSON.stringify(dataToAdd)),next);
+		addArrayToQueue(queueSync,JSON.parse(JSON.stringify(dataToAdd)),next);
 		addArrayToQueue(queueLocalStorage,JSON.parse(JSON.stringify(dataToAdd)),next);
 		
 	};
