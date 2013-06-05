@@ -7,6 +7,7 @@
 		module.exports = factory(
 			require('../node_modules/expect.js/expect.js'),
 			require('../js/SyncIt.js'),
+			require('../js/Queue/Persist.js'),
 			require('../js/Constant.js'),
 			require('../js/updateResult.js'),
 			require('../js/Persist/Memory.js'),
@@ -18,6 +19,7 @@
 			[
 				'expect.js',
 				'syncit/SyncIt',
+				'syncit/Queue/Persist',
 				'syncit/Constant',
 				'syncit/updateResult',
 				'syncit/Persist/Memory',
@@ -30,6 +32,7 @@
 		root.returnExports = factory(
 			root.expect,
 			root.SyncItLib,
+			root.SyncIt_Queue_Persist,
 			root.SyncIt_Constant,
 			root.SyncIt_updateResult,
 			root.SyncIt_Persist_Memory,
@@ -39,6 +42,7 @@
 })(this, function (
 	expect,
 	SyncItLib,
+	SyncIt_Queue_Persist,
 	SyncIt_Constant,
 	updateResult,
 	SyncIt_Persist_Memory,
@@ -47,8 +51,7 @@
 // =============================================================================
 
 var SyncIt = SyncItLib.SyncIt;
-var Queue = SyncItLib.Queue;
-var QueueWithHistory = SyncItLib.QueueWithHistory;
+var Queue = SyncIt_Queue_Persist;
 var Store = SyncItLib.Store;
 var Persist = SyncIt_Persist_MemoryAsync;
 
@@ -275,124 +278,6 @@ describe('Store',function() {
 		doIt();
 		
 	});
-});
-
-describe('Queue',function() {
-	
-	var dataToAdd = [];
-	dataToAdd.push({s:'car',k:'skoda',i:1});
-	dataToAdd.push({s:'car',k:'bmw',i:2});
-	dataToAdd.push({s:'car',k:'ford',i:3});
-	dataToAdd.push({s:'animal',k:'tiger',i:4});
-	dataToAdd.push({s:'animal',k:'lion',i:5});
-	dataToAdd.push({s:'animal',k:'domestic cat',i:6});
-	dataToAdd.push({s:'car',k:'bmw',i:7});
-	
-	var prepareForTest = function(next) {
-		var queue = new Queue(new Persist()),
-			i = 0;
-		
-		var doIt = function() {
-			queue.push(dataToAdd[i],function() {
-				if (++i == dataToAdd.length) {
-					return next(queue);
-				}
-				doIt();
-			});
-		};
-		doIt();
-		
-	};
-	
-	var filterToJustDatasetAndDataKey = function(results) {
-		var r = [];
-		for (var i=0;i<results.length;i++) {
-			r.push({s:results[i].s,k:results[i].k});
-		}
-		return r;
-	};
-	
-	it('can list queueitems unfiltered (after advance)',function(done) {
-		var check = function(queue) {
-			queue.advance(function(err) {
-				expect(err).to.equal(SyncIt_Constant.Error.OK);
-				var expectedMangled = filterToJustDatasetAndDataKey(dataToAdd);
-				expectedMangled.shift();
-				queue.getFullQueue(function(err,queueitems) {
-					expect(err).to.equal(SyncIt_Constant.Error.OK);
-					var resultMangled = filterToJustDatasetAndDataKey(queueitems);
-					expect(resultMangled).to.eql(expectedMangled);
-					done();
-				});
-			});
-		};
-		prepareForTest(check);
-	});
-	
-	it('can list queueitems in dataset and datakey (after advance)',function(done) {
-		var check = function(queue) {
-			queue.advance(function(err) {
-				expect(err).to.equal(SyncIt_Constant.Error.OK);
-				var expectedMangled = filterToJustDatasetAndDataKey(dataToAdd);
-				expectedMangled.shift();
-				expectedMangled = expectedMangled.filter(function(itm) {
-					if (itm.s != 'car') {
-						return false;
-					}
-					return true;
-				});
-				queue.getItemsForDatasetAndDatakey('car', 'bmw', function(err,queueitems) {
-					expectedMangled = expectedMangled.filter(function(itm) {
-						if ((itm.s == 'car') && (itm.k == 'bmw')) {
-							return true;
-						}
-						return false;
-					});
-					var resultMangled = filterToJustDatasetAndDataKey(queueitems);
-					expect(resultMangled).to.eql(expectedMangled);
-					done();
-				});
-			});
-		};
-		prepareForTest(check);
-	});
-
-	it('can return unfiltered queues, advance, push and get queues again',function(done) {
-		
-		var check = function(queue) {
-			
-			queue.getFullQueue(function(err,queueitems) {
-				
-				var expected = filterToJustDatasetAndDataKey(dataToAdd);
-				var unfiltered = filterToJustDatasetAndDataKey(queueitems);
-				
-				expect(unfiltered).to.eql(expected);
-				
-				queue.advance(function() {
-					queue.getFullQueue(function(err,newQueueitems) {
-						expected.shift();
-						var unfiltered = filterToJustDatasetAndDataKey(newQueueitems);
-						expect(unfiltered).to.eql(expected);
-						queue.push({s:'car',k:'lotus',i:9},function() {
-							expected.push({s:'car',k:'lotus'});
-							queue.getFullQueue(function(err,newNewQueueitems) {
-								expect(
-									filterToJustDatasetAndDataKey(newNewQueueitems)
-								).to.eql(expected);
-								done();
-							});
-						});
-					});
-				});
-				
-			});
-			
-		};
-		
-		prepareForTest(check);
-		
-	});
-
 });
 
 

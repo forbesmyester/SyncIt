@@ -25,6 +25,19 @@
 var Lsq = function(namespace,localStorage) {
 	this._ns = namespace;
     this._ls = localStorage;
+	this._listening = false;
+};
+
+Lsq.prototype._serialize = function(ob) {
+	return JSON.stringify(ob);
+};
+
+Lsq.prototype._unserialize = function(ob,dataset,datakey,basedonversion) {
+	var r = JSON.parse(ob);
+	r.s = dataset;
+	r.k = datakey
+	r.b = basedonversion;
+	return r;
 };
 
 Lsq.prototype._getLocalStorageRanges = function() {
@@ -40,6 +53,7 @@ Lsq.prototype._getLocalStorageRanges = function() {
 			val = this._ls.key(i);
 			if (val.substr(0,this._ns.length+1) == this._ns + '.') {
 				val = val.split('.');
+				if (val.length != 4) { continue; }
 				val.shift();
 				key = val[0] + "." + val[1];
 				if (!r.hasOwnProperty(key)) {
@@ -62,24 +76,96 @@ Lsq.prototype._getLocalStorageRanges = function() {
 
 Lsq.prototype.remove = function(dataset,datakey,next) {
     this._ls.removeItem(this._ns + "." + dataset + "." + datakey);
+	next(SyncIt_Constant.Error.OK);
 };
 
 Lsq.prototype.push = function(queueitem,next) {
+	this._ls.setItem(
+		[this._ns,queueitem.s,queueitem.k,queueitem.b].join('.'),
+		this._serialize(queueitem)
+	);
+	next(SyncIt_Constant.Error.OK);
 };
 
 Lsq.prototype.advance = function(next) {
+	var k = this.getFirst(function(e,queueitem) {});
+	if (k === null) {
+		return next(SyncIt_Constant.Error.NO_DATA_FOUND,null);
+	}
+	this._ls.removeItem(k);
+	return next(SyncIt_Constant.Error.OK,this._ls.getItem(k));
 };
 
 Lsq.prototype.getFirst = function(next) {
+	
+	var i = 0,
+		l = 0,
+		k = '';
+	for (i=0, l=this._ls.length; i<l; i++) {
+		k = this._ls.key(i);
+		if (k.substr(0,this._ns.length+1) == this._ns+'.') {
+			next(SyncIt_Constant.Error.OK,this._ls.getItem(k));
+			return k;
+		}
+	}
+
+	next(SyncIt_Constant.Error.NO_DATA_FOUND,null);
+	return null;
 };
 
 Lsq.prototype.getDatasetNames = function(next) {
+	var r = [],
+		struct = this._getLocalStorageRanges(),
+		k = '',
+		tmp = '';
+	
+	for (k in struct) {
+		if (struct.hasOwnProperty(k)) {
+			tmp = k.split('.')[0];
+			if (r.indexOf(tmp) === -1) {
+				r.push(tmp);
+			}
+		}
+	}
+
+	next(SyncIt_Constant.Error.OK,r);
+	
 };
 
 Lsq.prototype.getItemsForDatasetAndDatakey = function(dataset,datakey,next) {
-};
 
-Lsq.prototype.getAll = function(dataset,datakey,next) {
+	var r = [],
+		struct = this._getLocalStorageRanges(),
+		k = '',
+		tmp = '',
+		l = 0,
+		i = 0;
+	
+	for (k in struct) {
+		if (struct.hasOwnProperty(k)) {
+			tmp = k.split('.');
+			if ((tmp[0] == dataset) && (tmp[1] == datakey)){
+				for (var i=struct[k][0]; i<=struct[k][1]; i++) {
+					r.push(
+						this._unserialize(
+							this._ls.getItem(
+								this._ns +
+								'.' +
+								tmp[0] + '.' +
+								tmp[1] + '.' +
+								i
+							),
+							tmp[0],
+							tmp[1],
+							i
+						)
+					);
+				}
+			}
+		}
+	}
+
+	next(SyncIt_Constant.Error.OK,r);
 };
 
 return Lsq;
