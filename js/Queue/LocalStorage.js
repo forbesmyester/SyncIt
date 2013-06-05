@@ -22,11 +22,35 @@
 
 "use strict";
 
-var Lsq = new function(namespace) {
-	this._namespace = namespace
+var Lsq = new function(namespace,localStorage) {
+	this._ns = namespace;
+    this._ls = localStorage;
+
+};
+
+Lsq.prototype._getLocalStorageKeys = function() {
+    
+    if (this._ls.getKeys) {
+        return this._ls.getKeys();
+    }
+
+    return (function() {
+        var r = [],
+            i = 0,
+            val = false;
+
+        while (val = this.ls.get(i++)) {
+            r.push(val);
+        }
+
+        return r;
+
+    }.bind(this))();
+
 };
 
 Lsq.prototype.remove = function(dataset,datakey,next) {
+    this._ls.removeItem(this._ns + dataset + datakey);
 };
 
 Lsq.prototype.push = function(queueitem,next) {
