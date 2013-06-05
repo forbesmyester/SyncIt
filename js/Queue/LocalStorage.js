@@ -10,7 +10,7 @@
 			factory
 		);
 	} else {
-		root.SyncIt_LocalStorageQueue = factory(
+		root.SyncIt_Queue_LocalStorage = factory(
 			root.SyncIt_Constant
 		);
 	}
@@ -22,25 +22,36 @@
 
 "use strict";
 
-var Lsq = new function(namespace,localStorage) {
+var Lsq = function(namespace,localStorage) {
 	this._ns = namespace;
     this._ls = localStorage;
-
 };
 
-Lsq.prototype._getLocalStorageKeys = function() {
+Lsq.prototype._getLocalStorageRanges = function() {
     
-    if (this._ls.getKeys) {
-        return this._ls.getKeys();
-    }
-
     return (function() {
-        var r = [],
+        var r = {},
             i = 0,
-            val = false;
+			l = 0,
+            val = false,
+			key = '';
 
-        while (val = this.ls.get(i++)) {
-            r.push(val);
+		for (i=0, l=this._ls.length; i<l ;i++) {
+			val = this._ls.key(i);
+			if (val.substr(0,this._ns.length+1) == this._ns + '.') {
+				val = val.split('.');
+				val.shift();
+				key = val[0] + "." + val[1];
+				if (!r.hasOwnProperty(key)) {
+					r[key] = [null,null];
+				}
+				if ( (r[key][0] === null) || (r[key][0] > parseInt(val[2],10)) ) {
+					r[key][0] = parseInt(val[2],10);
+				}
+				if ( (r[key][1] === null) || (r[key][0] < parseInt(val[2],10)) ) {
+					r[key][1] = parseInt(val[2],10);
+				}
+			}
         }
 
         return r;
@@ -50,7 +61,7 @@ Lsq.prototype._getLocalStorageKeys = function() {
 };
 
 Lsq.prototype.remove = function(dataset,datakey,next) {
-    this._ls.removeItem(this._ns + dataset + datakey);
+    this._ls.removeItem(this._ns + "." + dataset + "." + datakey);
 };
 
 Lsq.prototype.push = function(queueitem,next) {
