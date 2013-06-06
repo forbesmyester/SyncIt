@@ -130,8 +130,8 @@ His wife, Emily is using the same App and either through a push notification or 
 
 User  | Dataset | Datakey | Store                                  | Queueitem
 ------|---------|---------|----------------------------------------|-----------
-James | Cars    | Subaru  | `{ color: 'blue' }` (v1)               |
-Emily | Cars    | Subaru  | `{ color: 'blue' }` (v1)               |
+James | Cars    | Subaru  | { color: 'blue' } (v1)               |
+Emily | Cars    | Subaru  | { color: 'blue' } (v1)               |
 
 This will add the change to the local store, assuming that there are no local changes for the same data, which we will get to later.
 
@@ -145,8 +145,8 @@ Emily does not like the idea of thier car being a Subaru and makes the following
 
 User  | Dataset | Datakey | Store                                  | Queueitem
 ------|---------|---------|----------------------------------------|-----------
-James | Cars    | Subaru  | `{ color: 'blue' }` (v1)                 |
-Emily | Cars    | Subaru  | `{ color: 'blue', style: 'a bit too boy racer for Emily' }` (v2)
+James | Cars    | Subaru  | { color: 'blue' } (v1)                 |
+Emily | Cars    | Subaru  | { color: 'blue', style: 'a bit too boy racer for Emily' } (v2)
 
 Because she is still in the park and has good mobile coverage that change is uploaded to the server and then applied immediately using `emilySyncIt.getFirst()` and `emilySyncIt.apply()` seen earlier for James.
 
@@ -163,8 +163,8 @@ James is again out of mobile coverage and is completely unaware of Emily's chang
 
 User  | Dataset | Datakey | Store                                  | Queueitem                                                     | Reads
 ------|---------|---------|----------------------------------------|---------------------------------------------------------------|------------
-James | Cars    | Subaru  | `{ color: 'blue' }` (v1)                 | `{ $set: { pluspoints: ['has 4WD'] }, $inc { votes: 1 } }` (v2) | `{ color: 'blue', pluspoints: 'has 4WD', votes: 1 }`
-Emily | Cars    | Subaru  | `{ color: 'blue', style: 'a bit too boy racer for Emily' }` (v2) | | `{ color: 'blue', style: 'a bit too boy racer for Emily' }`
+James | Cars    | Subaru  | { color: 'blue' } (v1)                 | { $set: { pluspoints: ['has 4WD'] }, $inc { votes: 1 } } (v2) | { color: 'blue', pluspoints: 'has 4WD', votes: 1 }
+Emily | Cars    | Subaru  | { color: 'blue', style: 'a bit too boy racer for Emily' } (v2) | | { color: 'blue', style: 'a bit too boy racer for Emily' }
 
 Now both users have made changes to the same data structure, but Emily's change has already been sent to the server.
 
@@ -235,8 +235,8 @@ The reason for conflict resolution being a callback function I feel it would be 
 
 User  | Dataset | Datakey | Store                                  | Queueitem                                                     | Reads
 ------|---------|---------|----------------------------------------|---------------------------------------------------------------|------------
-James | Cars    | Subaru  | `{ color: 'blue', style: 'a bit too boy racer for Emily' }` (v2) | `{ $set: { pluspoints: ['has 4WD'] }, $inc { votes: 1 } }` (v3) | `{ color: 'blue', style: 'a bit too boy racer for Emily', pluspoints: 'has 4WD', votes: 1 }`
-Emily | Cars    | Subaru  | `{ color: 'blue', style: 'a bit too boy racer for Emily' }` (v2) | | `{ color: 'blue', style: 'a bit too boy racer for Emily' }`
+James | Cars    | Subaru  | { color: 'blue', style: 'a bit too boy racer for Emily' } (v2) | { $set: { pluspoints: ['has 4WD'] }, $inc { votes: 1 } } (v3) | { color: 'blue', style: 'a bit too boy racer for Emily', pluspoints: 'has 4WD', votes: 1 }
+Emily | Cars    | Subaru  | { color: 'blue', style: 'a bit too boy racer for Emily' } (v2) | | { color: 'blue', style: 'a bit too boy racer for Emily' }
 
 At this point Emily's change is stored in the Store with a locally Queueitem in the Queue for James adding the fact it is four wheel drive and with James's vote. If James still has mobile coverate after downloading the change that change can be immediately sent to the server and then applied locally.
 
@@ -244,14 +244,20 @@ At this point Emily's change is stored in the Store with a locally Queueitem in 
 
 I need to do the following:
 
- * localStorage Persist for SyncIt, which will finally make this project useful for something!
- * Create a real SyncItServer based on SyncItTestServer, it should be pretty easy, because SyncItTestServer is pretty abstracted.
- * I want to make ServerPersist for both MongoDB and DynamoDB.
- * Add SyncIt.purge() methods to free space from SyncIt. This should be sufficient to make sure that if SyncIt runs out of space locally (in LocalStorage for example) space can be freed to enable it to work again.
- * Use this in a real project with a Browser and mobile (Phonegap based) clients.
- * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
- * Add a license to all files (It'll be MIT/BSD and GPL)
- * Auto Build of GitHub pages
+ * Public Facing
+    * Add a license to all files (It'll be MIT/BSD)
+    * Auto Build of GitHub pages
+    * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
+    * Make demo work in FireFox and IE
+ * Client SyncIt
+    * localStorage for SyncIt (Store)
+    * Add Async wrappers for Store & Persist
+ * Server SyncIt
+    * Create a real SyncItServer based on SyncItTestServer, it should be pretty easy, because SyncItTestServer is pretty abstracted.
+    * I want to make ServerPersist for both MongoDB and DynamoDB.
+ * Next Steps
+    * Use this in a real project with a Browser and mobile (Phonegap based) clients.
+    * Add SyncIt.purge() methods to free space from SyncIt.
 
 ## Dictionary
 
