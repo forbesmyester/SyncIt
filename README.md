@@ -24,7 +24,7 @@ As important as what it does, is what it does not do. I have tried to make SyncI
 
 ## How does it work?
 
-SyncIt has two areas where it stores data, one is called the [Store](#store) and the other called the [Queue](#queue). The Store stores everything which has been sent to or has come from the [Server](#server) and therefore is guarenteed not to be rolled back. The Queue on the other had will store data which at that moment is time, is only local.
+SyncIt has two areas where it stores data, one is called the [Store](#store) and the other is called the [Queue](#queue). The Store stores everything which has been sent to, or has come from the [Server](#server) and therefore is guarenteed not to be rolled back. The Queue on the other had will store data which at that moment in time, is only local.
 
 ![SyncIt: Overall Structure](bin/README/img/overall-diagram.png)
 
@@ -51,7 +51,9 @@ The App should download (or be pushed) Queueitem from the Server and then [Feed]
 
 ![Feeding with no conflicts: Writes to the store AFTER checking the Jrec version and that the Queue is empty (for the same Dataset / Datakey).](bin/README/img/no-conflict-feed.png)
 
-The App can access outstanding Queueitem for the purpose of uploading them to the server, so once all Queueitem on the Server have been Fed the App can try and push the outstanding local Queueitem to the Server. At this point the Queueitem will either be rejected (because someone/something else has pushed in the meantime) or accepted. If it is accepted there is a single API call to [Apply](#apply) the Queueitem in the Queue to the Store. Once all Queueitem have been applied the App is fully synchronized with the server and the Queue is empty.
+The App also can access outstanding Queueitem from the local Queue for the purpose of uploading them to the Server. Should all uploads be successfully applied your App is then fully synchronized with the Server. If however you encounter an error uploading it is probable that someone else has ammended that Queueitem since your last `SyncIt.feed()`. When uploading errors occur your App should download the Queueitem created by other User/Devices and use `SyncIt.feed()` to re-merge before attempting to upload the Queueitem again.
+
+At this point the Queueitem will either be rejected (because someone/something else has pushed in the meantime) or accepted. If it is accepted there is a single API call to [Apply](#apply) the Queueitem in the Queue to the Store. Once all Queueitem have been applied the App is fully synchronized with the server and the Queue is empty.
 
 ## Is there a demo
 
@@ -60,7 +62,6 @@ There sure is. It's located [here](http://forbesmyester.github.io/SyncIt/demo/in
 ## Have you got API Documentation?
 
 There is a (reasonably) complete set of [API Docs](http://forbesmyester.github.io/SyncIt/docs/SyncIt.js.html).
-
 ## Lets take a closer look at an example how this may work in real life.
 
 ### James changes data while offline
