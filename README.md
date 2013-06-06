@@ -24,6 +24,16 @@ As important as what it does, is what it does not do. I have tried to make SyncI
 
 ## How does it work?
 
+Key Principles
+Everything is versioned
+There is one central version of truth - The Server
+Clients must know what is on the server and be able to create local patches
+Local data not on server must be seperated from data on the server
+Local users must read the result of the stored data and patches
+Must be able to get patches to send to the server
+Must be able to load data from server to client
+Merges happen locally
+
 SyncIt has two areas where it stores data, one is called the [Store](#store) and the other is called the [Queue](#queue). The Store stores everything which has been sent to, or has come from the [Server](#server) and therefore is guarenteed not to be rolled back. The Queue on the other had will store data which at that moment in time, is only local.
 
 ![SyncIt: Overall Structure](bin/README/img/overall-diagram.png)
