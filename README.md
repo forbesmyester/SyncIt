@@ -243,14 +243,20 @@ At this point Emily's change is stored in the Store with a locally Queueitem in 
 
 I need to do the following:
 
- * localStorage Persist for SyncIt, which will finally make this project useful for something!
- * Create a real SyncItServer based on SyncItTestServer, it should be pretty easy, because SyncItTestServer is pretty abstracted.
- * I want to make ServerPersist for both MongoDB and DynamoDB.
- * Add SyncIt.purge() methods to free space from SyncIt. This should be sufficient to make sure that if SyncIt runs out of space locally (in LocalStorage for example) space can be freed to enable it to work again.
- * Use this in a real project with a Browser and mobile (Phonegap based) clients.
- * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
- * Add a license to all files (It'll be MIT/BSD and GPL)
- * Auto Build of GitHub pages
+ * Public Facing
+    * Add a license to all files (It'll be MIT/BSD)
+    * Auto Build of GitHub pages
+    * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
+    * Make demo work in FireFox and IE
+ * Client SyncIt
+    * localStorage for SyncIt (Store)
+    * Add Async wrappers for Store & Persist
+ * Server SyncIt
+    * Create a real SyncItServer based on SyncItTestServer, it should be pretty easy, because SyncItTestServer is pretty abstracted.
+    * I want to make ServerPersist for both MongoDB and DynamoDB.
+ * Next Steps
+    * Use this in a real project with a Browser and mobile (Phonegap based) clients.
+    * Add SyncIt.purge() methods to free space from SyncIt.
 
 ## Dictionary
 
