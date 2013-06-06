@@ -1,19 +1,59 @@
 @import "fluidity/normalize"
 @import "fluidity/type"
-@import "fluidity/semantic-grid"
+//@import "fluidity/semantic-grid"
 @import "fluidity/css3"
 
 @import "fluidity/gradients"
 @import "fluidity/vendorize"
 
-.box-cell 
-	border-left: solid 4px grey
-	position: relative
-	> div
-		height: 200px
-	> div#lhs-log, div#rhs-log
-		height: 120px
+.main-tab-holder
+	header
+		background-color: lightgrey
+		padding-bottom: 1em
+	h2, h3
+		background-color: grey
+		color: white
+		margin: 0
+		padding: 0.2em
+	nav.tabs
+		margin-top: 0
+		dl
+			background-color: lightgrey
+			dd
+				background-color: white
 
+#client-tab-holder .tab-bodies li
+	li
+		height: 120px
+	div.clientarea:first-child
+		border-top: 1px solid black
+	div.clientarea:last-child
+		border-bottom: 1px solid black
+	div.clientarea
+		position: relative
+		margin: 0 4em
+		border: 1px solid black
+		border-top-color: grey
+		border-bottom-color: grey
+		div.tab-holder
+			padding: 0
+		div.dgrid
+			height: 200px
+
+#server-tab-holder
+	padding: 0 0 20px 0
+	ul
+		background-color: white
+	div.server-view, div.server-log
+		div#server-log
+			height: 200px
+		div#server-view
+			height: 200px
+		background-color: black
+		color: gray
+		div.dgrid-header-row
+			background-color: black
+		
 #consLog
 	height: 120px
 	border-top: solid 4px grey
@@ -51,8 +91,8 @@ a.apihelp {
 	top: 0
 	right: 0
 	background-color: #808080
-	border-bottom-left-radius: 10px
-	padding: 2px 7px 5px 10px
+	border-radius: 5px
+	padding: 0.2em
 	color: white
 	font-weight: bold
 	text-decoration: none
@@ -63,13 +103,6 @@ a.apihelp {
 	.api
 		grid-space: 30%
 		clearfix();
-	.server-view
-		grid-space: 40%
-		background-color: black
-		color: gray
-		clearfix();
-		div.dgrid-header-row
-			background-color: black
 .client
 	grid()
 	.queue, .store
@@ -100,14 +133,18 @@ a.apihelp {
 		background-color: #DDD
 		margin: 0.2em 0
 		padding: 0.3em 0
-		grid()
 		min-width: 200px
 		dt
-			grid-space: 30%
+			width: 30%
+			display: inline-block
+			margin: 0
 			padding-left: 0.3em
 		dd
-			grid-space: 70%
-			padding-left: 0.3em
+			width: 60%
+			display: inline-block
+			vendorize(margin-start, 0)
+			margin: 0
+			padding-left: 0
 		
 		
 div.popup-content-template

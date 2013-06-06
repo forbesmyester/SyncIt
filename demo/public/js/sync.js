@@ -3,13 +3,19 @@ require(
 ],
 function(xhr, SyncItLib, SyncIt_Constant, SyncIt_Persist_Memory, ConsLog, TabControl, SyncItStore, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync, ServerSimulator, viewExtraQueue, viewExtraStore, viewExtraServer, syncItLog, htmlEntities, domConstruct, domClass, domQuery, domAttr, Grid, Memory, Observable, OnDemandGrid, Deferred, promiseAll, dom, on, domForm, dijitDialog) {
 
-dojo.byId('rhs-tab-holder').innerHTML = dojo.byId('lhs-tab-holder').innerHTML.replace(/lhs/g,'rhs');
+dojo.byId('clienttwo-holder').innerHTML = dojo.byId('clientone-holder').innerHTML.replace(/lhs/g,'rhs');
 
 var lhsTabControl = new TabControl(dom.byId('lhs-tab-holder'),'lhs-tab',{});
 lhsTabControl.startup();
 
 var rhsTabControl = new TabControl(dom.byId('rhs-tab-holder'),'rhs-tab',{});
 rhsTabControl.startup();
+
+var serverTabControl = new TabControl(dom.byId('server-tab-holder'),'server-tab',{});
+serverTabControl.startup();
+
+var clientTabControl = new TabControl(dom.byId('client-tab-holder'),'client-tab',{});
+clientTabControl.startup();
 
 var dialogShowText = function(title,text,width) {
 	var myDialog = new dijitDialog({
@@ -29,7 +35,7 @@ var dialogShowText = function(title,text,width) {
 	});
 }
 
-var consLog = new ConsLog('consLog');
+var serverLog = new ConsLog('server-log');
 
 var showHttpError = function(response) {
 	
@@ -61,16 +67,16 @@ var getErrorDisplayer = function(method) {
 	}
 }
 
-dialogShowText(
-	"Isn't this screen rather complicated?",
-	(function() {
-	var node = dojo.byId("help-demo-overview");
-	return (node === null) ?
-		'Cannot find content' : 
-		node.innerHTML;
-	})(),
-	'900px'
-);
+//dialogShowText(
+//	"Isn't this screen rather complicated?",
+//	(function() {
+//	var node = dojo.byId("help-demo-overview");
+//	return (node === null) ?
+//		'Cannot find content' : 
+//		node.innerHTML;
+//	})(),
+//	'900px'
+//);
 
 var conflictResolutionFunc = function(dataset ,datakey ,jrec ,localQueueItems, serverQueueItems ,resolved) {
 		
@@ -435,6 +441,7 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 	}, divId); // attach to a DOM id
 	
 	grid.startup();
+	return grid;
 };
 
 (function() { // Setup Grids etc
@@ -444,18 +451,28 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 	
 	for (var i=0; i<sides.length; i++) {
 		
-		showDisplayGridForSyncIt(syncIts[sides[i]]['syncIt'],sides[i]+'-jrec');
+		var vgrid = showDisplayGridForSyncIt(syncIts[sides[i]]['syncIt'],sides[i]+'-jrec');
 		
-		viewExtraQueue(
+		var qgrid = viewExtraQueue(
 			sides[i]+'-queue',
 			syncIts[sides[i]]['syncIt'],
 			syncIts[sides[i]]['queue']
 		);
-		viewExtraStore(
+		
+		var sgrid = viewExtraStore(
 			sides[i]+'-store',
 			syncIts[sides[i]]['syncIt'],
 			syncIts[sides[i]]['store']
 		);
+
+		(function(vgrid,sgrid,qgrid) {
+			on(clientTabControl,'tab-change',function() {
+				vgrid.resize();
+				qgrid.resize();
+				sgrid.resize();
+			});
+		})(vgrid,sgrid,qgrid)
+		
 		syncItLog(sides[i]+'-log',syncIts[sides[i]]['syncIt']);
 	}
 	
@@ -512,9 +529,12 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 	
 	var syncItTestServer = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
 	
-	viewExtraServer('server-view',syncItTestServer);
+	serverGrid = viewExtraServer('server-view',syncItTestServer);
+	on(serverTabControl,'tab-change',function() {
+		serverGrid.resize();
+	});
 	
-	var serverSimulator = new ServerSimulator(consLog);
+	var serverSimulator = new ServerSimulator(serverLog);
 	
 	(function() {
 		var statusMsgToHttpStatus = {

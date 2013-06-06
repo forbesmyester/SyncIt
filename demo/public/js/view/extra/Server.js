@@ -6,7 +6,7 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 		
 		var dojoStore = new Observable(new Memory({data:[]}));
 		
-		viewExtraCommon.drawDisplay(
+		var grid = viewExtraCommon.drawDisplay(
 			storeElementId,
 			[
 				{label: 'Dataset', field: 's', sortable: false},
@@ -38,6 +38,8 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 					jrec:jrec
 				});
 		});
+
+		return grid;
 		
 	};
 

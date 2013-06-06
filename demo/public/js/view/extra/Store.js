@@ -44,7 +44,7 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 
 		regenerateStore(dojoStore,syncItStore);
 		
-		viewExtraCommon.drawDisplay(
+		var grid = viewExtraCommon.drawDisplay(
 			storeElementId,
 			[
 				{label: 'Dataset', field: 's', sortable: false},
@@ -78,6 +78,8 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 		syncIt.listenForAddedToQueue(function(dataset,datakey,patch) {
 			regenerateStore(dojoStore,syncItStore);
 		});
+
+		return grid;
 		
 	};
 

@@ -1,6 +1,6 @@
 define(
-["dojo/_base/declare","dgrid/extensions/ColumnResizer","dgrid/Grid","dgrid/OnDemandGrid"],
-function(declare,ColumnResizer,Grid,OnDemandGrid) {
+["dojo/_base/declare","dgrid/extensions/ColumnResizer","dgrid/Grid","dgrid/OnDemandGrid","dgrid/extensions/DijitRegistry"],
+function(declare,ColumnResizer,Grid,OnDemandGrid,DijitRegistry) {
 
 	var emptyDojoStore = function(dojoStore) {
 		var i = 0,
@@ -17,7 +17,7 @@ function(declare,ColumnResizer,Grid,OnDemandGrid) {
 	
 	var drawDisplay = function(elementId,columns,dojoStore) {
 		
-		var grid = new (declare([OnDemandGrid, ColumnResizer]))({
+		var grid = new (declare([OnDemandGrid, ColumnResizer,DijitRegistry]))({
 			columns: columns,
 			store: dojoStore,
 			loadingMessage: 'loading...',
@@ -30,6 +30,8 @@ function(declare,ColumnResizer,Grid,OnDemandGrid) {
 		);
 		
 		grid.startup();
+
+		return grid;
 		
 	};
 	

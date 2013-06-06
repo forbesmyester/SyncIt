@@ -28,7 +28,7 @@ return function(queueElementId,syncIt,syncItQueue) {
 
 	regenerateQueue(dojoStore,syncItQueue);
 
-	viewExtraCommon.drawDisplay(
+	var grid = viewExtraCommon.drawDisplay(
 		queueElementId,
 		[
 			{label: 'Dataset', field: 's', sortable: false},
@@ -59,6 +59,8 @@ return function(queueElementId,syncIt,syncItQueue) {
 	syncIt.listenForAddedToQueue(function(dataset,datakey,patch) {
 		regenerateQueue(dojoStore,syncItQueue);
 	});
+
+	return grid;
 	
 }
 

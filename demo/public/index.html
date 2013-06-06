@@ -55,140 +55,155 @@
 		<header>
 			<h1>SyncIt Demo</h1>
 		</header>
-		
-		<div id="io" class="box-row">
-			<div class="api box-cell tab-holder" id="lhs-tab-holder">
-				<a href="apihelp.html" class="apihelp">?</a>
-				<nav class="tabs">
-					<dl>
-						<dd class="active tab download"><a href="#lhs-tab=download">
-							Download</a></dd>
-						<dd class="tab upload"><a href="#lhs-tab=upload">Upload</a></dd>
-						<dd class="tab apply"><a href="#lhs-tab=apply">Apply</a></dd>
-						<dd class="tab set"><a href="#lhs-tab=set">Set</a></dd>
-						<dd class="tab update"><a href="#lhs-tab=update">Update</a></dd>
-						<dd class="tab remove"><a href="#lhs-tab=remove">Remove</a></dd>
-					</dl>
-				</nav>
-				<ul class="tab-bodies">
-					<li class="download tab-body active" style="position:relative">
-						<form class="form-get-datset-names">
-							Press to <input type="submit" value="get Dataset names" />
-						</form>
-						<form class="form-updates-in-dataset hidden">
-							Check for updates in dataset
-							<select name="dataset" class="updates-in-dataset">
-							</select>
-							from position
-							<input type="text" name="from" value=""/>
-							then <input type="submit" value="downloading it and feed them into SyncIt"/>
-						</form>
-					</li>
-					<li class="tab-body upload">
-						<form class="upload-dataset-datakey">
-							upload one queued item
-							<input type="submit" value="to the server"/>
-						</form>
-					</li>
-					<li class="tab-body apply">
-						<form class="form-apply">
-							I would like to 
-							<input type="submit" value="apply" class="apply-btn"/>
-							the oldest change in my Queue
-						</form>
-					</li>
-					<li class="tab-body set">
-						<form class="form-set">
-							<label>
-								The dataset 
-								<input type="text" value="xxx" name="dataset"/>
-							</label>
-							<label>
-								and datakey
-								<input type="text" value="yyy" name="datakey"/>
-							</label>
-							with the JSON encoded string:
-							<input type="text"  name="json" value='{"aaa":"bbb"}'/>
-							should be 
-							<input type="submit" value="put into the Queue"/>.
-						</form>
-					</li>
-					<li class="tab-body update">
-						<form class="form-update">
-							<label>
-								The dataset 
-								<input type="text" value="xxx" name="dataset"/>
-							</label>
-							<label>
-								and datakey
-								<input type="text" value="yyy" name="datakey"/>
-							</label>
-							with this update in a JSON encoded string:
-							<input type="text"  name="json" value='{"$set":{"path.to":"data"}}'/>
-							should be 
-							<input type="submit" value="put into the Queue"/>.
-						</form>
-					</li>
-					<li class="tab-body remove">
-						<form class="form-remove">
-							The data at 
-							<input type="text" name="dataset" value="xxx"/> / 
-							<input type="text" name="datakey" value="yyy"/>
-							should be <input type="submit" value="removed"/>
-						</form>
-					</li>
-				</ul>
-			</div>
-			<div class="server-view box-cell">
-				<div id="server-view"></div>
-			</div>
-			<div class="api box-cell tab-holder" id="rhs-tab-holder">
-			</div>
-		</div>
-		
-		<div class="client box-row">
-			<div class="jrec box-cell">
-				<h2>LHS: SyncIt.get([Dataset],[Datakey])</h2>
-				<div id="lhs-jrec"></div>
-			</div>
-			<div class="jrec box-cell">
-				<h2>RHS: SyncIt.get([Dataset],[Datakey])</h2>
-				<div id="rhs-jrec"></div>
-			</div>
-		</div>
-		
-		<div class="client box-row">
-			<div class="queue box-cell">
-				<h2>LHS: Queue</h2>
-				<div id="lhs-queue"></div>
-			</div>
-			<div class="store box-cell">
-				<h2>LHS: Store</h2>
-				<div id="lhs-store"></div>
-			</div>
-			<div class="queue box-cell">
-				<h2>RHS: Queue</h2>
-				<div id="rhs-queue"></div>
-			</div>
-			<div class="store box-cell">
-				<h2>RHS: Store</h2>
-				<div id="rhs-store"></div>
-			</div>
-		</div>
-		
-		<div class="client box-row">
-			<div class="log box-cell">
-				<h2>LHS: Log</h2>
-				<div id="lhs-log"></div>
-			</div>
-			<div class="log box-cell">
-				<h2>RHS: Log</h2>
-				<div id="rhs-log"></div>
-			</div>
+
+		<div id="server-tab-holder" class="tab-holder main-tab-holder">
+			<header>
+				<h2>Server</h2>
+			</header>
+			<nav class="tabs">
+				<dl>
+					<dd class="active tab serverdata"><a href="#server-tab=serverdata">
+						Server Data</a></dd>
+					<dd class="tab serverlog"><a href="#server-tab=serverlog">Server Log</a></dd>
+				</dl>
+			</nav>
+			<ul class="tab-bodies">
+				<li class="serverlog tab-body">
+					<div class="server-log">
+						<div id="server-log"></div>
+					</div>
+				</li>
+				<li class="serverdata tab-body active">
+					<div class="server-view">
+						<div id="server-view"></div>
+					</div>
+				</li>
+			</ul>
 		</div>
 
-		<div id="consLog">
-			<h2>Simulated AJAX Request Log</h2>
+		<div id="client-tab-holder" class="tab-holder main-tab-holder">
+			<header>
+				<h2>Clients</h2>
+			</header>
+			<nav class="tabs">
+				<dl>
+					<dd class="active tab clientone">
+						<a href="#client-tab=clientone">Client One</a>
+					</dd>
+					<dd class="tab clienttwo">
+						<a href="#client-tab=clienttwo">Client Two</a>
+					</dd>
+				</dl>
+			</nav>
+			<ul class="tab-bodies">
+				<li id="clientone-holder" class="clientone tab-body">
+					<div class="clientarea api">
+						<header>
+							<h3>API</h3>
+						</header>
+						<div class="api tab-holder" id="lhs-tab-holder">
+							<a href="apihelp.html" class="apihelp">?</a>
+							<nav class="tabs">
+								<dl>
+									<dd class="active tab download"><a href="#lhs-tab=download">
+										Download</a></dd>
+									<dd class="tab upload"><a href="#lhs-tab=upload">Upload</a></dd>
+									<dd class="tab apply"><a href="#lhs-tab=apply">Apply</a></dd>
+									<dd class="tab set"><a href="#lhs-tab=set">Set</a></dd>
+									<dd class="tab update"><a href="#lhs-tab=update">Update</a></dd>
+									<dd class="tab remove"><a href="#lhs-tab=remove">Remove</a></dd>
+								</dl>
+							</nav>
+							<ul class="tab-bodies">
+								<li class="download tab-body active" style="position:relative">
+									<form class="form-get-datset-names">
+										Press to <input type="submit" value="get Dataset names" />
+									</form>
+									<form class="form-updates-in-dataset hidden">
+										Check for updates in dataset
+										<select name="dataset" class="updates-in-dataset">
+										</select>
+										from position
+										<input type="text" name="from" value=""/>
+										then <input type="submit" value="downloading it and feed them into SyncIt"/>
+									</form>
+								</li>
+								<li class="tab-body upload">
+									<form class="upload-dataset-datakey">
+										upload one queued item
+										<input type="submit" value="to the server"/>
+									</form>
+								</li>
+								<li class="tab-body apply">
+									<form class="form-apply">
+										I would like to 
+										<input type="submit" value="apply" class="apply-btn"/>
+										the oldest change in my Queue
+									</form>
+								</li>
+								<li class="tab-body set">
+									<form class="form-set">
+										<label>
+											The dataset 
+											<input type="text" value="xxx" name="dataset"/>
+										</label>
+										<label>
+											and datakey
+											<input type="text" value="yyy" name="datakey"/>
+										</label>
+										with the JSON encoded string:
+										<input type="text"  name="json" value='{"aaa":"bbb"}'/>
+										should be 
+										<input type="submit" value="put into the Queue"/>.
+									</form>
+								</li>
+								<li class="tab-body update">
+									<form class="form-update">
+										<label>
+											The dataset 
+											<input type="text" value="xxx" name="dataset"/>
+										</label>
+										<label>
+											and datakey
+											<input type="text" value="yyy" name="datakey"/>
+										</label>
+										with this update in a JSON encoded string:
+										<input type="text"  name="json" value='{"$set":{"path.to":"data"}}'/>
+										should be 
+										<input type="submit" value="put into the Queue"/>.
+									</form>
+								</li>
+								<li class="tab-body remove">
+									<form class="form-remove">
+										The data at 
+										<input type="text" name="dataset" value="xxx"/> / 
+										<input type="text" name="datakey" value="yyy"/>
+										should be <input type="submit" value="removed"/>
+									</form>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="clientarea">
+						<h3>SyncIt View</h3>
+						<div class="dgrid" id="lhs-jrec"></div>
+					</div>
+					<div class="clientarea">
+						<h3>Queue</h3>
+						<div class="dgrid" id="lhs-queue"></div>
+					</div>
+					<div class="clientarea">
+						<h3>Store</h3>
+						<div class="dgrid" id="lhs-store"></div>
+					</div>
+					<div class="clientarea">
+						<h3>Log</h3>
+						<div class="dgrid" id="lhs-log"></div>
+					</div>
+				</li>
+				<li id="clienttwo-holder" class="clienttwo tab-body active">
+				</li>
+			</ul>
 		</div>
 		
 		<div class="popup-content-template" id="conflict-resolution-dialog">
