@@ -1,3 +1,21 @@
+<style type="text/css">
+	table.store-dataset {
+		float: left;
+		margin: 3em;
+	}
+	.container:before,
+	.container:after {
+		content:"";
+		display:table;
+	}
+	.container:after {
+		clear:both;
+	}
+	.container {
+		zoom:1;
+	}
+</style>
+
 # SyncIt
 
 ## What is it for? 
@@ -22,48 +40,205 @@ As important as what it does, is what it does not do. I have tried to make SyncI
  * SyncIt will not manage your connection to the server or tell you when you are connected.
  * Subordinate your code to SyncIt. You can put data into it and you can get data out of it, but it will happen when you want it to happen.
 
+## What are the principes that SyncIt is built upon?
+
+SyncIt takes it's main ideas from Version Control software, but specifically [Subversion](http://subversion.apache.org). I love distributed tools like [git](http://git-scm.com/) and [Mercurial](http://mercurial.selenic.com/) but when developing software I usually have a central server.
+
+### Everything is versioned
+
+Versioning in essential to synchronization, withing a version number or hash it is impossible to check if anything has changed.
+
+### There is one central version of truth - The Server
+
+A central server is required for synchronization to occur and that server will only hold information which is to be shared with other users/devices.
+
+### Clients must know what is on the server and be able to create local patches
+
+Clients must be able to download information from the server. This server information can then have local patches applied to it.
+
+### Local data not on server must be seperated from data on the server
+
+Local changes must be kept seperate from data that is on the server, this enables easy identification of what needs to be uploaded to the server and will allow rollback and merges of those local changes when errors occur.
+
+### Local users must read the result of the stored data and patches
+
+Users will always have the expectation that their changes will be successfully applied to the server, so to the user their locally modified data is __the__ so the API must support reading the result of taking the known-to-be-on-the-server data and applying local patches to it.
+
+### Must be possible to send patches to send to the server
+
+We must be able to send our patches to the server, which will the either accept or reject those changes, primarily based on version number.
+
+### Merges happen locally
+
+If patches are rejected, the client should be able to download the new patches from the server and merge they with local patches, at which point it can then upload those patches to the server.
+
 ## How does it work?
 
-Key Principles
-Everything is versioned
-There is one central version of truth - The Server
-Clients must know what is on the server and be able to create local patches
-Local data not on server must be seperated from data on the server
-Local users must read the result of the stored data and patches
-Must be able to get patches to send to the server
-Must be able to load data from server to client
-Merges happen locally
-
-SyncIt has two areas where it stores data, one is called the [Store](#store) and the other is called the [Queue](#queue). The Store stores everything which has been sent to, or has come from the [Server](#server) and therefore is guarenteed not to be rolled back. The Queue on the other had will store data which at that moment in time, is only local.
+SyncIt has two areas where it stores data, one is called the [Store](#store) and the other is called the [Queue](#queue).
 
 ![SyncIt: Overall Structure](bin/README/img/overall-diagram.png)
 
-Both these areas store data against a [Dataset](#dataset) and a [Datakey](#datakey). A Dataset is somewhat like a table in [MySql](http://www.mysql.com/) or a collection in [MongoDB](http://www.mongodb.org/) and the Datakey is like a primary key, so you could have a data structure like the folling:
+### The Store
 
-Dataset | Datakey | Data
---------|---------|----
-Cars    | Subaru  | { "Color": "Red", "Owner": "Alice" }
-Cars    | Ford    | { "Color": "Red", "Owner": "Simon" }
-Cars    | Honda   | { "Color": "Red", "Owner": "Alice" }
-Person  | Simon   | { "Role: "Programmer", "Age": 37 }
-Person  | Alice   | { "Role: "Lawyer", "Age": 32 }
+Data within the Store is organized into a Datasets and a Datakeys. A Dataset is somewhat like a table in [MySql](http://www.mysql.com/) or a collection in [MongoDB](http://www.mongodb.org/) and the Datakey is like a primary key, so you could have a data structure like the folling:
 
-The data that is in the Store are called [Jrec](#jrec) whereas the data in the Queue are called [Queueitem](#queueitem). When data is being read from SyncIt it will first read the Jrec from the Store and then read through every Queueitem for that Dataset and Datakey to give you the data which will be committed should no [Conflict](#conflict) occur. The table below illustrates an example reading process for Car/Subaru, the result is `{ "Seats": "Leather", "Likes": 1 }`.
+<div class="container">
+<table class="store-dataset">
+	<caption><em>Dataset: Cars</em></caption>
+	<tr><th>Datakey</th><th>Data</th><th>Version</th><th>Modifier</th></tr>
+	<tr><td>Ford</td><td>{ "Color": "Red", "Owner": "Simon" }</td><td>1</td><td>Jack</td></tr>
+	<tr><td>Subaru</td><td>{ "Color": "Blue", "Owner": "Alice" }</td><td>1</td><td>Jack</td></tr>
+	<tr><td>Honda</td><td>{ "Color": "White", "Owner": "Alice" }</td><td>2</td><td>Jane</td></tr>
+</table>
 
-Dataset | Datakey | Location | Version | [Operation](#operation) | [Update](#update) | Read Value
---------|---------|----------|---------|-----------|---------------------------------|---------------
-Cars    | Subaru  | Store    | 2       |           | { "Color": "Red" }              | { "Color": "Red" }
-Cars    | Subaru  | Queue    | 3       | Set       | { "Seats": "Leather" }          | { "Seats": "Leather" }
-Cars    | Subaru  | Queue    | 4       | Update    | { "$inc { "Likes": 1 } }        | { "Seats": "Leather", "Likes": 1 }
+<table class="store-dataset">
+	<caption><em>Dataset: People</em></caption>
+	<tr><th>Datakey</th><th>Data</th><th>Version</th><th>Modifier</th></tr>
+	<tr><td>Simon</td><td>{ "Role: "Programmer", "Age": 37 }</td><td>4</td><td>Jane</td></tr>
+	<tr><td>Alice</td><td>{ "Role: "Lawyer", "Age": 32 }</td><td>2</td><td>Joe</td></tr>
+</table>
+</div>
 
+SyncIt also store the Version and Modifier of data in the Store. Data in the Store is what is already on the Server and is therefore guaranteed not to be rolled back. The records within the Store are called [Jrec](#jrec).
 
-The App should download (or be pushed) Queueitem from the Server and then [Feed](#feed) them into SyncIt. Feeding is similar to a [Subversion](http://subversion.apache.org/) `update` or a [Mercurial](http://mercurial.selenic.com/) / [git](http://git-scm.com/) `pull` and `merge` process and as such includes the capabilty of handling conflict resolution.
+### The Queue
 
-![Feeding with no conflicts: Writes to the store AFTER checking the Jrec version and that the Queue is empty (for the same Dataset / Datakey).](bin/README/img/no-conflict-feed.png)
+The Queue stores local modifications to the data within the Store. When data is being read from SyncIt it will first read the Jrec from the Store and then read through every Queueitem for that same Dataset and Datakey to give you the result. The table below illustrates an example reading process for Car/Subaru.
 
-The App also can access outstanding Queueitem from the local Queue for the purpose of uploading them to the Server. Should all uploads be successfully applied your App is then fully synchronized with the Server. If however you encounter an error uploading it is probable that someone else has ammended that Queueitem since your last `SyncIt.feed()`. When uploading errors occur your App should download the Queueitem created by other User/Devices and use `SyncIt.feed()` to re-merge before attempting to upload the Queueitem again.
+![Reading data from SyncIt](bin/README/img/read-request.png)
 
-At this point the Queueitem will either be rejected (because someone/something else has pushed in the meantime) or accepted. If it is accepted there is a single API call to [Apply](#apply) the Queueitem in the Queue to the Store. Once all Queueitem have been applied the App is fully synchronized with the server and the Queue is empty.
+### The Process
+
+#### Your App downloads updates from the Server
+
+The App should download (or be pushed) an Array of Queueitem from the Server these may come from an AJAX request when reconnected or from something like Socket.io.
+
+#### Your App should Feed them into SyncIt
+
+Once your App has the Array of Queueitem from the Server it will need to Feed them into SyncIt. This is done with one API call:
+
+```javascript
+syncIt.feed(
+    [{Queueitem},{Queueitem},{Queueitem}], // The update from James
+    function( ... ) { ... }, // Conflict Resolution - We'll get to this soon
+    function(errorcode) { ... } // Callback when complete
+);
+```
+
+This API call will eventually fire the final callback, when it does and the Errorcode is zero then the data has been imported into the Store.
+
+#### Your App can work with the data locally
+
+Now SyncIt knows the state of the data on the Server it can work with it locally, this might be reading:
+
+```javascript
+syncIt.get(
+    'cars',
+    'Subaru',
+    function(err,result) {
+        if (err) {
+            // Something went wront... throw?
+        }
+        alert(
+            'The data stored in cars.subaru is: ' +
+            JSON.stringify(result)
+        );
+    }
+);
+```
+
+You may also choose to write data:
+
+```javascript
+syncIt.set(
+    'cars',
+    'Subaru',
+	{ "Optional Extras": ["Alloys"] },
+    function(err,result) {
+        if (err) {
+            // Something went wront... throw?
+        }
+        alert(
+            'The data stored in cars.subaru is: ' +
+            JSON.stringify(result)
+        );
+    }
+);
+```
+
+The set operation will and a Queueitem to the end of the Queue, TODO Diagram
+
+#### At some point you will want to put these local updates onto the server
+
+The App also can access outstanding local changes which need uploading to the Server. These are stored as Queueitem from the local Queue.
+
+Just like downloading from the Server, SyncIt does not attempt to communicate with the Server. SyncIt is only capable of giving you the first Queueitem which needs uploading.
+
+```javascript
+syncIt.getFirst(function(err,queueitem) {
+	if (err === SyncIt_Constant.Error.QUEUE_EMPTY) {
+		// There is nothing left to upload
+		return;
+	}
+    if (err !== SyncIt_Constant.Error.OK) {
+        // Something went wront...
+		// Perhaps another client/device has updated the same data
+    }
+	// You now have a Queueitem ready to upload
+	xhr(...)
+});
+```
+
+Note: This will not change the Queue in any way.
+
+Assuming the Queueitem is accepted by the Server, the first local Queueitem should then be applied to the local Store so that Dataset/Datakey matches the state on the Server in the Store and the Queueitem should then be removed.
+
+```javascript
+jamesSyncIt.apply( function(err, appliedQueueitem, storedrecord ) {
+	if (err) {
+        // Something went wront... throw?
+	}
+    alert(
+		'Queueitem ' +
+		JSON.stringify(appliedQueueitem) + ' ' +
+		'has been applied. The currently stored data is ' +
+		JSON.stringify(storedrecord)
+	);
+});
+```
+
+##### Diagram of the Applying process - Before:
+
+![What happens during a syncIt.apply() - Before](bin/README/img/apply-before.png)
+
+##### Diagram of the Applying process - After:
+
+![What happens during a syncIt.apply() - After](bin/README/img/apply-after.png)
+
+### What happens if the data is modified by two different users / devices?
+
+At some point, you will find that data has been modified by two different users or devices. The first thing to note about this is that, just like Subversion, Git or Mercurial the overall process for your App will probably look something like the following:
+
+![Recommended Process](bin/README/img/process.png)
+
+Should all uploads be successfully applied your App is then fully synchronized with the Server.
+
+If however conflicts do occur we will need to perform something similar to a merge operation that occurs in Subversion, Mercurial or Git. The key to this is the second argument of the `SyncIt.feed()` function:
+
+```javascript
+syncIt.feed(
+    [{Queueitem},{Queueitem}],
+    function(dataset, datakey, storedrecord, localChanges, remoteChanges, resolved) {
+        // The resolved function takes two parameter. The first is whether you have 
+		// merged or not and the second are local changes to apply afterwards
+        return resolved(true,[]);
+    },
+    function(err,remoteUpdatesNotFed) {
+		// If you pass false into the resolved function, the Array removeUpdatesNotFed 
+		// will have the remaining items in it.
+    }
+);
+```
 
 ## Is there a demo
 
@@ -86,7 +261,7 @@ User James is sat on the the underground using an application developed using Sy
     );
 
 User  | Dataset | Datakey | Store | Queueitem Update
-------|---------|---------|-------|-----------
+------|---------|---------|-------|-----------------
 James | Cars    | Subaru  |       | { color: 'blue' }
 
 The data from this operation is now stored in a queue of pending changes to be sent to the server but can be read by the App in the normal way, by calling `jamesSyncIt.get('cars','Subaru',function(err,data) { ... })`.
@@ -97,7 +272,7 @@ James is happy because he is making progress on deciding on his next car.
 
 Later, when James exits the underground the App detects that it can connect and makes the following API call:
 
-    jamesSyncIt.getFirst(function(err,queueitem) {
+    syncIt.getFirst(function(err,queueitem) {
         if (err !== SyncIt_Constant.Error.OK) {
             // throw?
         }
@@ -110,9 +285,9 @@ Later, when James exits the underground the App detects that it can connect and 
         ).then(
             function() {
                 // data now stored on server
-				jamesSyncIt.apply(function(err) {
-					...
-				});
+                jamesSyncIt.apply(function(err) {
+                    ...
+                });
             },
             function(err) {
                 // something went wrong... throw err?

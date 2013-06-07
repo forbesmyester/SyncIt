@@ -1,0 +1,18 @@
+digraph structs {
+	node [shape=record];
+	structread [shape=record,color=white,label="Read Request"];
+	subgraph clusterstore {
+		label = "Store";
+		structstore [shape=record,label="{ Dataset | Car | <f0> Car | Person }|{ Datakey | Ford | Subaru | Simon }|{ Version | 1 | 2 | 4 }|{ Info | \{...\} | \{ \"Color\": \"Red\" \} | \{...\} }"];
+	}
+	subgraph clusterqueue {
+		label = "Queue";
+		structqueue [shape=record,label="{ Dataset | Person | <f1> Car | Car | Person | Car | <f2> Car }|{ Datakey | Simon | Subaru | Ford | Simon | Ford | Subaru }|{ Version | 5 | 3 | 2 | 6 | 3 | 4 }|{ Operation | Update | Set | Update | Set | Remove | Update }|{ Update | \{...\} | <f3> \{\"Seats\": \"Leather\"\} | \{...\} | \{...\} | \{...\} | <f4> \{ \"$inc \{ \"Likes\": 1 \}\} }"];
+	}
+	structresult [shape=record,color=white,label="\{ \"Seats\": \"Leather\", \"Likes\": 1 \}"];
+
+	structread -> structstore:f0 [color="red",style="bold"];
+	structstore:f0 -> structqueue:f1 [color="red",style="bold"];
+	structqueue:f3 -> structqueue:f4 [color="red",style="bold"];
+	structqueue:f4 -> structresult [color="red",style="bold"];
+}

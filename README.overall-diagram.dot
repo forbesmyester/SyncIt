@@ -1,10 +1,13 @@
 digraph a { 
-	SyncIt_Persist_Queue [label="SyncIt_Persist"];
-	SyncIt_Persist_Store [label="SyncIt_Persist"];
-	Server -> App [arrowhead=none]; 
-	App -> SyncIt [arrowhead=none]; 
-	SyncIt -> SyncIt_Queue [arrowhead=none]; 
-	SyncIt_Queue -> SyncIt_Persist_Queue [arrowhead=none]; 
-	SyncIt -> SyncIt_Store [arrowhead=none]; 
-	SyncIt_Store -> SyncIt_Persist_Store [arrowhead=none];
+	subgraph x {
+		color = gray;
+		Server -> App [arrowhead=none, style=dashed]; 
+		App -> SyncIt [arrowhead=none, style=dashed]; 
+	}
+	subgraph clustersi {
+		label = "SyncIt Library";
+		color = black;
+		SyncIt -> SyncIt_Queue [arrowhead=none]; 
+		SyncIt -> SyncIt_Store [arrowhead=none]; 
+	}
 } 

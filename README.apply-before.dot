@@ -1,0 +1,12 @@
+digraph structs {
+	node [shape=record];
+	subgraph clusterqueue {
+		label = "Queue";
+		structqueue [shape=record,label="{ Dataset | <f1> Car | Car | Person | Car | <f2> Car }|{ Datakey | Subaru | Ford | Simon | Ford | Subaru }|{ Version | 3 | 2 | 6 | 3 | 4 }|{ Operation | Set | Update | Set | Remove | Update }|{ Update | <f3> \{\"Seats\": \"Leather\"\} | \{...\} | \{...\} | \{...\} | <f4> \{ \"$inc \{ \"Likes\": 1 \}\} }"];
+	}
+	subgraph clusterstore {
+		label = "Store";
+		structstore [shape=record,label="{ Dataset | Car | Car | Person }|{ Datakey | Ford | Subaru | Simon }|{ Version | 1 |  2 | 4 }|{ Info | \{...\} | <f0> \{ \"Color\": \"Red\" \} | \{...\} }"];
+	}
+	structqueue:f3 -> structstore:f0 [color="red",style="bold"];
+}

@@ -1,0 +1,22 @@
+digraph process {
+	downloadupdates [label="Download Updates & Feed"]
+	makechanges [label="Make Local Changes"];
+	downloadupates2 [label="Download Updates & Feed"];
+	resolveconflicts [label="Deal with Conflicts"];
+	getfirst [label="Get the first Local Queueitem"];
+	upload [label="XHR the first Local Queueitem to Server"];
+	apply [label="Apply the first Queueitem to the Store"];
+	subgraph a {
+	downloadupdates;
+	downloadupdates -> makechanges;
+	}
+	subgraph b {
+	makechanges -> downloadupates2 -> resolveconflicts;
+	}
+	subgraph c {
+	resolveconflicts -> getfirst;
+	getfirst -> upload;
+	upload -> apply;
+	apply -> getfirst;
+	}
+}
