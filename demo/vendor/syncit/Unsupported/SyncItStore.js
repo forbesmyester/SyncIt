@@ -2,7 +2,11 @@
 define(
 ['syncit/SyncIt','syncit/Constant','dojo/_base/declare','dojo/Deferred',"dojo/promise/all",
 	"dojo/_base/array",'dojo/store/util/QueryResults'],
-function(SyncItLib,SyncIt_Constant,declare,Deferred,promiseAll,dojoBaseArray,QueryResults) {
+function(SyncIt,SyncIt_Constant,declare,Deferred,promiseAll,dojoBaseArray,QueryResults) {
+
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: 2013 Matthew Forrester
+// License: MIT/BSD-style
 
 return declare('syncit.Unsupported.SyncItStore',[], {
 	
@@ -73,16 +77,16 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 			
 		};
 		
-		inst._syncIt.listenForAddedToQueue(function(dataset,datakey) {
+		inst._syncIt.listenForAddedToQueue(function(dataset, datakey) {
 			indexItem(dataset, datakey, function() {} );
 		});
 		
-		inst._syncIt.listenForApplied(function(queueitem) {
-			indexItem(queueitem.s, queueitem.k, function() {} );
+		inst._syncIt.listenForApplied(function(dataset, datakey, queueitem) {
+			indexItem(dataset, datakey, function() {} );
 		});
 		
-		inst._syncIt.listenForFed(function(queueitem) {
-			indexItem(queueitem.s, queueitem.k, function() {} );
+		inst._syncIt.listenForFed(function(dataset, datakey, queueitem) {
+			indexItem(dataset, datakey, function() {} );
 		});
 		
 		var indexDataset = function(dataset) {

@@ -1,0 +1,151 @@
+@import "fluidity/normalize"
+@import "fluidity/type"
+//@import "fluidity/semantic-grid"
+@import "fluidity/css3"
+
+@import "fluidity/gradients"
+@import "fluidity/vendorize"
+
+.main-tab-holder
+	header
+		background-color: lightgrey
+		padding-bottom: 1em
+	h2, h3
+		background-color: grey
+		color: white
+		margin: 0
+		padding: 0.2em
+	nav.tabs
+		margin-top: 0
+		dl
+			background-color: lightgrey
+			dd
+				background-color: white
+
+#client-tab-holder .tab-bodies li
+	li
+		height: 120px
+	div.clientarea:first-child
+		border-top: 1px solid black
+	div.clientarea:last-child
+		border-bottom: 1px solid black
+	div.clientarea
+		position: relative
+		margin: 0 4em
+		border: 1px solid black
+		border-top-color: grey
+		border-bottom-color: grey
+		div.tab-holder
+			padding: 0
+		div.dgrid
+			height: 200px
+
+#server-tab-holder
+	padding: 0 0 20px 0
+	ul
+		background-color: white
+	div.server-view, div.server-log
+		div#server-log
+			height: 200px
+		div#server-view
+			height: 200px
+		background-color: black
+		color: gray
+		div.dgrid-header-row
+			background-color: black
+		
+#consLog
+	height: 120px
+	border-top: solid 4px grey
+
+.box-cell, #consLog
+	h2
+		position: absolute
+		top: 20%
+		left: 5%
+		color: lightgray
+		font-size: 2em
+		font-weight: bold
+
+.box-cell:first-child
+	border-left-width: 0px
+
+.box-row
+	border-top: solid 4px grey
+.box-row-bottom
+	border-bottom: solid 4px grey
+
+nav.tabs
+	margin-top: 1em
+
+div.dgrid .removed {
+	text-decoration: line-through
+}
+
+.hidden {
+	display: none
+}
+
+a.apihelp {
+	position:absolute
+	top: 0
+	right: 0
+	background-color: #808080
+	border-radius: 5px
+	padding: 0.2em
+	color: white
+	font-weight: bold
+	text-decoration: none
+}
+
+#io
+	grid()
+	.api
+		grid-space: 30%
+		clearfix();
+.client
+	grid()
+	.queue, .store
+		grid-space: 25%
+		clearfix();
+		> div
+			height: 300px
+	.jrec, .log
+		grid-space: 50%
+		clearfix();
+
+.syncit-update-conflicts
+	background-color: white
+	h5
+		margin: 0
+	ul
+		list-style-type: none
+		padding: 0
+		margin: 0
+	footer
+		text-align: right
+		float: none
+	div.null
+		background-color: #DDD
+		margin: 0.2em 0
+		padding: 0.3em
+	dl
+		background-color: #DDD
+		margin: 0.2em 0
+		padding: 0.3em 0
+		min-width: 200px
+		dt
+			width: 30%
+			display: inline-block
+			margin: 0
+			padding-left: 0.3em
+		dd
+			width: 60%
+			display: inline-block
+			vendorize(margin-start, 0)
+			margin: 0
+			padding-left: 0
+		
+		
+div.popup-content-template
+	display: none

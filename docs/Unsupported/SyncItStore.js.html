@@ -41,7 +41,22 @@
 <span class="nx">define</span><span class="p">(</span>
 <span class="p">[</span><span class="s1">&#39;syncit/SyncIt&#39;</span><span class="p">,</span><span class="s1">&#39;syncit/Constant&#39;</span><span class="p">,</span><span class="s1">&#39;dojo/_base/declare&#39;</span><span class="p">,</span><span class="s1">&#39;dojo/Deferred&#39;</span><span class="p">,</span><span class="s2">&quot;dojo/promise/all&quot;</span><span class="p">,</span>
   <span class="s2">&quot;dojo/_base/array&quot;</span><span class="p">,</span><span class="s1">&#39;dojo/store/util/QueryResults&#39;</span><span class="p">],</span>
-<span class="kd">function</span><span class="p">(</span><span class="nx">SyncItLib</span><span class="p">,</span><span class="nx">SyncIt_Constant</span><span class="p">,</span><span class="nx">declare</span><span class="p">,</span><span class="nx">Deferred</span><span class="p">,</span><span class="nx">promiseAll</span><span class="p">,</span><span class="nx">dojoBaseArray</span><span class="p">,</span><span class="nx">QueryResults</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span><span class="p">(</span><span class="nx">SyncIt</span><span class="p">,</span><span class="nx">SyncIt_Constant</span><span class="p">,</span><span class="nx">declare</span><span class="p">,</span><span class="nx">Deferred</span><span class="p">,</span><span class="nx">promiseAll</span><span class="p">,</span><span class="nx">dojoBaseArray</span><span class="p">,</span><span class="nx">QueryResults</span><span class="p">)</span> <span class="p">{</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: 2013 Matthew Forrester
+License: MIT/BSD-style</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
 <span class="k">return</span> <span class="nx">declare</span><span class="p">(</span><span class="s1">&#39;syncit.Unsupported.SyncItStore&#39;</span><span class="p">,[],</span> <span class="p">{</span>
   
@@ -52,7 +67,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Constructor.</p>
@@ -137,16 +152,16 @@
       
     <span class="p">};</span>
     
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForAddedToQueue</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForAddedToQueue</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
     <span class="p">});</span>
     
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForApplied</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">indexItem</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForApplied</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
     <span class="p">});</span>
     
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForFed</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">indexItem</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForFed</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
     <span class="p">});</span>
     
     <span class="kd">var</span> <span class="nx">indexDataset</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">)</span> <span class="p">{</span>
@@ -169,7 +184,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
 <p>Fired when all indexes have been created for one jrec.</p>
         </td>
@@ -287,7 +302,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
 <p>First of all, if the query comes from an adding notify, make sure to add
 the supplied new objects to the jread cache.
@@ -320,7 +335,7 @@ if ((query instanceof Array) &amp;&amp; (options === undefined)) {
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
 <p>var obIds = Object.getOwnPropertyNames(inst.<em>jreadCache);
 for (var i=0;i<inst.</em>jreadCache.length;i++) {

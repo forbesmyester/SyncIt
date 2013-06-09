@@ -48,6 +48,8 @@ define("xstyle/core/generate", ["xstyle/core/elemental", "put-selector/put", "xs
 			// temporarily store it on the element, so it can be accessed as an element-property
 			// TODO: remove it after completion
 			element.content = contentFragment;
+			var indentationLevel = 0;
+			var indentationLevels = [element];
 			for(var i = 0, l = generatingSelector.length;i < l; i++){
 				// go through each part in the selector/generation sequence
 				var lastPart = part,
@@ -160,9 +162,21 @@ define("xstyle/core/generate", ["xstyle/core/elemental", "put-selector/put", "xs
 						var nextElement = lastElement;
 						var nextPart = generatingSelector[i + 1];
 						// parse for the sections of the selector
-						part.replace(/(,\s*)?(\.|#)?([-\w%$|\.\#]+)(?:\[([^\]=]+)=?['"]?([^\]'"]*)['"]?\])?/g, function(t, commaOperator, prefix, value, attrName, attrValue){
-							if(commaOperator){
-								nextElement = element;
+						part.replace(/([,\n]+)?([\t ]+)?(\.|#)?([-\w%$|\.\#]+)(?:\[([^\]=]+)=?['"]?([^\]'"]*)['"]?\])?/g, function(t, nextLine, indentation, prefix, value, attrName, attrValue){
+							if(indentation){
+								if(nextLine){
+									var newIndentationLevel = indentation.length;
+									console.log(newIndentationLevel, value);
+									if(newIndentationLevel > indentationLevel){
+										// a new child
+										indentationLevels[newIndentationLevel] = nextElement;
+									}else{
+										// returning to an existing parent
+										nextElement = indentationLevels[newIndentationLevel] || nextElement;
+									}
+									indentationLevel = newIndentationLevel;
+								}
+//								nextElement = element;
 							}
 							var selector;
 							if(prefix){// we don't want to modify the current element, we need to create a new one
@@ -172,7 +186,7 @@ define("xstyle/core/generate", ["xstyle/core/elemental", "put-selector/put", "xs
 							}else{
 								var target = rule.getDefinition(value);
 								// see if we have a definition for the element
-								if(target){
+								if(target && target.appendTo){
 									nextElement = target.appendTo(nextElement, beforeElement);
 								}else{
 									selector = value;

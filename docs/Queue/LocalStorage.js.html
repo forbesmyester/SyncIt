@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LocalStorage.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../", thisFile = "home/fozz/Projects/syncit//Queue/LocalStorage.js", defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>LocalStorage.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="cm">/* jshint strict: true, smarttabs: true, es3: true, forin: true, immed: true, latedef: true, newcap: true, noarg: true, undef: true, unused: true, es3: true, bitwise: false, curly: true, latedef: true, newcap: true, noarg: true, noempty: true */</span>
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// UMD from https://github.com/umdjs/umd/blob/master/returnExports.js</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
+      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../Constant.js&#39;</span><span class="p">)</span>
+    <span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">(</span>
+      <span class="p">[</span><span class="s1">&#39;syncit/Constant&#39;</span><span class="p">],</span>
+      <span class="nx">factory</span>
+    <span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Queue_LocalStorage</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
+      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Constant</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: Matthew Forrester
+License: MIT/BSD-style</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>For all docs, please see Queue/Persist at present</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+<span class="kd">var</span> <span class="nx">Lsq</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span><span class="nx">localStorage</span><span class="p">,</span><span class="nx">stringifyFunc</span><span class="p">,</span><span class="nx">parseFunc</span><span class="p">,</span><span class="nx">maxOrderDigitLength</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ns</span> <span class="o">=</span> <span class="nx">namespace</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span> <span class="o">=</span> <span class="nx">localStorage</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_stringifyFunc</span> <span class="o">=</span> <span class="nx">stringifyFunc</span> <span class="o">?</span>
+    <span class="nx">stringifyFunc</span> <span class="o">:</span> 
+    <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">ob</span><span class="p">);</span>
+    <span class="p">};</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_parseFunc</span> <span class="o">=</span> <span class="nx">parseFunc</span> <span class="o">?</span>
+    <span class="nx">parseFunc</span> <span class="o">:</span> 
+    <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">str</span><span class="p">);</span>
+    <span class="p">};</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">maxOrderDigitLength</span> <span class="o">=</span> <span class="nx">maxOrderDigitLength</span> <span class="o">?</span> <span class="nx">maxOrderDigitLength</span> <span class="o">:</span> <span class="mi">8</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_serialize</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_stringifyFunc</span> <span class="p">({</span>
+    <span class="nx">u</span><span class="o">:</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">u</span><span class="p">,</span>
+    <span class="nx">t</span><span class="o">:</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">t</span><span class="p">,</span>
+    <span class="nx">m</span><span class="o">:</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span><span class="p">,</span>
+    <span class="nx">b</span><span class="o">:</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span><span class="p">,</span>
+    <span class="nx">o</span><span class="o">:</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">o</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_unserialize</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">stored</span><span class="p">,</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">ob</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">storedOb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parseFunc</span><span class="p">(</span><span class="nx">stored</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">storedOb</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">storedOb</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">ob</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">storedOb</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">delete</span> <span class="nx">ob</span><span class="p">.</span><span class="nx">p</span>
+  <span class="k">return</span> <span class="nx">ob</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_extractFromKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">info</span> <span class="o">=</span> <span class="nx">key</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ns</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">p</span><span class="o">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">info</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mi">10</span><span class="p">),</span>
+    <span class="nx">s</span><span class="o">:</span> <span class="nx">info</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+    <span class="nx">k</span><span class="o">:</span> <span class="nx">info</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_findLowestKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">!==</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">k</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_findHighestOrderint</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="nx">i</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">keyInfo</span> <span class="o">!==</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">keyInfo</span><span class="p">.</span><span class="nx">p</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_pad</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">n</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">+</span><span class="nx">n</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">n</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">maxOrderDigitLength</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">n</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span><span class="o">+</span><span class="nx">n</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">n</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_unpad</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">str</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_constructKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">orderInt</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ns</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">_pad</span><span class="p">(</span><span class="nx">orderInt</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_removeByDatasetAndDatakey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="nx">keyInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">)))</span> <span class="o">!==</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">((</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">s</span> <span class="o">==</span> <span class="nx">dataset</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">k</span> <span class="o">==</span> <span class="nx">datakey</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">));</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">push</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_constructKey</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">_pad</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_findHighestOrderint</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">)),</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_serialize</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span>
+  <span class="p">);</span>
+  <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">advance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_findLowestKey</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">k</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">,</span><span class="kc">null</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">k</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getFirst</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  
+  <span class="nx">k</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_findLowestKey</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">k</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">,</span><span class="kc">null</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">next</span><span class="p">(</span>
+    <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_unserialize</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="nx">k</span><span class="p">),</span><span class="nx">k</span><span class="p">)</span>
+  <span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getDatasetNames</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="p">{};</span>
+  
+  <span class="k">for</span> <span class="p">(</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">keyInfo</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">s</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">s</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
+  
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getDatakeyInDataset</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="p">{};</span>
+  
+  <span class="k">for</span> <span class="p">(</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">));</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">keyInfo</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">if</span> <span class="p">((</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">s</span> <span class="o">==</span> <span class="nx">dataset</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">k</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">k</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
+  
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getFullQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  
+  <span class="k">for</span> <span class="p">(</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_unserialize</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="nx">k</span><span class="p">),</span><span class="nx">k</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
+  
+<span class="p">};</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getCountInQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  
+  <span class="k">for</span> <span class="p">(</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
+    <span class="nx">r</span><span class="o">++</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">Lsq</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getItemsForDatasetAndDatakey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="nx">tmp</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  
+  <span class="k">for</span> <span class="p">(</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">key</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+    <span class="nx">keyInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFromKey</span><span class="p">(</span><span class="nx">k</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">((</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">s</span> <span class="o">===</span> <span class="nx">dataset</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">keyInfo</span><span class="p">.</span><span class="nx">k</span> <span class="o">===</span> <span class="nx">datakey</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_unserialize</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="nx">k</span><span class="p">),</span><span class="nx">k</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="nx">next</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="k">return</span> <span class="nx">Lsq</span><span class="p">;</span>
+
+<span class="p">});</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

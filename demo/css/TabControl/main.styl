@@ -1,0 +1,38 @@
+TabControlSpacing = 0.5em
+
+div.tab-holder
+	padding: TabControlSpacing 0
+	> nav
+		dl
+			display: block
+			border-bottom: 1px solid grey
+			padding-start: 0
+			margin: 0
+			dd
+				margin-left: TabControlSpacing
+				margin-right: 0
+				margin-top: 0
+				display: inline-block
+				margin-bottom: -1px
+				a
+					display: block
+					border 1px solid gray
+					border-bottom-width 0
+					padding: 6px 12px
+			dd.active
+				border-top: 2px solid green
+				a
+					background-color: white
+					padding: 6px 12px
+					border-bottom-color: white
+					border-top-width 0
+	> ul.tab-bodies
+		padding-start: 0
+		margin-before: 0
+		margin-after: 0
+		display: block
+		margin: TabControlSpacing
+		> li
+			display: none
+		> li.active
+			display: block

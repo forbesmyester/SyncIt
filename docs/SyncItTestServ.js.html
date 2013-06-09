@@ -118,7 +118,22 @@
       <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Constant</span>
     <span class="p">);</span>
   <span class="p">}</span>
-<span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">SyncItLib</span><span class="p">,</span><span class="nx">SyncIt_Constant</span><span class="p">,</span><span class="nx">Persist_Memory</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">SyncItLib</span><span class="p">,</span><span class="nx">SyncIt_Constant</span><span class="p">)</span> <span class="p">{</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: 2013 Matthew Forrester
+License: MIT/BSD-style</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
 <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
 
@@ -338,8 +353,10 @@
 
 <ul>
 <li><strong>@param {Function} <code>listener</code></strong> Callback. Signature: <code>function (processedQueueitem, processedJrec)</code>
-<ul><li><strong>@param {String} <code>listener.processedQueueitem</code></strong> The Queueitem which has just been added</li>
-<li><strong>@param {Object} <code>listener.processedJrec</code></strong> The resulting data after the Queueitem has been applied</li></ul></li>
+<ul><li><strong>@param {String} <code>listener.dataset</code></strong> The dataset of the just fed Queueitem.</li>
+<li><strong>@param {String} <code>listener.datakey</code></strong> The datakey of the just fed Queueitem.</li>
+<li><strong>@param {Queueitem} <code>listener.processedQueueitem</code></strong> The Queueitem which has just been added</li>
+<li><strong>@param {Storerecord} <code>listener.processedJrec</code></strong> The resulting data after the Queueitem has been applied</li></ul></li>
 </ul>
   </div>
 </div>
@@ -406,7 +423,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <p>Translations from SyncIt_Constant.Error to StatusString.</p>
         </td>
@@ -532,7 +549,13 @@ purpose function.</p>
       <span class="p">}</span>
       
       <span class="k">if</span> <span class="p">(</span><span class="nx">emit</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">inst</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;fed&#39;</span><span class="p">,</span><span class="nx">processedQueueitem</span><span class="p">,</span><span class="nx">processedJrec</span><span class="p">);</span>
+        <span class="nx">inst</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span>
+          <span class="s1">&#39;fed&#39;</span><span class="p">,</span>
+          <span class="nx">processedQueueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span>
+          <span class="nx">processedQueueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span>
+          <span class="nx">processedQueueitem</span><span class="p">,</span>
+          <span class="nx">processedJrec</span>
+        <span class="p">);</span>
       <span class="p">}</span>
       <span class="k">return</span> <span class="nx">responder</span><span class="p">(</span>
         <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">?</span> <span class="s1">&#39;created&#39;</span> <span class="o">:</span> <span class="s1">&#39;ok&#39;</span><span class="p">,</span>
@@ -649,7 +672,7 @@ purpose function.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p><strong>TestServer._emit()</strong></p>

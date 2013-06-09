@@ -6,7 +6,7 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 		
 		var dojoStore = new Observable(new Memory({data:[]}));
 		
-		viewExtraCommon.drawDisplay(
+		var grid = viewExtraCommon.drawDisplay(
 			storeElementId,
 			[
 				{label: 'Dataset', field: 's', sortable: false},
@@ -29,7 +29,7 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 			dojoStore
 		);
 		
-		syncItServer.listenForFed(function(queueitem,jrec) {
+		syncItServer.listenForFed(function(dataset, datakey, queueitem, jrec) {
 			dojoStore.put(
 				{
 					id:queueitem.s+'.'+queueitem.k, 
@@ -38,6 +38,8 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 					jrec:jrec
 				});
 		});
+
+		return grid;
 		
 	};
 

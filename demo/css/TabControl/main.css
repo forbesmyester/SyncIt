@@ -1,12 +1,22 @@
+
+/* line 1 : /home/fozz/Projects/syncit/demo/node_modules/stylus/lib/functions/index.styl */
+
+/* line 3 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder {
   padding: 0.5em 0;
 }
+
+/* line 5 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
+
+/* line 6 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder > nav dl {
   display: block;
   border-bottom: 1px solid #808080;
   padding-start: 0;
   margin: 0;
 }
+
+/* line 11 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder > nav dl dd {
   margin-left: 0.5em;
   margin-right: 0;
@@ -14,21 +24,29 @@ div.tab-holder > nav dl dd {
   display: inline-block;
   margin-bottom: -1px;
 }
+
+/* line 17 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder > nav dl dd a {
   display: block;
   border: 1px solid #808080;
   border-bottom-width: 0;
   padding: 6px 12px;
 }
+
+/* line 22 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder > nav dl dd.active {
   border-top: 2px solid #008000;
 }
+
+/* line 24 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder > nav dl dd.active a {
   background-color: #fff;
   padding: 6px 12px;
   border-bottom-color: #fff;
   border-top-width: 0;
 }
+
+/* line 29 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder > ul.tab-bodies {
   padding-start: 0;
   margin-before: 0;
@@ -36,9 +54,13 @@ div.tab-holder > ul.tab-bodies {
   display: block;
   margin: 0.5em;
 }
+
+/* line 35 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder > ul.tab-bodies > li {
   display: none;
 }
+
+/* line 37 : /home/fozz/Projects/syncit/demo/public/css/TabControl/main.styl */
 div.tab-holder > ul.tab-bodies > li.active {
   display: block;
 }

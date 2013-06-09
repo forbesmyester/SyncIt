@@ -16,7 +16,11 @@
 			root.SyncIt_Constant
 		);
 	}
-})(this, function (SyncItLib,SyncIt_Constant,Persist_Memory) {
+})(this, function (SyncItLib,SyncIt_Constant) {
+
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: 2013 Matthew Forrester
+// License: MIT/BSD-style
 
 "use strict";
 
@@ -120,8 +124,10 @@ TestServer.prototype.getValue = function(req,responder) {
  * #### Parameters
  *
  * * **@param {Function} `listener`** Callback. Signature: `function (processedQueueitem, processedJrec)`
- *   * **@param {String} `listener.processedQueueitem`** The Queueitem which has just been added
- *   * **@param {Object} `listener.processedJrec`** The resulting data after the Queueitem has been applied
+ *   * **@param {String} `listener.dataset`** The dataset of the just fed Queueitem.
+ *   * **@param {String} `listener.datakey`** The datakey of the just fed Queueitem.
+ *   * **@param {Queueitem} `listener.processedQueueitem`** The Queueitem which has just been added
+ *   * **@param {Storerecord} `listener.processedJrec`** The resulting data after the Queueitem has been applied
  */
 TestServer.prototype.listenForFed = function(listener) {
 	this.listen('fed',listener);
@@ -258,7 +264,13 @@ TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 			}
 			
 			if (emit) {
-				inst._emit('fed',processedQueueitem,processedJrec);
+				inst._emit(
+					'fed',
+					processedQueueitem.s,
+					processedQueueitem.k,
+					processedQueueitem,
+					processedJrec
+				);
 			}
 			return responder(
 				queueitem.b === 0 ? 'created' : 'ok',

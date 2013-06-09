@@ -19,9 +19,6 @@
     <div id="tree"></div>
     <div id="headings">
       <div class="heading h2">
-        <a href="#dictionary">Dictionary</a>
-      </div>
-      <div class="heading h2">
         <a href="#syncit">SyncIt</a>
       </div>
       <div class="heading h3">
@@ -150,104 +147,8 @@
       <div class="heading h4">
         <a href="#parameters">Parameters</a>
       </div>
-      <div class="heading h2">
-        <a href="#queue">Queue</a>
-      </div>
       <div class="heading h3">
-        <a href="#new%20queue()">new Queue()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h4">
-        <a href="#see">See</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queue.getqueue()">Queue.getQueue()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queue.getcountinqueue()">Queue.getCountInQueue()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queue._removebydatasetanddatakey">Queue._removeByDatasetAndDatakey</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queue.push()">Queue.push()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queue.advance()">Queue.advance()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queue.getfirst()">Queue.getFirst()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queue.getdatasetnames()">Queue.getDatasetNames()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h2">
-        <a href="#queuewithhistory">QueueWithHistory</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queuewithhistory.getposition()">QueueWithHistory.getPosition()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queuewithhistory.getqueue()">QueueWithHistory.getQueue()</a>
-      </div>
-      <div class="heading h3">
-        <a href="#queuewithhistory.advance()">QueueWithHistory.advance()</a>
-      </div>
-      <div class="heading h2">
-        <a href="#store">Store</a>
-      </div>
-      <div class="heading h3">
-        <a href="#new%20store()">new Store()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#store.get()">Store.get()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#store.set()">Store.set()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#store.getdatasetnames()">Store.getDatasetNames()</a>
-      </div>
-      <div class="heading h4">
-        <a href="#parameters">Parameters</a>
-      </div>
-      <div class="heading h3">
-        <a href="#store.getdatakeynames()">Store.getDatakeyNames()</a>
+        <a href="#syncit.removestalefromqueue()">SyncIt.removeStaleFromQueue()</a>
       </div>
       <div class="heading h4">
         <a href="#parameters">Parameters</a>
@@ -287,78 +188,43 @@
       <span class="nx">factory</span>
     <span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">root</span><span class="p">.</span><span class="nx">SyncItLib</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
       <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Constant</span><span class="p">,</span>
       <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_updateResult</span>
     <span class="p">);</span>
   <span class="p">}</span>
 <span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">,</span> <span class="nx">updateResult</span><span class="p">)</span> <span class="p">{</span>
 
-<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-
 
 </pre></div>
         </td>
       </tr>
       <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="dictionary">
-  <h2>
-    <a href="#dictionary" name="dictionary" class="pilcrow">&#182;</a>
-    Dictionary
-  </h2>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
 </div>
-
-  </div>
-  <div class="body"><ul>
-<li><strong><code>persist</code></strong> - Storage for both <em>queue</em> and <code>store</code>
-<ul><li><strong><code>store/data</code></strong> - Contains information that has been processed from the 
-queue</li>
-<li><strong><code>queueitem</code></strong> - An <em>update</em> as well as some metadata.</li>
-<li><strong><code>outqueueitem</code></strong> - An <em>update</em> but made more readable.</li>
-<li><strong><code>queue</code></strong> - A queue that modification instructions are added to and which
-will eventually need applying so it can be stored in the <code>store</code></li>
-<li><strong><code>s/dataset</code></strong> - A categorization of the data you are storing, similar to
-an SQL table.</li>
-<li><strong><code>k/datakey</code></strong> - Something that uniquely identifies a unique thing within
-a <em>dataset</em>, simalar to a primary key within SQL.</li>
-<li><strong><code>jrec</code></strong> - All the data stored within a <em>datakey</em>.</li>
-<li><strong><code>jread</code></strong> - All the data stored within a <em>datakey</em> as well as outstanding
-in the <em>queue</em>.</li>
-<li><strong><code>metadata</code></strong> - Stores data about <em>info</em> for data maintenance/tracking
-purposes.</li>
-<li><strong><code>i/info</code></strong> - Stored within a <em>jrec</em> and holds the real data as apposed to
-<em>metadata</em>.</li>
-<li><strong><code>u/update</code></strong> - A <em>update</em> is the data portion of an <em>update</em>.</li>
-<li><strong><code>e/fed</code></strong> - Boolean stored in queueitem to mark an update as coming from
-feed.</li>
-<li><strong><code>f/fieldpath</code></strong> - Stored within an <em>updateDataField</em> <em>update</em> descibing
-a path within the <em>info</em>, to update for example <em>eyes</em> in the a 
-dataset/datakey <em>person</em>, but you could have <code>hair.color</code> and <code>hair.length</code>
-which would describe a structre simiar to <code>{hair:{color:red, length:long}}</code>.</li>
-<li><strong><code>g/fieldvalue</code></strong> - Stored within an <em>updateDataField</em> <em>update</em> and is the 
-data which will be put into the <em>fieldpath</em>.</li>
-<li><strong><code>v/version</code></strong> - The version of a <em>jrec</em>.</li>
-<li><strong><code>b/basedonversion</code></strong> - An <em>update</em> is based on a <em>jrec</em> <em>version</em> and
-preceding <code>queueitem</code></li>
-<li><strong><code>m/modifier</code></strong> Stored within both <code>update</code>s and <em>jrec</em> and is a unique
-reference on the entity that is modifying data. It could be potentially be a
-<em>user</em> but more likely is unique to a user/device combination.</li>
-<li><strong><code>r/removed</code></strong> - Stored in <em>jrec</em> and denotes that the data has been
-removed.</li>
-<li><strong><code>o/operation</code></strong> - Describes the type of <em>operation</em> that an <em>update</em> will
-perform.</li>
-<li><strong><code>t/modificationtime</code></strong> - Both <em>jrec</em> and <em>update</em> include a 
-<em>modificationtime</em>, this is what is returned from <code>(new Date).getTime()</code></li></ul></li>
-</ul>
-
-<p>Classes are documented like <code>ThisIsAClass</code>
-Variables are documented like <code>theVariable</code></p>
-  </div>
-</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: Matthew Forrester
+License: MIT/BSD-style</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
+
+<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">_filter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span><span class="nx">filterFunc</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
+  
+  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">filterFunc</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span> <span class="p">{</span>
+      <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  
+  <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+<span class="p">};</span>
 
 
 </pre></div>
@@ -398,7 +264,7 @@ Variables are documented like <code>theVariable</code></p>
 <ul>
 <li><strong>@param {Store} <code>store</code></strong> Used to store data which is known to be synced onto the <em>Server</em>.</li>
 <li><strong>@param {Queue} <code>queue</code></strong> Used to store data which is still to be synced to the <em>Server</em>.</li>
-<li><strong>@param {Modifier} <code>modifier</code></strong> The User/Device which is using the instance of SyncIt.</li>
+<li><strong>@param {Modifier} <code>modifier</code></strong> The UNIQUE User/Device which is using the instance of SyncIt.</li>
 </ul>
   </div>
 </div>
@@ -415,20 +281,6 @@ Variables are documented like <code>theVariable</code></p>
     <span class="s1">&#39;fed&#39;</span><span class="o">:</span> <span class="p">[]</span>
   <span class="p">};</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">_cloneObj</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">ob</span><span class="p">));</span> <span class="p">};</span>
-<span class="p">};</span>
-
-<span class="kd">var</span> <span class="nx">_filter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span><span class="nx">filterFunc</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
-  
-  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">filterFunc</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span> <span class="p">{</span>
-      <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-  
-  <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
 <span class="p">};</span>
 
 
@@ -821,9 +673,11 @@ you to change what function does that deep copying.</p>
 
 
 <ul>
-<li><strong>@param {Function} <code>listener</code></strong> Signature: <code>function(queueitem, newStoredJrec)</code>.</li>
+<li><strong>@param {Function} <code>listener</code></strong> Signature: <code>function(queueitem, newStorerecord)</code>.
+<ul><li><strong>@param {Dataset} <code>listener.dataset</code></strong> The <em>dataset</em> of the applied.</li>
+<li><strong>@param {Datakey} <code>listener.datakey</code></strong> The <em>datakey</em> that was.applied.</li></ul></li>
 <li><strong>@param {Queueitem} <code>listener.queueitem</code></strong> The <em>queueitem</em> that was applied.</li>
-<li><strong>@param {Jrec} <code>listener.newStoredJrec</code></strong> The <em>jrec</em> which is now stored.</li>
+<li><strong>@param {Storerecord} <code>listener.newStorerecord</code></strong> The <em>storerecord</em> which is now stored.</li>
 </ul>
   </div>
 </div>
@@ -861,9 +715,11 @@ you to change what function does that deep copying.</p>
 
 
 <ul>
-<li><strong>@param {Function} <code>listener</code></strong> Signature: <code>function(queueitem, newStoredJrec)</code>.</li>
+<li><strong>@param {Function} <code>listener</code></strong> Signature: <code>function(queueitem, newStorerecord)</code>.
+<ul><li><strong>@param {String} <code>listener.dataset</code></strong> The dataset of the just fed Queueitem.</li>
+<li><strong>@param {String} <code>listener.datakey</code></strong> The datakey of the just fed Queueitem.</li></ul></li>
 <li><strong>@param {Queueitem} <code>listener.queueitem</code></strong> The <em>queueitem</em> that was applied.</li>
-<li><strong>@param {Jrec} <code>listener.newStoredJrec</code></strong> The <em>jrec</em> which is now stored.</li>
+<li><strong>@param {Storerecord} <code>listener.newStorerecord</code></strong> The <em>storerecord</em> which is now stored.</li>
 </ul>
   </div>
 </div>
@@ -915,9 +771,7 @@ you to change what function does that deep copying.</p>
     <span class="nx">dataset</span><span class="p">,</span>
     <span class="nx">datakey</span><span class="p">,</span>
     <span class="nx">update</span><span class="p">,</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">getModifier</span><span class="p">(),</span>
-    <span class="kc">null</span><span class="p">,</span>
-    <span class="kc">null</span><span class="p">,</span>
+    <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">(),</span>
     <span class="kc">false</span><span class="p">,</span>
     <span class="nx">whenAddedToQueue</span>
   <span class="p">);</span>
@@ -964,9 +818,7 @@ you to change what function does that deep copying.</p>
     <span class="nx">dataset</span><span class="p">,</span>
     <span class="nx">datakey</span><span class="p">,</span>
     <span class="p">{},</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">getModifier</span><span class="p">(),</span>
-    <span class="kc">null</span><span class="p">,</span>
-    <span class="kc">null</span><span class="p">,</span>
+    <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">(),</span>
     <span class="kc">false</span><span class="p">,</span>
     <span class="nx">whenAddedToQueue</span>
   <span class="p">);</span>
@@ -1034,9 +886,7 @@ you to change what function does that deep copying.</p>
     <span class="nx">dataset</span><span class="p">,</span>
     <span class="nx">datakey</span><span class="p">,</span>
     <span class="nx">update</span><span class="p">,</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">getModifier</span><span class="p">(),</span>
-    <span class="kc">null</span><span class="p">,</span>
-    <span class="kc">null</span><span class="p">,</span>
+    <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">(),</span>
     <span class="kc">false</span><span class="p">,</span>
     <span class="nx">whenAddedToQueue</span>
   <span class="p">);</span>
@@ -1070,19 +920,20 @@ you to change what function does that deep copying.</p>
 
 <ul>
 <li><strong>@param {Array} <code>feedQueueitems</code></strong> These are the items which are being fed from the <em>Server</em>.</li>
-<li><strong>@param {Function} <code>resolutionFunction</code></strong> Called when conflict occurs, Signature: <code>function(dataset, datakey, jrec, serverQueueitems, localQueueitems, resolved)</code>.
+<li><strong>@param {Function} <code>resolutionFunction</code></strong> Called when conflict occurs, Signature: <code>function(dataset, datakey, storerecord, serverQueueitems, localQueueitems, resolved)</code>.
 <ul><li><strong>@param {Array} <code>resolutionFunction.dataset</code></strong> The <em>Dataset</em> of the conflict.</li>
 <li><strong>@param {Array} <code>resolutionFunction.datakey</code></strong> The <em>Datakey</em> of the conflict.</li>
-<li><strong>@param {Array} <code>resolutionFunction.jrec</code></strong> What is in the local <em>Store</em> for that <em>Dataset</em> / <em>Datakey</em>.</li>
+<li><strong>@param {Array} <code>resolutionFunction.storerecord</code></strong> What is in the local <em>Store</em> for that <em>Dataset</em> / <em>Datakey</em>.</li>
 <li><strong>@param {Array} <code>resolutionFunction.localQueueitems</code></strong> The <em>Queueitem</em> that has been added using functions such as <a href="#syncit.set--">SyncIt.set()</a> but is now conflicting with the data from the <em>Server</em>.</li>
 <li><strong>@param {Array} <code>resolutionFunction.serverQueueitems</code></strong> The extra <em>Queueitem</em> that are on the Server.</li>
 <li><strong>@param {Function} <code>resolutionFunction.resolved</code></strong> This should be called from inside resolutionFunction and will add <em>Queueitem</em> after the <em>Server</em> supplied <em>Queueitem</em>. Signature: <code>function(resolved, mergedLocalsToApplyAfterwards)</code>
 <ul><li><strong>@param {Boolean} <code>resolutionFunction.resolved.resolved</code></strong> use false to halt the feeding, true otherwise</li>
 <li><strong>@param {Array} <code>resolutionFunction.resolved.mergedLocalsToApplyAfterwards</code></strong> These will be added to the <em>Queue</em> <strong>after</strong> (currently) all serverQueueitems have been applied to the <em>Store</em>.</li></ul></li></ul></li>
-<li><strong>@param {Function} <code>feedDone</code></strong> Callback for when done. Signature: <code>function(err, fedItemsFailed, conflictResolutionQueueitemFailed, resultingJrec)</code>;
+<li><strong>@param {Function} <code>feedDone</code></strong> Callback for when done. Signature: <code>function(err, fedItemsFailed, conflictResolutionQueueitemFailed, resultingStorerecord)</code>;
 <ul><li><strong>@param {Errorcode} <code>feedDone.err</code></strong> See SyncIt_Constant.Error.</li>
 <li><strong>@param {Array} <code>feedDone.fedItemsFailed</code></strong> Array of items fed from the <em>Server</em> which could not be processed.</li>
-<li><strong>@param {Array} <code>feedDone.conflictResolutionQueueitemFailed</code></strong> Array of items created in conflict resolution (using <code>resolutionFunction.resolved</code>) which have failed to be added to the local <em>Queue</em>.</li></ul></li>
+<li><strong>@param {Array} <code>feedDone.conflictResolutionQueueitemFailed</code></strong> Array of items created in conflict resolution (using <code>resolutionFunction.resolved</code>) which have failed to be added to the local <em>Queue</em>.</li>
+<li><strong>@param {Storerecord} <code>feedDone.resultingStorerecord</code></strong> What is now stored on the Store.</li></ul></li>
 </ul>
   </div>
 </div>
@@ -1134,17 +985,17 @@ fiddling with users data.</p>
   
   <span class="kd">var</span> <span class="nx">allLocalToApplyAfterwards</span> <span class="o">=</span> <span class="p">[];</span>
   
-  <span class="kd">var</span> <span class="nx">prepareServerQueueItemForResolutionFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jrec</span><span class="p">,</span> <span class="nx">applyQueue</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">prepareServerQueueItemForResolutionFunction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">storerecord</span><span class="p">,</span> <span class="nx">applyQueue</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[],</span>
       <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
       <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
       <span class="nx">firstQueueitem</span> <span class="o">=</span> <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
     
     <span class="kd">var</span> <span class="nx">filterFunc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">elem</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">jrec</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">storerecord</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
       <span class="p">}</span>
-      <span class="k">return</span> <span class="p">(</span><span class="nx">elem</span><span class="p">.</span><span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">jrec</span><span class="p">.</span><span class="nx">v</span><span class="p">);</span>
+      <span class="k">return</span> <span class="p">(</span><span class="nx">elem</span><span class="p">.</span><span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">storerecord</span><span class="p">.</span><span class="nx">v</span><span class="p">);</span>
     <span class="p">};</span>
     
     <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">applyQueue</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -1169,25 +1020,46 @@ fiddling with users data.</p>
   <span class="p">};</span>
   
   <span class="kd">var</span> <span class="nx">addToStoreAndContinue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">applyQueue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_addQueueitemToStore</span><span class="p">(</span><span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">appliedQueueitem</span><span class="p">,</span> <span class="nx">jrec</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_addQueueitemToStore</span><span class="p">(</span><span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">appliedQueueitem</span><span class="p">,</span> <span class="nx">storerecord</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">unlockAndError</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">applyQueue</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="nx">applyQueue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
-      <span class="nx">inst</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;fed&#39;</span><span class="p">,</span> <span class="nx">appliedQueueitem</span><span class="p">,</span> <span class="nx">jrec</span><span class="p">);</span>
+      <span class="nx">inst</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;fed&#39;</span><span class="p">,</span> <span class="nx">appliedQueueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span> <span class="nx">appliedQueueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span> <span class="nx">appliedQueueitem</span><span class="p">,</span> <span class="nx">storerecord</span><span class="p">);</span>
       <span class="k">return</span> <span class="nx">feedOne</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
     <span class="p">});</span>
   <span class="p">};</span>
     
-  <span class="kd">var</span> <span class="nx">fireConflictResolution</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jrec</span><span class="p">,</span> <span class="nx">applyQueue</span><span class="p">,</span> <span class="nx">queueitemInQueue</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">fireConflictResolution</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">storerecord</span><span class="p">,</span> <span class="nx">applyQueue</span><span class="p">,</span> <span class="nx">queueitemInQueue</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="kd">var</span> <span class="nx">queueitemInQueueAndPreviousLocalsToApplyAfterwards</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitemInQueue</span><span class="p">,</span><span class="nx">localsAfterwards</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+      <span class="kd">var</span> <span class="nx">addArray</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ar</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">ar</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">ar</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+      <span class="p">};</span>
+
+      <span class="nx">addArray</span><span class="p">(</span><span class="nx">queueitemInQueue</span><span class="p">);</span>
+      <span class="nx">addArray</span><span class="p">(</span><span class="nx">localsAfterwards</span><span class="p">);</span>
+
+      <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+    <span class="p">};</span>
+
     <span class="nx">resolutionFunction</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span>
       <span class="nx">inst</span><span class="p">,</span>
       <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">s</span><span class="p">,</span>
       <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">k</span><span class="p">,</span>
-      <span class="nx">jrec</span><span class="p">.</span><span class="nx">v</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="nx">jrec</span><span class="p">,</span>
-      <span class="nx">queueitemInQueue</span><span class="p">,</span>
+      <span class="nx">storerecord</span><span class="p">.</span><span class="nx">v</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="nx">storerecord</span><span class="p">,</span>
+      <span class="nx">queueitemInQueueAndPreviousLocalsToApplyAfterwards</span><span class="p">(</span>
+        <span class="nx">queueitemInQueue</span><span class="p">,</span>
+        <span class="nx">allLocalToApplyAfterwards</span>
+      <span class="p">),</span>
       <span class="nx">prepareServerQueueItemForResolutionFunction</span><span class="p">(</span>
-        <span class="nx">jrec</span><span class="p">,</span>
+        <span class="nx">storerecord</span><span class="p">,</span>
         <span class="nx">applyQueue</span>
       <span class="p">),</span>
       <span class="kd">function</span><span class="p">(</span><span class="nx">resolved</span><span class="p">,</span> <span class="nx">localsToApplyAfterwards</span><span class="p">)</span> <span class="p">{</span>
@@ -1263,7 +1135,7 @@ the same Dataset / Datakey</p>
     <span class="nx">inst</span><span class="p">.</span><span class="nx">_store</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span>
       <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">s</span><span class="p">,</span>
       <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">k</span><span class="p">,</span>
-      <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">jrec</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">storerecord</span><span class="p">)</span> <span class="p">{</span>
         
 
 </pre></div>
@@ -1279,7 +1151,7 @@ dataset / datakey that does not already exist.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
         <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">jrec</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_getEmptyJrec</span><span class="p">();</span>
+          <span class="nx">storerecord</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_getEmptyStorerecord</span><span class="p">();</span>
         <span class="p">}</span>
 
 
@@ -1291,15 +1163,35 @@ dataset / datakey that does not already exist.</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
 </div>
-<p>It is possible we have stale items in our queue, if so, we just skip
-over them</p>
+<p>It might be that we are trying to feed data which is 
+based on an old storerecord, if we are just skip over it</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="k">while</span> <span class="p">(</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">b</span> <span class="o">&lt;</span> <span class="nx">storerecord</span><span class="p">.</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">applyQueue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+          <span class="k">return</span> <span class="nx">feedOne</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+</div>
+<p>It is possible we have stale items in our queue</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="k">if</span> <span class="p">(</span>
           <span class="nx">queueitemInQueue</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> 
-          <span class="p">(</span><span class="nx">queueitemInQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">b</span> <span class="o">&lt;</span> <span class="nx">jrec</span><span class="p">.</span><span class="nx">v</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-          <span class="p">(</span><span class="nx">queueitemInQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">m</span> <span class="o">==</span> <span class="nx">jrec</span><span class="p">.</span><span class="nx">m</span><span class="p">))</span> <span class="p">{</span>
-          <span class="nx">queueitemInQueue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+          <span class="p">(</span><span class="nx">queueitemInQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">b</span> <span class="o">&lt;</span> <span class="nx">storerecord</span><span class="p">.</span><span class="nx">v</span><span class="p">)</span>
+        <span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">unlockAndError</span><span class="p">(</span>
+            <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">STALE_FOUND_IN_QUEUE</span><span class="p">,</span>
+            <span class="nx">applyQueue</span>
+          <span class="p">);</span>
         <span class="p">}</span>
 
 
@@ -1309,7 +1201,7 @@ over them</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
 </div>
 <p>It is quite possible all queueitem where stale, in which case just
 go right ahead and process the fed queueitem!</p>
@@ -1326,7 +1218,7 @@ go right ahead and process the fed queueitem!</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
 </div>
 <p>If we have items in our local queue with a basedonversion which is
 lower than what we are being fed, it is likely that we have unapplied
@@ -1347,36 +1239,6 @@ items which we have already uploaded.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
-</div>
-<p>It might be that we are trying to feed data which is 
-based on an old version, if we are error with code to 
-indicate whether it is a duplicate or not.</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">jrec</span><span class="p">.</span><span class="nx">v</span> <span class="o">&gt;</span> <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span>
-            <span class="p">(</span><span class="nx">jrec</span><span class="p">.</span><span class="nx">v</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">b</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-            <span class="p">(</span><span class="nx">jrec</span><span class="p">.</span><span class="nx">m</span> <span class="o">==</span> <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">m</span><span class="p">)</span>
-          <span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">unlockAndError</span><span class="p">(</span>
-              <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_APPLY_UPDATE_ALREADY_APPLIED</span><span class="p">,</span>
-              <span class="nx">applyQueue</span>
-            <span class="p">);</span>
-          <span class="p">}</span>
-          <span class="k">return</span> <span class="nx">unlockAndError</span><span class="p">(</span>
-            <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_APPLY_UPDATE_BASED_ON_OLD_VERSION</span><span class="p">,</span>
-            <span class="nx">applyQueue</span>
-          <span class="p">);</span>
-        <span class="p">}</span>
-        
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
   <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
 </div>
 <p>fire conflict resolution with the item shifted. It does
@@ -1384,7 +1246,7 @@ not matter because it will either succeed, removing all
 Queueitem for that dataset / datakey or fail.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">fireConflictResolution</span><span class="p">(</span><span class="nx">jrec</span><span class="p">,</span> <span class="nx">applyQueue</span><span class="p">,</span> <span class="nx">queueitemInQueue</span><span class="p">);</span>
+        <span class="nx">fireConflictResolution</span><span class="p">(</span><span class="nx">storerecord</span><span class="p">,</span> <span class="nx">applyQueue</span><span class="p">,</span> <span class="nx">queueitemInQueue</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">);</span>
     
@@ -1405,8 +1267,6 @@ Queueitem for that dataset / datakey or fail.</p>
       <span class="nx">allLocalToApplyAfterwards</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">s</span><span class="p">,</span>
       <span class="nx">allLocalToApplyAfterwards</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">k</span><span class="p">,</span>
       <span class="nx">allLocalToApplyAfterwards</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">u</span><span class="p">,</span>
-      <span class="nx">allLocalToApplyAfterwards</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">m</span><span class="p">,</span>
-      <span class="nx">allLocalToApplyAfterwards</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">b</span><span class="p">,</span>
       <span class="nx">allLocalToApplyAfterwards</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">t</span><span class="p">,</span>
       <span class="kc">true</span><span class="p">,</span>
       <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
@@ -1431,8 +1291,9 @@ Queueitem for that dataset / datakey or fail.</p>
       <span class="k">return</span> <span class="nx">addConflictResolvingQueueitemToQueue</span><span class="p">(</span><span class="nx">allLocalToApplyAfterwards</span><span class="p">);</span>
     <span class="p">}</span>
     
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">(</span>
-      <span class="p">{</span><span class="nx">dataset</span><span class="o">:</span> <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">s</span><span class="p">,</span> <span class="nx">datakey</span><span class="o">:</span> <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">k</span><span class="p">},</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getItemsForDatasetAndDatakey</span><span class="p">(</span>
+      <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">s</span><span class="p">,</span>
+      <span class="nx">applyQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">k</span><span class="p">,</span>
       <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">queueitemInQueue</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">queueitemsRetrieved</span><span class="p">(</span>
           <span class="nx">err</span><span class="p">,</span>
@@ -1510,18 +1371,21 @@ Queueitem for that dataset / datakey or fail.</p>
   <span class="p">}</span>
 <span class="p">};</span>
 
-<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_basicValidationForQueueitem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_basicValidationForQueueitem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">skips</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Validation</span><span class="p">.</span><span class="nx">DATASET_REGEXP</span><span class="p">)</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_DATASET</span><span class="p">;</span>
   <span class="p">}</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Validation</span><span class="p">.</span><span class="nx">DATAKEY_REGEXP</span><span class="p">)</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_DATAKEY</span><span class="p">;</span>
   <span class="p">}</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Validation</span><span class="p">.</span><span class="nx">MODIFIER_REGEXP</span><span class="p">)</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_MODIFIER</span><span class="p">;</span>
-  <span class="p">}</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">o</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Validation</span><span class="p">.</span><span class="nx">OPERATION_REGEXP</span><span class="p">)</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_OPERATION</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="nx">skips</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">skips</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Validation</span><span class="p">.</span><span class="nx">MODIFIER_REGEXP</span><span class="p">)</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_MODIFIER</span><span class="p">;</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
 <span class="p">};</span>
@@ -1561,7 +1425,7 @@ Queueitem for that dataset / datakey or fail.</p>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_addToQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">operation</span><span class="p">,</span> <span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">update</span><span class="p">,</span> <span class="nx">modifier</span><span class="p">,</span> <span class="nx">basedonversion</span><span class="p">,</span> <span class="nx">modificationtime</span><span class="p">,</span> <span class="nx">allowFeedLock</span><span class="p">,</span> <span class="nx">whenAddedToQueue</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_addToQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">operation</span><span class="p">,</span> <span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">update</span><span class="p">,</span> <span class="nx">modificationtime</span><span class="p">,</span> <span class="nx">allowFeedLock</span><span class="p">,</span> <span class="nx">whenAddedToQueue</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
   
   <span class="kd">var</span> <span class="nx">amILocked</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -1571,13 +1435,10 @@ Queueitem for that dataset / datakey or fail.</p>
     <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
   <span class="p">};</span>
   
-  <span class="kd">var</span> <span class="nx">extractInfoFromQueueitems</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jrec</span><span class="p">,</span> <span class="nx">queueitems</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">extractInfoFromQueueitems</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">storerecord</span><span class="p">,</span> <span class="nx">queueitems</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">info</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="nx">alreadyDone</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-      <span class="nx">removed</span><span class="o">:</span> <span class="nx">jrec</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span>
-      <span class="nx">version</span><span class="o">:</span> <span class="nx">jrec</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span>
-      <span class="nx">feedVersion</span><span class="o">:</span> <span class="nx">jrec</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span>
-      <span class="nx">lastFeedIndex</span><span class="o">:</span> <span class="mi">0</span>
+      <span class="nx">removed</span><span class="o">:</span> <span class="nx">storerecord</span><span class="p">.</span><span class="nx">r</span><span class="p">,</span>
+      <span class="nx">version</span><span class="o">:</span> <span class="nx">storerecord</span><span class="p">.</span><span class="nx">v</span>
     <span class="p">};</span>
     
     <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
@@ -1585,22 +1446,9 @@ Queueitem for that dataset / datakey or fail.</p>
         <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
       
       <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">queue</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">((</span><span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">s</span> <span class="o">!=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">k</span> <span class="o">!=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-          <span class="k">continue</span><span class="p">;</span>
-        <span class="p">}</span>
         <span class="nx">info</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">o</span> <span class="o">==</span> <span class="s1">&#39;remove&#39;</span><span class="p">)</span> <span class="p">{</span>
           <span class="nx">info</span><span class="p">.</span><span class="nx">removed</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">m</span> <span class="o">!=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">getModifier</span><span class="p">())</span> <span class="p">{</span>
-          <span class="nx">info</span><span class="p">.</span><span class="nx">feedVersion</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-          <span class="nx">info</span><span class="p">.</span><span class="nx">lastFeedIndex</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
-          <span class="k">if</span> <span class="p">(</span>
-            <span class="p">(</span><span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">m</span> <span class="o">==</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-            <span class="p">(</span><span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">b</span> <span class="o">==</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span>
-          <span class="p">)</span> <span class="p">{</span>
-            <span class="nx">info</span><span class="p">.</span><span class="nx">alreadyDone</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-          <span class="p">}</span>
         <span class="p">}</span>
       <span class="p">}</span>
     <span class="p">})(</span><span class="nx">queueitems</span><span class="p">);</span>
@@ -1625,52 +1473,21 @@ Queueitem for that dataset / datakey or fail.</p>
     
   <span class="p">};</span>
   
-  <span class="kd">var</span> <span class="nx">checkAndStore</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,</span> <span class="nx">jrec</span><span class="p">,</span> <span class="nx">existingQueueitems</span><span class="p">,</span> <span class="nx">whenAddedToQueue</span><span class="p">)</span>
+  <span class="kd">var</span> <span class="nx">checkAndStore</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,</span> <span class="nx">storerecord</span><span class="p">,</span> <span class="nx">existingQueueitems</span><span class="p">,</span> <span class="nx">whenAddedToQueue</span><span class="p">)</span>
   <span class="p">{</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">t</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">queueitem</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">()).</span><span class="nx">getTime</span><span class="p">();</span>
     <span class="p">}</span>
 
-    <span class="kd">var</span> <span class="nx">info</span> <span class="o">=</span> <span class="nx">extractInfoFromQueueitems</span><span class="p">(</span><span class="nx">jrec</span><span class="p">,</span> <span class="nx">existingQueueitems</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">info</span> <span class="o">=</span> <span class="nx">extractInfoFromQueueitems</span><span class="p">(</span><span class="nx">storerecord</span><span class="p">,</span> <span class="nx">existingQueueitems</span><span class="p">);</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">removed</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
       <span class="k">return</span> <span class="nx">whenAddedToQueue</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">DATA_ALREADY_REMOVED</span><span class="p">);</span>
     <span class="p">}</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span> <span class="o">!=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">getModifier</span><span class="p">())</span> <span class="p">{</span>
-      
-      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">!==</span> <span class="s1">&#39;number&#39;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nx">whenAddedToQueue</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">FEED_REQUIRES_BASED_ON_VERSION</span><span class="p">);</span>
-      <span class="p">}</span>
-      
-      <span class="k">if</span> <span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">feedVersion</span> <span class="o">!=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nx">whenAddedToQueue</span><span class="p">(</span>
-          <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">&lt;</span> <span class="nx">info</span><span class="p">.</span><span class="nx">feedVersion</span><span class="p">)</span> <span class="o">?</span>
-            <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_ADD_ALREADY_ADDED_QUEUEITEM</span> <span class="o">:</span>
-            <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_ADD_FUTURE_QUEUEITEM</span><span class="p">,</span>
-          <span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span>
-          <span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span>
-          <span class="nx">queueitem</span>
-        <span class="p">);</span>
-      <span class="p">}</span>
-      
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="nx">info</span><span class="p">.</span><span class="nx">version</span><span class="p">;</span>
-    <span class="p">}</span>
-    
-    <span class="k">if</span> <span class="p">(</span>
-      <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span> <span class="o">!==</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">getModifier</span><span class="p">())</span> <span class="o">&amp;&amp;</span> 
-      <span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">version</span> <span class="o">!=</span> <span class="nx">info</span><span class="p">.</span><span class="nx">feedVersion</span><span class="p">)</span>
-    <span class="p">)</span> <span class="p">{</span>
-      
-      <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
-      <span class="k">return</span> <span class="nx">whenAddedToQueue</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">FEED_ATTEMPTED_WHILE_LOCAL_IN_QUEUE</span><span class="p">);</span>
-    <span class="p">}</span>
-
+    <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="nx">info</span><span class="p">.</span><span class="nx">version</span><span class="p">;</span>
     
     <span class="nx">storeIt</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">);</span>
     
@@ -1683,20 +1500,19 @@ Queueitem for that dataset / datakey or fail.</p>
   <span class="p">}</span>
   
   
-  <span class="kd">var</span> <span class="nx">queueitem</span> <span class="o">=</span> <span class="p">{</span><span class="nx">o</span><span class="o">:</span><span class="nx">operation</span><span class="p">,</span> <span class="nx">s</span><span class="o">:</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">k</span><span class="o">:</span><span class="nx">datakey</span><span class="p">,</span> <span class="nx">u</span><span class="o">:</span><span class="nx">update</span><span class="p">,</span> <span class="nx">m</span><span class="o">:</span> <span class="nx">modifier</span><span class="p">,</span>
-    <span class="nx">t</span><span class="o">:</span><span class="nx">modificationtime</span><span class="p">,</span> <span class="nx">b</span><span class="o">:</span> <span class="nx">basedonversion</span><span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">queueitem</span> <span class="o">=</span> <span class="p">{</span><span class="nx">o</span><span class="o">:</span><span class="nx">operation</span><span class="p">,</span> <span class="nx">s</span><span class="o">:</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">k</span><span class="o">:</span><span class="nx">datakey</span><span class="p">,</span> <span class="nx">u</span><span class="o">:</span><span class="nx">update</span><span class="p">,</span> <span class="nx">t</span><span class="o">:</span><span class="nx">modificationtime</span><span class="p">,</span> <span class="nx">m</span><span class="o">:</span><span class="k">this</span><span class="p">.</span><span class="nx">getModifier</span><span class="p">()};</span>
 
-  <span class="kd">var</span> <span class="nx">validateQueueitemErr</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_basicValidationForQueueitem</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">validateQueueitemErr</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_basicValidationForQueueitem</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,[</span><span class="s1">&#39;m&#39;</span><span class="p">]);</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">validateQueueitemErr</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">whenAddedToQueue</span><span class="p">(</span><span class="nx">validateQueueitemErr</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">|</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">;</span>
   
-  <span class="nx">inst</span><span class="p">.</span><span class="nx">_store</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">jrec</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">inst</span><span class="p">.</span><span class="nx">_store</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">storerecord</span><span class="p">)</span> <span class="p">{</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">jrec</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_getEmptyJrec</span><span class="p">();</span>
+      <span class="nx">storerecord</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_getEmptyStorerecord</span><span class="p">();</span>
       <span class="nx">err</span> <span class="o">=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
     <span class="p">}</span>
     
@@ -1704,8 +1520,8 @@ Queueitem for that dataset / datakey or fail.</p>
       <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
       <span class="k">return</span> <span class="nx">whenAddedToQueue</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
     <span class="p">}</span>
-      
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">({},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">existingQueueitems</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getItemsForDatasetAndDatakey</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">existingQueueitems</span><span class="p">)</span> <span class="p">{</span>
       
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
@@ -1714,7 +1530,7 @@ Queueitem for that dataset / datakey or fail.</p>
       
       <span class="nx">checkAndStore</span><span class="p">(</span>
         <span class="nx">queueitem</span><span class="p">,</span>
-        <span class="nx">jrec</span><span class="p">,</span>
+        <span class="nx">storerecord</span><span class="p">,</span>
         <span class="nx">existingQueueitems</span><span class="p">,</span>
         <span class="nx">whenAddedToQueue</span>
       <span class="p">);</span>
@@ -1735,14 +1551,14 @@ Queueitem for that dataset / datakey or fail.</p>
   <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
 </div>
 <div class="dox">
-  <div class="summary"><p><strong>SyncIt._getEmptyJrec()</strong></p>
+  <div class="summary"><p><strong>SyncIt._getEmptyStorerecord()</strong></p>
   </div>
   <div class="body"><p>When applying a <em>Queueitem</em> either because SyncIt is moving data from the <em>Queue</em> to the <em>Store</em> or just because it is processing a `<a href="#syncit.get--">SyncIt.get()</a> it is possible that no data already exists at the <em>Store</em> for that <em>Dataset</em> / <em>Datakey</em>. It's handy to use this function to get something that looks like stored data to limit code complexity.</p>
   </div>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_getEmptyJrec</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_getEmptyStorerecord</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="p">{</span>
     <span class="nx">i</span><span class="o">:</span><span class="p">{},</span>
     <span class="nx">v</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
@@ -1769,7 +1585,7 @@ based on versioning. returns {SyncIt_Constant.ErrorCode}**</p>
 
 <ul>
 <li><strong>{Queueitem} <code>update</code></strong> The <em>Queueitem</em> we are testing to see if it can be applied.</li>
-<li><strong>{Jrec} <code>storeddata</code></strong> This is the data currently in the <em>Store</em> or null if there is nothing stored for that <em>Dataset</em> / <em>Datakey</em> currently.</li>
+<li><strong>{Storerecord} <code>storeddata</code></strong> This is the data currently in the <em>Store</em> or null if there is nothing stored for that <em>Dataset</em> / <em>Datakey</em> currently.</li>
 </ul>
 
 <p>Returns</p>
@@ -1812,14 +1628,11 @@ are applying must be to version 0;</p>
 <div class="pilwrap">
   <a class="pilcrow" href="#section-31" id="section-31">&#182;</a>
 </div>
-<p>If something in store then we could be trying to re-apply the same
-version if we are the author or it will be an error if we are not.</p>
+<p>If we are trying to apply something old then we must fail.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">storeddata</span><span class="p">.</span><span class="nx">v</span> <span class="o">==</span> <span class="nx">update</span><span class="p">.</span><span class="nx">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">storeddata</span><span class="p">.</span><span class="nx">m</span> <span class="o">==</span> <span class="nx">update</span><span class="p">.</span><span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_APPLY_UPDATE_ALREADY_APPLIED</span><span class="p">;</span>
-    <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">storeddata</span><span class="p">.</span><span class="nx">v</span> <span class="o">&gt;</span> <span class="nx">update</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">STALE_FOUND_IN_QUEUE</span><span class="p">;</span>
   <span class="p">}</span>
   
 
@@ -1830,22 +1643,6 @@ version if we are the author or it will be an error if we are not.</p>
         <td class="docs">
 <div class="pilwrap">
   <a class="pilcrow" href="#section-32" id="section-32">&#182;</a>
-</div>
-<p>If we are trying to apply something old then we must fail.</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">storeddata</span><span class="p">.</span><span class="nx">v</span> <span class="o">&gt;</span> <span class="nx">update</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_APPLY_UPDATE_BASED_ON_OLD_VERSION</span><span class="p">;</span>
-  <span class="p">}</span>
-  
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-33" id="section-33">&#182;</a>
 </div>
 <p>Could be trying to apply something at a future version... This is silly</p>
         </td>
@@ -1864,7 +1661,7 @@ version if we are the author or it will be an error if we are not.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
+  <a class="pilcrow" href="#section-33" id="section-33">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>This function adds a <em>Queueitem</em> into the <em>Store</em> if it passes some version 
@@ -1877,7 +1674,7 @@ checking.</p>
 <li><strong>{Function} <code>next</code></strong> The function to fire when applied.
 <ul><li><strong>{err} <code>next.err</code></strong> See SyncIt_Constant.Error.</li>
 <li><strong>{Queueitem} <code>next.firstInQueue</code></strong> This is the Queueitem that was added.</li>
-<li><strong>{Jrec} <code>next.jrec</code></strong> This is the new data stored in the <em>Store</em> or <code>undefined</code> on failure.</li></ul></li>
+<li><strong>{Storerecord} <code>next.storerecord</code></strong> This is the new data stored in the <em>Store</em> or <code>undefined</code> on failure.</li></ul></li>
 </ul>
   </div>
 </div>
@@ -1888,10 +1685,10 @@ checking.</p>
   <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">storeItemRetrieved</span><span class="p">;</span>
     
-  <span class="nx">storeItemRetrieved</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">jrec</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">storeItemRetrieved</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">storerecord</span><span class="p">)</span> <span class="p">{</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">===</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">jrec</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getEmptyJrec</span><span class="p">();</span>
+      <span class="nx">storerecord</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getEmptyStorerecord</span><span class="p">();</span>
       <span class="nx">e</span> <span class="o">=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
     <span class="p">}</span>
     
@@ -1900,21 +1697,21 @@ checking.</p>
       <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">);</span>
     <span class="p">}</span>
     
-    <span class="nx">r</span> <span class="o">=</span> <span class="nx">SyncIt</span><span class="p">.</span><span class="nx">_versionCheck</span><span class="p">(</span><span class="nx">jrec</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">);</span>
+    <span class="nx">r</span> <span class="o">=</span> <span class="nx">SyncIt</span><span class="p">.</span><span class="nx">_versionCheck</span><span class="p">(</span><span class="nx">storerecord</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">);</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="nx">r</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span>
     <span class="p">{</span>
       <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">);</span>
     <span class="p">}</span>
     
-    <span class="kd">var</span> <span class="nx">updatedJrec</span> <span class="o">=</span> <span class="nx">updateResult</span><span class="p">(</span><span class="nx">jrec</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_cloneObj</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">updatedStorerecord</span> <span class="o">=</span> <span class="nx">updateResult</span><span class="p">(</span><span class="nx">storerecord</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_cloneObj</span><span class="p">);</span>
     
     <span class="k">this</span><span class="p">.</span><span class="nx">_store</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span>
       <span class="nx">firstInQueue</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span>
       <span class="nx">firstInQueue</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span>
-      <span class="nx">updatedJrec</span><span class="p">,</span>
+      <span class="nx">updatedStorerecord</span><span class="p">,</span>
       <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="nx">updatedJrec</span><span class="p">);</span>
+        <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="nx">updatedStorerecord</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">);</span>
     
@@ -1950,10 +1747,10 @@ checking.</p>
 
 
 <ul>
-<li><strong>@param {Function} <code>done</code></strong> Callback when the operation is complete (or not). Signature: <code>function(errorCode, queueitem, jrec)</code>
+<li><strong>@param {Function} <code>done</code></strong> Callback when the operation is complete (or not). Signature: <code>function(errorCode, queueitem, storerecord)</code>
 <ul><li><strong>@param {ErrorCode} <code>done.errorCode</code></strong> See SyncIt_Constant.Error.</li>
 <li><strong>@param {Queueitem} <code>done.queueitem</code></strong> The <em>Queueitem</em> we are trying to apply. <code>Null</code> only if queue is empty.</li>
-<li><strong>@param {Jrec} <code>done.jrec</code></strong> The new <em>Jrec</em> that is now in the Store, <code>undefined</code> on everything but success.</li></ul></li>
+<li><strong>@param {Storerecord} <code>done.storerecord</code></strong> The new <em>Storerecord</em> that is now in the Store, <code>undefined</code> on everything but success.</li></ul></li>
 </ul>
   </div>
 </div>
@@ -1963,31 +1760,8 @@ checking.</p>
   <span class="kd">var</span> <span class="nx">whenAddedToQueue</span><span class="p">,</span>
     <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
   
-  <span class="nx">whenAddedToQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="nx">storedJrec</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">whenAddedToQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="nx">newStorerecord</span><span class="p">)</span> <span class="p">{</span>
 
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-36" id="section-36">&#182;</a>
-</div>
-<p>It could be that there is a stale item in the queue, in which case
-we should advance the queue only.</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_APPLY_UPDATE_ALREADY_APPLIED</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">advance</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">STALE_FOUND_QUEUE_COULD_NOT_ADVANCE</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">STALE_FOUND_QUEUE_ADVANCED</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">);</span>
-      <span class="p">});</span>
-    <span class="p">}</span>
-    
     <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
       <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">);</span>
@@ -1998,8 +1772,8 @@ we should advance the queue only.</p>
       <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">COULD_NOT_ADVANCE_QUEUE</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">);</span>
       <span class="p">}</span>
-      <span class="nx">inst</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;applied&#39;</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="nx">storedJrec</span><span class="p">);</span>
-      <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="nx">storedJrec</span><span class="p">);</span>
+      <span class="nx">inst</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;applied&#39;</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="nx">newStorerecord</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="nx">firstInQueue</span><span class="p">,</span> <span class="nx">newStorerecord</span><span class="p">);</span>
     <span class="p">});</span>
 
   <span class="p">};</span>
@@ -2112,14 +1886,14 @@ we should advance the queue only.</p>
   
   <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
   
-  <span class="nx">inst</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">({</span><span class="nx">dataset</span><span class="o">:</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="o">:</span> <span class="nx">datakey</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">inst</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getItemsForDatasetAndDatakey</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
     
     <span class="nx">inst</span><span class="p">.</span><span class="nx">_store</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span> <span class="p">{</span>
       <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
         <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
       
       <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">===</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">r</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_getEmptyJrec</span><span class="p">();</span>
+        <span class="nx">r</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_getEmptyStorerecord</span><span class="p">();</span>
         <span class="nx">e</span> <span class="o">=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
       <span class="p">}</span>
       
@@ -2130,7 +1904,10 @@ we should advance the queue only.</p>
         <span class="p">}</span>
       <span class="p">}</span>
 
-      <span class="k">if</span> <span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">r</span><span class="p">.</span><span class="nx">s</span> <span class="o">=</span> <span class="nx">dataset</span><span class="p">;</span>
+      <span class="nx">r</span><span class="p">.</span><span class="nx">k</span> <span class="o">=</span> <span class="nx">datakey</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">whenDataRetrieved</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">,</span><span class="kc">null</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="k">return</span> <span class="nx">whenDataRetrieved</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">r</span><span class="p">);</span>
@@ -2146,7 +1923,7 @@ we should advance the queue only.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-39" id="section-39">&#182;</a>
+  <a class="pilcrow" href="#section-37" id="section-37">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>_mergeArraysWhenCountIs()</p>
@@ -2324,7 +2101,7 @@ we should advance the queue only.</p>
   <span class="k">if</span> <span class="p">(</span><span class="nx">inWhere</span> <span class="o">&amp;</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Location</span><span class="p">.</span><span class="nx">IN_STORE</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_store</span><span class="p">.</span><span class="nx">getDatakeyNames</span><span class="p">(</span><span class="nx">datasetName</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">names</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">whenDatakeysKnown</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">whenDatakeysKnown</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="nx">resolved</span> <span class="o">=</span> <span class="nx">resolved</span> <span class="o">+</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Location</span><span class="p">.</span><span class="nx">IN_STORE</span><span class="p">;</span>
       <span class="nx">rs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">names</span><span class="p">);</span>
@@ -2333,18 +2110,12 @@ we should advance the queue only.</p>
   <span class="p">}</span>
   
   <span class="k">if</span> <span class="p">(</span><span class="nx">inWhere</span> <span class="o">&amp;</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Location</span><span class="p">.</span><span class="nx">IN_QUEUE</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">({</span><span class="nx">dataset</span><span class="o">:</span><span class="nx">datasetName</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">queueitems</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getDatakeyInDataset</span><span class="p">(</span><span class="nx">datasetName</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">datakeys</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">whenDatakeysKnown</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
       <span class="p">}</span>
-      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">queueitems</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">queueitems</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">k</span><span class="p">);</span>
-      <span class="p">}</span>
       <span class="nx">resolved</span> <span class="o">=</span> <span class="nx">resolved</span> <span class="o">+</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Location</span><span class="p">.</span><span class="nx">IN_QUEUE</span><span class="p">;</span>
-      <span class="nx">rs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">r</span><span class="p">);</span>
+      <span class="nx">rs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datakeys</span><span class="p">);</span>
       <span class="nx">possiblySend</span><span class="p">();</span>
     <span class="p">});</span>
   <span class="p">}</span>
@@ -2358,41 +2129,18 @@ we should advance the queue only.</p>
       <tr>
         <td class="docs"><div class="dox">
   <div class="summary">
-<div class="pilwrap" id="queue">
-  <h2>
-    <a href="#queue" name="queue" class="pilcrow">&#182;</a>
-    Queue
-  </h2>
-</div>
-
-  </div>
-  <div class="body"><p><em>Queue</em> stores <em>operation</em>s which have been performed locally but are still waiting to
-be applied to the <em>Server</em>.</p>
-
-<p>Currently Queue is a bit basic in that it stores a giant array in the key <code>_queue</code> instead of storing them seperately. This is fine for Persists that use Memory and I have seen people saying that is the fastest way to use LocalStorage (though I wonder if it's size dependant). Still I do feel this is a bit of an overly basic implementation. I expect to improve this soon.</p>
-
-<p>Note: All <em>Queue</em> must support at least the <em>Dataset</em> and <em>Datakey</em> filters. This class only supports those.</p>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="new%20queue()">
+<div class="pilwrap" id="syncit.removestalefromqueue()">
   <h3>
-    <a href="#new%20queue()" name="new%20queue()" class="pilcrow">&#182;</a>
-    new Queue()
+    <a href="#syncit.removestalefromqueue()" name="syncit.removestalefromqueue()" class="pilcrow">&#182;</a>
+    SyncIt.removeStaleFromQueue()
   </h3>
 </div>
 
   </div>
-  <div class="body">
+  <div class="body"><p>If somehow a Queueitem is applied to the store, but could not be removed then
+this function should be used to remove them from the Queue at a later date.</p>
+
+
 <div class="pilwrap" id="parameters">
   <h4>
     <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
@@ -2402,1046 +2150,62 @@ be applied to the <em>Server</em>.</p>
 
 
 <ul>
-<li><strong>@param {Persist} <code>persist</code></strong></li>
-</ul>
-
-
-<div class="pilwrap" id="see">
-  <h4>
-    <a href="#see" name="see" class="pilcrow">&#182;</a>
-    See
-  </h4>
-</div>
-
-
-<p>See <a href="Persist.js">Persist</a> for more information</p>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="kd">var</span> <span class="nx">Queue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">persist</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span> <span class="o">=</span> <span class="nx">persist</span><span class="p">;</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-44" id="section-44">&#182;</a>
-</div>
-<div class="dox">
-  <div class="summary"><p>Queue._basicFilterMethod()</p>
-  </div>
-  <div class="body"><p>Filter out items based on a <em>Dataset</em> and <em>Datakey</em>.</p>
-
-<p>Parameters</p>
-
-<ul>
-<li><strong>@param {Object} <code>filter</code></strong> Takes an Object like <code>{dataset: 'dataset_name', datakey: 'datakey_name</code>'} to filter by <em>Dataset</em> and <em>Datakey</em>.</li>
-<li><strong>@param {Array} <code>queueitems</code></strong> An array of <em>Queueitem</em> to filter.</li>
-<li><strong>@return {Array}</strong> The <em>Queueitem</em> that passed the filter.</li>
+<li><strong>@param {Function} <code>whenDatakeysKnown</code></strong> Signature: <code>function(err)</code></li>
 </ul>
   </div>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_basicFilterMethod</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">filter</span><span class="p">,</span> <span class="nx">queueitems</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">removeStaleFromQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
   
-  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
-  
-  <span class="kd">var</span> <span class="nx">filterFunc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">filter</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">))</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span> <span class="o">!==</span> <span class="nx">filter</span><span class="p">.</span><span class="nx">dataset</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">filter</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;datakey&#39;</span><span class="p">))</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span> <span class="o">!==</span> <span class="nx">filter</span><span class="p">.</span><span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-  <span class="p">};</span>
-  
-  <span class="kd">var</span> <span class="nx">propertyNames</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">ob</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">ob</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-      <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">k</span><span class="p">);</span>
-    <span class="p">}</span> <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
-  <span class="p">})(</span><span class="nx">filter</span><span class="p">);</span>
-  
-  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">propertyNames</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">((</span><span class="nx">propertyNames</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;dataset&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">propertyNames</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;datakey&#39;</span><span class="p">))</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="s2">&quot;Queue._basicFilterMethod: Can only filter on dataset and datakey&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">done</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">UNABLE_TO_PROCESS_BECAUSE_LOCKED</span><span class="p">);</span>
   <span class="p">}</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">|</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">;</span>
   
-  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">queueitems</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span> <span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">filterFunc</span><span class="p">(</span><span class="nx">queueitems</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span> <span class="p">{</span>
-      <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">queueitems</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="queue.getqueue()">
-  <h3>
-    <a href="#queue.getqueue()" name="queue.getqueue()" class="pilcrow">&#182;</a>
-    Queue.getQueue()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>Gets the items from the Queue, respecting the supplied filter</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Object} <code>filter</code></strong> Filtering parameters. See <a href="#queue._basicfiltermethod--">basic filtering method</a></li>
-<li><strong>@param {Function} <code>callback</code></strong> To get the results. Signature <code>function(err, results)</code>.
-<ul><li><strong>@param {ErrorCode} <code>callback.err</code></strong> See SyncIt_Constant.Error.</li>
-<li><strong>@param {Array} <code>callback.results</code></strong> An array of <code>queueitem</code></li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">filter</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_queue&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">queueitems</span><span class="p">)</span> <span class="p">{</span>
-    
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">queueitems</span> <span class="o">=</span> <span class="p">[];</span>
-      <span class="nx">err</span> <span class="o">=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
-    <span class="p">}</span>
-    
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    
-    <span class="nx">callback</span><span class="p">(</span>
-      <span class="nx">err</span><span class="p">,</span>
-      <span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_basicFilterMethod</span><span class="p">(</span><span class="nx">filter</span><span class="p">,</span> <span class="nx">queueitems</span><span class="p">)</span>
-    <span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-46" id="section-46">&#182;</a>
-</div>
-<div class="dox">
-  <div class="summary"><p><strong>Queue._setQueue()</strong></p>
-  </div>
-  <div class="body"><p><strong>Parameters</strong></p>
-
-<ul>
-<li><strong>@param {Array} <code>queueitem</code></strong> The new <code>Queueitem</code>s</li>
-<li><strong>@param {Function} <code>callback</code></strong> Called when done</li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_setQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span>
-    <span class="s1">&#39;_queue&#39;</span><span class="p">,</span>
-    <span class="nx">queueitem</span><span class="p">,</span>
-    <span class="nx">callback</span>
-  <span class="p">);</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-  </div>
-  <div class="body">
-<div class="pilwrap" id="queue.getcountinqueue()">
-  <h3>
-    <a href="#queue.getcountinqueue()" name="queue.getcountinqueue()" class="pilcrow">&#182;</a>
-    Queue.getCountInQueue()
-  </h3>
-</div>
-
-
-<p>Gets the count of items matching a Filter in the <em>Queue</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Object} <code>filter</code></strong> Filtering parameters. See <a href="#queue._basicfiltermethod--">basic filtering method</a></li>
-<li><strong>@param {Function} <code>retrieved</code></strong> Called when count retrieved. Signature: <code>function(err, length)</code>
-<ul><li><strong>@param {ErrorCode} <code>retrieved.err</code></strong></li>
-<li><strong>@param {Number} <code>retrieved.length</code></strong> The amount of items in the list matching the filter</li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getCountInQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">filter</span><span class="p">,</span> <span class="nx">retrieved</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">(</span><span class="nx">filter</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">retrieved</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="nx">retrieved</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="queue._removebydatasetanddatakey">
-  <h3>
-    <a href="#queue._removebydatasetanddatakey" name="queue._removebydatasetanddatakey" class="pilcrow">&#182;</a>
-    Queue._removeByDatasetAndDatakey
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>Removes all <em>Queueitem</em> that have a specified <em>Dataset</em> and <em>Datakey</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {String} <code>dataset</code></strong></li>
-<li><strong>@param {String} <code>datakey</code></strong></li>
-<li><strong>@param {String} <code>whenRemoved</code></strong> Called when done. Signature: <code>function(err)</code>
-<ul><li><strong>@param {ErrorCode} <code>whenRemoved.err</code></strong></li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_removeByDatasetAndDatakey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">whenRemoved</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="nx">inst</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">({},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">whenRemoved</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_setQueue</span><span class="p">(</span>
-      <span class="nx">_filter</span><span class="p">(</span><span class="nx">queue</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">update</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span>
-          <span class="p">(</span><span class="nx">update</span><span class="p">.</span><span class="nx">s</span> <span class="o">==</span> <span class="nx">dataset</span><span class="p">)</span> <span class="o">&amp;&amp;</span> 
-          <span class="p">(</span><span class="nx">update</span><span class="p">.</span><span class="nx">k</span> <span class="o">==</span> <span class="nx">datakey</span><span class="p">)</span>
-        <span class="p">)</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-      <span class="p">}),</span>
-      <span class="nx">whenRemoved</span>
-    <span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="queue.push()">
-  <h3>
-    <a href="#queue.push()" name="queue.push()" class="pilcrow">&#182;</a>
-    Queue.push()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>Add an item onto the end of the <em>Queue</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {queueitem} <code>value</code></strong></li>
-<li><strong>@param {Function} <code>whenAddedAtEnd</code></strong> Called when added, Signature: <code>function(err)</code>
-<ul><li><strong>@param {ErrorCode} <code>whenAddedAtEnd.err</code></strong></li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">push</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">whenAddedAtEnd</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="nx">inst</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">({},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">whenAddedAtEnd</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_setQueue</span><span class="p">(</span><span class="nx">queue</span><span class="p">,</span> <span class="nx">whenAddedAtEnd</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-  </div>
-  <div class="body">
-<div class="pilwrap" id="queue.advance()">
-  <h3>
-    <a href="#queue.advance()" name="queue.advance()" class="pilcrow">&#182;</a>
-    Queue.advance()
-  </h3>
-</div>
-
-
-<p>Remove the first value from the <em>Queue</em>, like <code>Array.shift()</code> except it does not
-return the removed item.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Function} <code>done</code></strong> Called when complete. Signature: <code>function(err)</code>
-<ul><li><strong>@param {ErrorCode} <code>done.err</code></strong></li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">advance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="nx">inst</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">({},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
-    <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_setQueue</span><span class="p">(</span><span class="nx">queue</span><span class="p">,</span> <span class="nx">done</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-  </div>
-  <div class="body">
-<div class="pilwrap" id="queue.getfirst()">
-  <h3>
-    <a href="#queue.getfirst()" name="queue.getfirst()" class="pilcrow">&#182;</a>
-    Queue.getFirst()
-  </h3>
-</div>
-
-
-<p>Gets the first item in the <em>Queue</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Function} <code>whenFirstElementRetrieved</code></strong> Called when got. Signature: <code>function(err, queueitem)</code>
-<ul><li><strong>@param {ErrorCode} <code>whenFirstElementRetrieved.err</code></strong></li>
-<li><strong>@param {Queueitem} <code>whenFirstElementRetrieved.queueitem</code></strong></li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getFirst</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">whenFirstElementRetrieved</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">({},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">queue</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">whenFirstElementRetrieved</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">whenFirstElementRetrieved</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-  </div>
-  <div class="body">
-<div class="pilwrap" id="queue.getdatasetnames()">
-  <h3>
-    <a href="#queue.getdatasetnames()" name="queue.getdatasetnames()" class="pilcrow">&#182;</a>
-    Queue.getDatasetNames()
-  </h3>
-</div>
-
-
-<p>Gets the names of <em>Dataset</em> within the <em>Queue</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Function} <code>whenRetrieved</code></strong> Called when got. Signature: <code>function(err, datasets)</code>.
-<ul><li><strong>@param {ErrorCode} <code>whenRetrieved.err</code></strong></li>
-<li><strong>@param {Array} <code>whenRetrieved.datasets</code></strong> An array of Dataset names.</li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getDatasetNames</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">whenRetrieved</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">({},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">queue</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">whenRetrieved</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-      <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">queue</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">r</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">s</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">queue</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">s</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">whenRetrieved</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">r</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="queuewithhistory">
-  <h2>
-    <a href="#queuewithhistory" name="queuewithhistory" class="pilcrow">&#182;</a>
-    QueueWithHistory
-  </h2>
-</div>
-
-  </div>
-  <div class="body"><p><em>QueueWithHistory</em> should perform identically to <em>Queue</em> except that it will also keep records of the <em>Queueitem</em> which have would have been discarded when <em>Queue</em> has <a href="#queue.advance--">Queue.advance()</a> called.</p>
-
-<p>The methods that have Filters attached to them include an additional property which can be read, it is called <code>from</code>. If this is passed the <em>Queueitem</em> will be read from that index, instead of the current position.</p>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-
-<span class="kd">var</span> <span class="nx">QueueWithHistory</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">persist</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span> <span class="o">=</span> <span class="nx">persist</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_position</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="queuewithhistory.getposition()">
-  <h3>
-    <a href="#queuewithhistory.getposition()" name="queuewithhistory.getposition()" class="pilcrow">&#182;</a>
-    QueueWithHistory.getPosition()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>Gets the current position where the QueueWithHistory has been advanced to.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Function} <code>found</code></strong> Called when got. Signature: <code>function(err, position)</code>.
-<ul><li><strong>@param {ErrorCode} <code>found.err</code></strong></li>
-<li><strong>@param {Array} <code>found.position</code></strong></li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">QueueWithHistory</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getPosition</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">found</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;_queue_position&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">found</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="s2">&quot;QueueWithHistory: Could not get initial position&quot;</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">found</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">position</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-55" id="section-55">&#182;</a>
-</div>
-<div class="dox">
-  <div class="summary"><p>Function for getting all <em>Queueitem</em> and the position simultaneously, it is shared between two functions.</p>
-  </div>
-  <div class="body"><ul>
-<li><strong>@param {Function} <code>callback</code></strong> Signature: `function(err, ob)
-<ul><li><strong>@param {Errorcode} <code>callback.err</code></strong></li>
-<li><strong>@param {Object} <code>callback.ob</code></strong> Includes the keys allQueueitem and position.</li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">QueueWithHistory</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_getQueueAndPosition</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">working</span> <span class="o">=</span> <span class="p">{};</span>
-  <span class="kd">var</span> <span class="nx">haveError</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">doIHave</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">working</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;allQueueitems&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="nx">working</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;position&#39;</span><span class="p">))</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">callback</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="nx">working</span><span class="p">);</span>
-  <span class="p">};</span>
+  <span class="kd">var</span> <span class="nx">working</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   
-  <span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getQueue</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">{},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">allQueueitems</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">haveError</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="p">}</span>
-      <span class="nx">haveError</span> <span class="o">=</span>  <span class="kc">true</span><span class="p">;</span>
-      <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="nx">working</span><span class="p">.</span><span class="nx">allQueueitems</span> <span class="o">=</span> <span class="nx">allQueueitems</span><span class="p">;</span>
-    <span class="nx">doIHave</span><span class="p">();</span>
-  <span class="p">});</span>
-  
-  <span class="k">this</span><span class="p">.</span><span class="nx">getPosition</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">haveError</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="p">}</span>
-      <span class="nx">haveError</span> <span class="o">=</span>  <span class="kc">true</span><span class="p">;</span>
-      <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="nx">working</span><span class="p">.</span><span class="nx">position</span> <span class="o">=</span> <span class="nx">position</span><span class="p">;</span>
-    <span class="nx">doIHave</span><span class="p">();</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="queuewithhistory.getqueue()">
-  <h3>
-    <a href="#queuewithhistory.getqueue()" name="queuewithhistory.getqueue()" class="pilcrow">&#182;</a>
-    QueueWithHistory.getQueue()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>See the corresponding function on <a href="SyncIt.js.html#queue">Queue</a></p>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">QueueWithHistory</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">filter</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_getQueueAndPosition</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-    
-    <span class="kd">var</span> <span class="nx">position</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">position</span><span class="p">,</span>
-      <span class="nx">nonProcessed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">],</span>
-      <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-      <span class="nx">newFilter</span> <span class="o">=</span> <span class="p">{};</span>
-    
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">filter</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;from&#39;</span><span class="p">))</span> <span class="p">{</span>
-      <span class="nx">position</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">filter</span><span class="p">.</span><span class="nx">from</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
-    <span class="p">}</span>
-    
-    <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">filter</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">filter</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">nonProcessed</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">newFilter</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">filter</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
-      <span class="p">}</span>
-    <span class="p">}</span> <span class="p">}</span>
-    
-    <span class="k">return</span> <span class="nx">callback</span><span class="p">(</span>
-      <span class="nx">err</span><span class="p">,</span>
-      <span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_basicFilterMethod</span><span class="p">(</span>
-        <span class="nx">newFilter</span><span class="p">,</span>
-        <span class="nx">result</span><span class="p">.</span><span class="nx">allQueueitems</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span>
-      <span class="p">)</span>
-    <span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-57" id="section-57">&#182;</a>
-</div>
-<div class="dox">
-  <div class="summary"><p><strong>QueueWithHistory._setQueue()</strong></p>
-  </div>
-  <div class="body"><p>See the corresponding function on <a href="SyncIt.js.html#queue">Queue</a></p>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">QueueWithHistory</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_setQueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">newQueueItems</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="nx">inst</span><span class="p">.</span><span class="nx">_getQueueAndPosition</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">callback</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">allQueueitems</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">position</span><span class="p">);</span>
-    <span class="nx">newQueueItems</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-    <span class="nx">newQueueItems</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">position</span><span class="p">);</span>
-    <span class="nx">r</span><span class="p">.</span><span class="nx">splice</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">newQueueItems</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_persist</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span>
-      <span class="s1">&#39;_queue&#39;</span><span class="p">,</span>
-      <span class="nx">r</span><span class="p">,</span>
-      <span class="nx">callback</span>
-    <span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="queuewithhistory.advance()">
-  <h3>
-    <a href="#queuewithhistory.advance()" name="queuewithhistory.advance()" class="pilcrow">&#182;</a>
-    QueueWithHistory.advance()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>See the corresponding function on <a href="SyncIt.js.html#queue">Queue</a></p>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">QueueWithHistory</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">advance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">getPosition</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">pos</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">unlock</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">^</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span><span class="p">);</span>
       <span class="nx">done</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_persist</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span>
-      <span class="s1">&#39;_queue_position&#39;</span><span class="p">,</span>
-      <span class="nx">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
-      <span class="nx">done</span>
-    <span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-<span class="kd">var</span> <span class="nx">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;getCountInQueue&#39;</span><span class="p">,</span> <span class="s1">&#39;_removeByDatasetAndDatakey&#39;</span><span class="p">,</span> <span class="s1">&#39;push&#39;</span><span class="p">,</span> <span class="s1">&#39;getFirst&#39;</span><span class="p">,</span> <span class="s1">&#39;getDatasetNames&#39;</span><span class="p">];</span>
-
-<span class="kd">var</span> <span class="nx">getInheritFunc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">func</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
-  <span class="p">};</span>
-<span class="p">};</span>
-
-<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">methods</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">QueueWithHistory</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span><span class="nx">methods</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">getInheritFunc</span><span class="p">(</span><span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span><span class="nx">methods</span><span class="p">[</span><span class="nx">i</span><span class="p">]]);</span>
-<span class="p">}</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="store">
-  <h2>
-    <a href="#store" name="store" class="pilcrow">&#182;</a>
-    Store
-  </h2>
-</div>
-
-  </div>
-  <div class="body"><p><em>Store</em> is where the information that has been synced to the <em>Server</em> is stored.</p>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="new%20store()">
-  <h3>
-    <a href="#new%20store()" name="new%20store()" class="pilcrow">&#182;</a>
-    new Store()
-  </h3>
-</div>
-
-  </div>
-  <div class="body">
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Persist} <code>persist</code></strong></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="kd">var</span> <span class="nx">Store</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">persist</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span> <span class="o">=</span> <span class="nx">persist</span><span class="p">;</span>
-<span class="p">};</span>
-<span class="nx">Store</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_keyCheck</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">checkRe</span> <span class="o">=</span> <span class="sr">/(\.)|(^[0-9])|(^_)/</span><span class="p">,</span>
-    <span class="nx">toCheck</span> <span class="o">=</span> <span class="p">{</span><span class="nx">Dataset</span><span class="o">:</span> <span class="nx">dataset</span><span class="p">,</span> <span class="nx">Datakey</span><span class="o">:</span> <span class="nx">datakey</span><span class="p">},</span>
-    <span class="nx">msg</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-    <span class="nx">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-    
-  <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">toCheck</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">toCheck</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">checkRe</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">toCheck</span><span class="p">[</span><span class="nx">k</span><span class="p">]))</span> <span class="p">{</span>
-        <span class="nx">msg</span> <span class="o">=</span> <span class="s1">&#39;SyncIt.Store does not support &#39;</span><span class="o">+</span><span class="nx">k</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span>
-          <span class="s1">&#39;which includes a &quot;.&quot; or starts with a &quot;_&quot; or number&#39;</span><span class="p">;</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  
+    <span class="k">this</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">getFirst</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">unlock</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">unlock</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
       <span class="p">}</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">toCheck</span><span class="p">[</span><span class="nx">k</span><span class="p">].</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">msg</span> <span class="o">=</span> <span class="s1">&#39;SyncIt.Store does not support &#39;</span><span class="o">+</span><span class="nx">k</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span>
-          <span class="s1">&#39;with a length less than 2&#39;</span><span class="p">;</span>
-      <span class="p">}</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="s1">&#39;SyncIt.Store.Invalid&#39;</span><span class="o">+</span><span class="nx">k</span><span class="o">+</span><span class="s1">&#39;: &#39;</span><span class="o">+</span><span class="nx">msg</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+  
+      <span class="k">this</span><span class="p">.</span><span class="nx">_store</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">storerecord</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">unlock</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">&gt;=</span> <span class="nx">storerecord</span><span class="p">.</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">unlock</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+        <span class="p">}</span>
+  
+        <span class="k">this</span><span class="p">.</span><span class="nx">_queue</span><span class="p">.</span><span class="nx">advance</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">unlock</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="nx">working</span><span class="p">(</span><span class="nx">done</span><span class="p">);</span>
+        <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+  <span class="nx">working</span><span class="p">();</span>
 <span class="p">};</span>
 
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="store.get()">
-  <h3>
-    <a href="#store.get()" name="store.get()" class="pilcrow">&#182;</a>
-    Store.get()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>Gets the data in the <em>Store</em> for a specfic <em>Dataset</em> / <em>Datakey</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Dataset} <code>dataset</code></strong></li>
-<li><strong>@param {Datakey} <code>datakey</code></strong></li>
-<li><strong>@param {Function} <code>whenRetrieved</code></strong> Signature: `function(err, jrec)
-<ul><li><strong>@param {Errorcode} <code>whenRetrieved.err</code></strong></li>
-<li><strong>@param {Jrec} <code>whenRetrieved.jrec</code></strong> The value stored at the <em>Dataset</em> / <em>Datakey</em>.</li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Store</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">whenRetrieved</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_keyCheck</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">);</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">dataset</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nx">datakey</span><span class="p">,</span> <span class="nx">whenRetrieved</span><span class="p">);</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="store.set()">
-  <h3>
-    <a href="#store.set()" name="store.set()" class="pilcrow">&#182;</a>
-    Store.set()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>Sets the data in the <em>Store</em> for a specfic <em>Dataset</em> / <em>Datakey</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Dataset} <code>dataset</code></strong></li>
-<li><strong>@param {Datakey} <code>datakey</code></strong></li>
-<li><strong>@param {Function} <code>whenSet</code></strong> Signature: `function(err)
-<ul><li><strong>@param {Errorcode} <code>whenSet.err</code></strong></li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Store</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">set</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">whenSet</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_keyCheck</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">);</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">dataset</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nx">datakey</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">whenSet</span><span class="p">);</span>
-<span class="p">};</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-63" id="section-63">&#182;</a>
-</div>
-<div class="dox">
-  <div class="summary"><p><strong>Store._getPersistStorageKeys()</strong></p>
-  </div>
-  <div class="body"><p>Returns the name of all keys stored in the <em>Persist</em>.</p>
-
-<p>In practice the storage keys are the form [<code>Dataset</code>].[<code>Datakey</code>] so you are
-getting a somewhat easy to parse list of the <em>Dataset</em> / <em>Datakey</em>.</p>
-
-<p><strong>Parameters</strong>  </p>
-
-<ul>
-<li><strong>@param {Function} <code>dataRetrieved</code></strong> Signature: `function(err, storageKeys)
-<ul><li><strong>@param {Errocode} <code>dataRetrieved.err</code></strong></li>
-<li><strong>@param {Array} <code>dataRetrieved.storageKeys</code></strong> A list of all storage keys in the <code>Persist</code></li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Store</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_getPersistStorageKeys</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataRetrieved</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_persist</span><span class="p">.</span><span class="nx">getKeys</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">persistKeys</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">dataRetrieved</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">persistKeys</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">persistKeys</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">match</span><span class="p">(</span><span class="sr">/\S+\.\S+/</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">persistKeys</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="nx">dataRetrieved</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="nx">r</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="store.getdatasetnames()">
-  <h3>
-    <a href="#store.getdatasetnames()" name="store.getdatasetnames()" class="pilcrow">&#182;</a>
-    Store.getDatasetNames()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>Will retrieve the <code>Dataset</code>s which are in use in the <em>Store</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {Function} <code>setsRetrieved</code></strong> Signature: <code>function(err, sets)</code>
-<ul><li><strong>@param {Errorcode} <code>setsRetrieved.err</code></strong> </li>
-<li><strong>@param {Array} <code>setsRetrieved.sets</code></strong> An array of names of <code>Dataset</code>s</li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Store</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getDatasetNames</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">setsRetrieved</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_getPersistStorageKeys</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">persistData</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">setsRetrieved</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">persistData</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">datasetName</span> <span class="o">=</span> <span class="nx">persistData</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\..*/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">datasetName</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datasetName</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="nx">setsRetrieved</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="nx">r</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="store.getdatakeynames()">
-  <h3>
-    <a href="#store.getdatakeynames()" name="store.getdatakeynames()" class="pilcrow">&#182;</a>
-    Store.getDatakeyNames()
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><p>Will retrieve the Keys which are in use within a <em>Dataset</em> in the <em>Store</em>.</p>
-
-
-<div class="pilwrap" id="parameters">
-  <h4>
-    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
-    Parameters
-  </h4>
-</div>
-
-
-<ul>
-<li><strong>@param {String} <code>dataset</code></strong></li>
-<li><strong>@param {Function} <code>keysRetrieved</code></strong> Signature: function(err, keys)
-<ul><li><strong>@param {Errorcode} <code>keysRetrieved.err</code></strong> </li>
-<li><strong>@param {Array} <code>keysRetrieved.keys</code></strong> An array of names of <code>Datakey</code>s</li></ul></li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">Store</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getDatakeyNames</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">keysRetrieved</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_getPersistStorageKeys</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">persistData</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">keysRetrieved</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">persistData</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">persistData</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\..*/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="nx">dataset</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">persistData</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/.*\./</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">));</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="nx">keysRetrieved</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="nx">r</span><span class="p">);</span>
-  <span class="p">});</span>
-<span class="p">};</span>
-
-<span class="k">return</span> <span class="p">{</span>
-  <span class="nx">SyncIt</span><span class="o">:</span> <span class="nx">SyncIt</span><span class="p">,</span>
-  <span class="nx">Queue</span><span class="o">:</span> <span class="nx">Queue</span><span class="p">,</span>
-  <span class="nx">QueueWithHistory</span><span class="o">:</span> <span class="nx">QueueWithHistory</span><span class="p">,</span>
-  <span class="nx">Store</span><span class="o">:</span> <span class="nx">Store</span>
-<span class="p">};</span>
+<span class="k">return</span> <span class="nx">SyncIt</span><span class="p">;</span>
 
 <span class="p">});</span>
 </pre></div>

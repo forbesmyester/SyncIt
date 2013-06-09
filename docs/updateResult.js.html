@@ -74,11 +74,24 @@
       <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_manip</span>
     <span class="p">);</span>
   <span class="p">}</span>
-<span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">manipulation</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">manip</span><span class="p">)</span> <span class="p">{</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: Matthew Forrester
+License: MIT/BSD-style</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
 
 <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-
-<span class="kd">var</span> <span class="nx">manip</span> <span class="o">=</span> <span class="nx">manipulation</span><span class="p">.</span><span class="nx">create</span><span class="p">();</span>
 
 
 </pre></div>
@@ -154,7 +167,7 @@
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nx">updateResult</span><span class="p">.</span><span class="nx">_op_update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">cloningFunction</span><span class="p">(</span><span class="nx">ob</span><span class="p">);</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">i</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">u</span><span class="p">);</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">i</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">u</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">);</span>
   <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
   <span class="nx">r</span><span class="p">.</span><span class="nx">m</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span><span class="p">;</span>
   <span class="nx">r</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">t</span><span class="p">;</span>

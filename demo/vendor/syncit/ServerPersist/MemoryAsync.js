@@ -18,7 +18,10 @@
 	}
 })(this, function (SyncIt_Constant,updateResult) {
 	
-	
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: 2013 Matthew Forrester
+// License: MIT/BSD-style
+
 /**
  * ## SyncIt_ServerPersist_MemoryAsync
  * 

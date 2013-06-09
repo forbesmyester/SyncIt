@@ -85,6 +85,21 @@ like Node.</p>
   <span class="p">}</span>
 <span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: 2013 Matthew Forrester
+License: MIT/BSD-style</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
 <span class="kd">var</span> <span class="nb">Error</span> <span class="o">=</span> <span class="p">{};</span>
 
 
@@ -94,7 +109,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Everything was normal.</p>
@@ -113,7 +128,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>A request was made for data at a location, but that location contains no data.</p>
@@ -132,7 +147,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Data wrote from journal into store, but we could not clear the journal record.</p>
@@ -151,7 +166,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>The data is currently locked, please try again.</p>
@@ -170,7 +185,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>The data is currently locked for feeding, please try again.</p>
@@ -189,7 +204,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to apply an update based on a version number higher than the current.</p>
@@ -208,7 +223,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to apply an update based on a version which is no longer current.</p>
@@ -227,7 +242,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>We are trying to apply an update that has already been.</p>
@@ -246,7 +261,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to change data post delete</p>
@@ -265,7 +280,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to change data post delete</p>
@@ -275,7 +290,8 @@ like Node.</p>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nb">Error</span><span class="p">.</span><span class="nx">FEED_ATTEMPTED_WHILE_LOCAL_IN_QUEUE</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">FEEDING_OUT_OF_DATE_BASEDONVERSION</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+
 
 </pre></div>
         </td>
@@ -283,7 +299,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Failure writing update.</p>
@@ -302,7 +318,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to Feed data into SyncIt, but without a version</p>
@@ -321,7 +337,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>A request was made to add a Queueitem, but it is based on an outdated version.</p>
@@ -340,7 +356,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>A request was made to add a Queueitem, but we already have it (note this may only happen for the latest!)</p>
@@ -359,7 +375,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>For some reason, we are trying to add an item based on something that does not yet exist!</p>
@@ -378,7 +394,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>It is only possible to use <code>SyncIt.feed()</code> for Queueitem coming from elsewhere.</p>
@@ -397,7 +413,7 @@ like Node.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>If you have local Queueitem that have been put into the Repository and not
@@ -417,40 +433,18 @@ applied locally, but are feeding Queueitem with a higher version.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
-</div>
-<div class="dox">
-  <div class="summary"><p>It might be that SyncIt had an item in the Queue that was applied but could not
-be cleared. If that is the case when we next call apply it will spot this and will
-only advance the queue and return this error code. At this point you should call
-apply() again.</p>
-  </div>
-  <div class="body">
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nb">Error</span><span class="p">.</span><span class="nx">STALE_FOUND_QUEUE_ADVANCED</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
   <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
 </div>
 <div class="dox">
-  <div class="summary"><p>On the other hand, we might be able spot a stale Queueitem, but may still not be 
-able to advance it.</p>
+  <div class="summary"><p>It might be that SyncIt had an item in the Queue that was applied but could not
+be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
   </div>
   <div class="body">
   </div>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nb">Error</span><span class="p">.</span><span class="nx">STALE_FOUND_QUEUE_COULD_NOT_ADVANCE</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">STALE_FOUND_IN_QUEUE</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
 
 
 </pre></div>

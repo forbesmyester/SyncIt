@@ -25,9 +25,6 @@
         <a href="#parameters">Parameters</a>
       </div>
       <div class="heading h3">
-        <a href="#manip._cloneobj().">manip._cloneObj().</a>
-      </div>
-      <div class="heading h3">
         <a href="#manip._setkey()">manip._setKey()</a>
       </div>
       <div class="heading h4">
@@ -80,8 +77,6 @@
   <span class="p">}</span>
 <span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
   
-  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-  
 
 </pre></div>
         </td>
@@ -91,18 +86,14 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
 </div>
-<div class="dox">
-  <div class="summary"><p>Returns a Manip</p>
-  </div>
-  <div class="body"><ul>
-<li><strong>@return {Function}</strong></li>
-</ul>
-  </div>
-</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: Matthew Forrester
+License: MIT/BSD-style</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="kd">var</span> <span class="nx">create</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    
+
+<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
 
 </pre></div>
         </td>
@@ -132,56 +123,35 @@
 <ul>
 <li><strong>@param {Object} <code>ob</code></strong> The function to apply the Manipulation to.</li>
 <li><strong>@param {Object} <code>jsonDoc</code></strong> The manipulation.</li>
+<li><strong>@param {Function|undefined} <code>cloneObjFunc</code></strong> Function to use for cloning objects, if left null, it will do a JSON based clone.</li>
 <li><strong>@return {Object}</strong> The result of applying the <code>jsonDoc</code> to <code>ob</code>.</li>
 </ul>
   </div>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="kd">var</span> <span class="nx">manip</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">jsonDoc</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="nx">r</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">manip</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">jsonDoc</span><span class="p">,</span><span class="nx">cloneFunc</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="nx">r</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nx">_cloneFunc</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">ob</span><span class="p">))</span> <span class="p">};</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">cloneFunc</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">r</span> <span class="o">=</span> <span class="nx">_cloneFunc</span><span class="p">(</span><span class="nx">ob</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">r</span> <span class="o">=</span> <span class="nx">cloneFunc</span><span class="p">(</span><span class="nx">ob</span><span class="p">);</span>
+  <span class="p">}</span>
 
-      <span class="nx">r</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_cloneObj</span><span class="p">(</span><span class="nx">ob</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">jsonDoc</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">jsonDoc</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;$&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">manip</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;manip: Does not have manipulation function &#39;</span><span class="o">+</span><span class="nx">k</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="nx">r</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">fn</span><span class="p">[</span><span class="nx">k</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">)].</span><span class="nx">call</span><span class="p">(</span><span class="nx">manip</span><span class="p">,</span><span class="nx">r</span><span class="p">,</span><span class="nx">jsonDoc</span><span class="p">[</span><span class="nx">k</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+<span class="p">};</span>
 
-      <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">jsonDoc</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">jsonDoc</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;$&#39;</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">manip</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;manip: Does not have manipulation function &#39;</span><span class="o">+</span><span class="nx">k</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
-          <span class="p">}</span>
-          <span class="nx">r</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">fn</span><span class="p">[</span><span class="nx">k</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">)].</span><span class="nx">call</span><span class="p">(</span><span class="nx">manip</span><span class="p">,</span><span class="nx">r</span><span class="p">,</span><span class="nx">jsonDoc</span><span class="p">[</span><span class="nx">k</span><span class="p">]);</span>
-        <span class="p">}</span>
-      <span class="p">}</span> <span class="p">}</span>
-      <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
-    <span class="p">};</span>
-    
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs"><div class="dox">
-  <div class="summary">
-<div class="pilwrap" id="manip._cloneobj().">
-  <h3>
-    <a href="#manip._cloneobj()." name="manip._cloneobj()." class="pilcrow">&#182;</a>
-    manip._cloneObj().
-  </h3>
-</div>
-
-  </div>
-  <div class="body"><ul>
-<li><strong>@param {Object} <code>ob</code></strong> The object to clone.</li>
-<li><strong>@return {Object}</strong> The cloned object.</li>
-</ul>
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">_cloneObj</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">ob</span><span class="p">));</span>
-    <span class="p">};</span>
-    
 
 </pre></div>
         </td>
@@ -189,13 +159,13 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
 <p>Holds the functions</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">fn</span> <span class="o">=</span> <span class="p">{};</span>
-    
+<span class="nx">manip</span><span class="p">.</span><span class="nx">fn</span> <span class="o">=</span> <span class="p">{};</span>
+
 
 </pre></div>
         </td>
@@ -232,24 +202,24 @@
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">_setKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">k</span><span class="p">,</span>
-        <span class="nx">t</span> <span class="o">=</span> <span class="nx">r</span><span class="p">,</span>
-        <span class="nx">parsePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
-      
-      <span class="k">while</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">k</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-          <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-          <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
-        <span class="p">}</span>
-        <span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
-      <span class="p">}</span>
+<span class="nx">manip</span><span class="p">.</span><span class="nx">_setKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span><span class="p">,</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">r</span><span class="p">,</span>
+    <span class="nx">parsePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+  
+  <span class="k">while</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
       <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
-    <span class="p">};</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+<span class="p">};</span>
 
 
 </pre></div>
@@ -286,23 +256,23 @@
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">_getKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">k</span><span class="p">,</span>
-        <span class="nx">t</span> <span class="o">=</span> <span class="nx">r</span><span class="p">,</span>
-        <span class="nx">parsePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
-      
-      <span class="k">while</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">k</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-          <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
-        <span class="p">}</span>
-        <span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
-      <span class="p">}</span>
-      <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="p">};</span>
+<span class="nx">manip</span><span class="p">.</span><span class="nx">_getKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span><span class="p">,</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">r</span><span class="p">,</span>
+    <span class="nx">parsePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+  
+  <span class="k">while</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">};</span>
 
 
 </pre></div>
@@ -339,25 +309,25 @@
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">_remKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">k</span><span class="p">,</span>
-        <span class="nx">t</span> <span class="o">=</span> <span class="nx">r</span><span class="p">,</span>
-        <span class="nx">parsePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
-      
-      <span class="k">while</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">k</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">delete</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
-          <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
-      <span class="p">}</span>
+<span class="nx">manip</span><span class="p">.</span><span class="nx">_remKey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span><span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span><span class="p">,</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">r</span><span class="p">,</span>
+    <span class="nx">parsePath</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+  
+  <span class="k">while</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">k</span> <span class="o">=</span> <span class="nx">parsePath</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">parsePath</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">delete</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
       <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
-    <span class="p">};</span>
-    
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">t</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+<span class="p">};</span>
+
 
 </pre></div>
         </td>
@@ -392,10 +362,35 @@
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">addManipulation</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">manip</span><span class="p">.</span><span class="nx">fn</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">func</span><span class="p">;</span>
-    <span class="p">};</span>
-    
+<span class="nx">manip</span><span class="p">.</span><span class="nx">addManipulation</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">manip</span><span class="p">.</span><span class="nx">fn</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">func</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Adds the 'set' which is similar to the MongoDB operation of the same name.</p>
+  </div>
+  <div class="body">
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">manip</span><span class="p">.</span><span class="nx">addManipulation</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">jsonSnippet</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">ob</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_setKey</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">k</span><span class="p">,</span><span class="nx">jsonSnippet</span><span class="p">[</span><span class="nx">k</span><span class="p">]);</span>
+  <span class="p">}</span> <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">ob</span><span class="p">;</span>
+<span class="p">});</span>
+
 
 </pre></div>
         </td>
@@ -406,21 +401,21 @@
   <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
 </div>
 <div class="dox">
-  <div class="summary"><p>Adds the 'set' which is similar to the MongoDB operation of the same name.</p>
+  <div class="summary"><p>Adds the 'unset' which is similar to the MongoDB operation of the same name.</p>
   </div>
   <div class="body">
   </div>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">addManipulation</span><span class="p">(</span><span class="s1">&#39;set&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">jsonSnippet</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">ob</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_setKey</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">k</span><span class="p">,</span><span class="nx">jsonSnippet</span><span class="p">[</span><span class="nx">k</span><span class="p">]);</span>
-      <span class="p">}</span> <span class="p">}</span>
-      <span class="k">return</span> <span class="nx">ob</span><span class="p">;</span>
-    <span class="p">});</span>
-    
+<span class="nx">manip</span><span class="p">.</span><span class="nx">addManipulation</span><span class="p">(</span><span class="s1">&#39;unset&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">jsonSnippet</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">ob</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_remKey</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">k</span><span class="p">);</span>
+  <span class="p">}</span> <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">ob</span><span class="p">;</span>
+<span class="p">});</span>
+
 
 </pre></div>
         </td>
@@ -431,31 +426,6 @@
   <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 <div class="dox">
-  <div class="summary"><p>Adds the 'unset' which is similar to the MongoDB operation of the same name.</p>
-  </div>
-  <div class="body">
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">addManipulation</span><span class="p">(</span><span class="s1">&#39;unset&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">jsonSnippet</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">ob</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_remKey</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">k</span><span class="p">);</span>
-      <span class="p">}</span> <span class="p">}</span>
-      <span class="k">return</span> <span class="nx">ob</span><span class="p">;</span>
-    <span class="p">});</span>
-    
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
-</div>
-<div class="dox">
   <div class="summary"><p>Adds the 'inc' which is similar to the MongoDB operation of the same name.</p>
   </div>
   <div class="body">
@@ -463,22 +433,18 @@
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">manip</span><span class="p">.</span><span class="nx">addManipulation</span><span class="p">(</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">jsonSnippet</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_getKey</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">k</span><span class="p">);</span>
-        <span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">jsonSnippet</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
-        <span class="nx">ob</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_setKey</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">k</span><span class="p">,</span><span class="nx">x</span><span class="p">);</span>
-      <span class="p">}</span> <span class="p">}</span>
-      <span class="k">return</span> <span class="nx">ob</span><span class="p">;</span>
-    <span class="p">});</span>
+<span class="nx">manip</span><span class="p">.</span><span class="nx">addManipulation</span><span class="p">(</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">jsonSnippet</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">jsonSnippet</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_getKey</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">k</span><span class="p">);</span>
+    <span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">jsonSnippet</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+    <span class="nx">ob</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">.</span><span class="nx">_setKey</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">k</span><span class="p">,</span><span class="nx">x</span><span class="p">);</span>
+  <span class="p">}</span> <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">ob</span><span class="p">;</span>
+<span class="p">});</span>
 
-    <span class="k">return</span> <span class="nx">manip</span><span class="p">;</span>
-  <span class="p">};</span>
-  
-  <span class="k">return</span> <span class="p">{</span><span class="nx">create</span><span class="o">:</span> <span class="nx">create</span><span class="p">};</span>
-  
-  
+<span class="k">return</span> <span class="nx">manip</span><span class="p">;</span>
+
 <span class="p">}));</span>
 </pre></div>
         </td>

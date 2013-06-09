@@ -14,11 +14,13 @@
 			root.SyncIt_manip
 		);
 	}
-})(this, function (manipulation) {
+})(this, function (manip) {
+
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: Matthew Forrester
+// License: MIT/BSD-style
 
 "use strict";
-
-var manip = manipulation.create();
 
 /**
  * ### updateResult()
@@ -53,7 +55,7 @@ var updateResult = function(obToApplyTo,queueitem,cloningFunction) {
  */
 updateResult._op_update = function(ob,queueitem,cloningFunction) {
 	var r = cloningFunction(ob);
-	r.i = manip(r.i,queueitem.u);
+	r.i = manip(r.i,queueitem.u,cloningFunction);
 	r.v = queueitem.b + 1;
 	r.m = queueitem.m;
 	r.t = queueitem.t;

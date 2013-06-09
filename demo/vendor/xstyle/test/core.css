@@ -32,7 +32,8 @@ test-component = section {
 pink-background = {
 	background-color: #faa;
 }
-hello-world = test-component, pink-background {
+hello-world = test-component {
+	pink-background: defaults;
 	label: Hello world;
 	main-color: #888;
 }
@@ -44,5 +45,14 @@ body {
 		label: Hi there;
 		content: some content;
 	},
-	hello-world, .with-content;
+	hello-world, 
+	.with-content
+	div.parent
+		div.middle1
+			div.child1 { color: red;},
+			div.child2 
+		div.middle2
+		    div.child3 
+		    div.child4
+		div.middle3
 }

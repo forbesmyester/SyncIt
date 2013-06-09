@@ -14,6 +14,10 @@
   }
 }(this, function () {
 
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: 2013 Matthew Forrester
+// License: MIT/BSD-style
+
 var Error = {};
 
 /**
@@ -64,7 +68,8 @@ Error.DATA_ALREADY_REMOVED = 8;
 /**
  Trying to change data post delete
  */
-Error.FEED_ATTEMPTED_WHILE_LOCAL_IN_QUEUE = 9;
+Error.FEEDING_OUT_OF_DATE_BASEDONVERSION = 9;
+
 /**
  Failure writing update.
 */
@@ -103,17 +108,9 @@ Error.BASED_ON_IN_QUEUE_LESS_THAN_BASED_IN_BEING_FED = 18;
 
 /**
  * It might be that SyncIt had an item in the Queue that was applied but could not
- * be cleared. If that is the case when we next call apply it will spot this and will
- * only advance the queue and return this error code. At this point you should call
- * apply() again.
+ * be cleared. At this point you should call SyncIt.removeStaleFromQueue.
  */
-Error.STALE_FOUND_QUEUE_ADVANCED = 19;
-
-/**
- * On the other hand, we might be able spot a stale Queueitem, but may still not be 
- * able to advance it.
- */
-Error.STALE_FOUND_QUEUE_COULD_NOT_ADVANCE = 20;
+Error.STALE_FOUND_IN_QUEUE = 19;
 
 /**
  * Validation Error

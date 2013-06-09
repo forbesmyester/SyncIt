@@ -179,7 +179,7 @@ define("xstyle/core/parser", ["xstyle/core/utils"], function(utils){
 							}
 							if(sequence.creating){
 								// in generation, we auto-generate selectors so we can reference them
-								newTarget.selector = '.' + (assignmentOperator == '=' ? first.replace(/[^\w-]/g,'') : '') + '-x-' + nextId++;
+								newTarget.selector = '.' + (assignmentOperator == '=' ? first.match(/[\w-]*$/g,'')[0] : '') + '-x-' + nextId++;
 								newTarget.creating = true;
 							}else{						
 								newTarget.selector = target.root ? selector : target.selector + ' ' + selector;
@@ -195,7 +195,8 @@ define("xstyle/core/parser", ["xstyle/core/utils"], function(utils){
 						// make the parent reference
 						newTarget.parent = target;
 						if(doExtend){
-							value.replace(/(?:^|,|>)\s*([\w-]+)/g, function(t, base){
+//							value.replace(/(?:^|,|>)\s*([\w-]+)/g, function(t, base){
+							value.replace(/([\w-]+)$/g, function(t, base){
 								var ref = target.getDefinition(base, true);
 								if(ref){
 									ref.extend(newTarget, true);
