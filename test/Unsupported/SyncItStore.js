@@ -1,12 +1,9 @@
 /*jshint smarttabs:true */
-require(['syncit/SyncIt','syncit/Persist/MemoryAsync','syncit/Unsupported/SyncItStore','dojo/node!expect.js',
+require(['syncit/SyncIt','syncit/Constant','syncit/Queue/Persist','syncit/Store/Persist','syncit/Persist/MemoryAsync','syncit/Unsupported/SyncItStore','dojo/node!expect.js',
 "dojo/_base/array","dojo/promise/all","dojo/store/Observable"],
-function(SyncItLib,Persist,SyncItStore,expect,dojoBaseArray,dojoPromiseAll,Observable) {
+function(SyncIt,SyncIt_Constant,Queue,Store,Persist,SyncItStore,expect,dojoBaseArray,dojoPromiseAll,Observable) {
 
-var	SyncIt = SyncItLib.SyncIt,
-	Queue = SyncItLib.Queue,
-	Store = SyncItLib.Store,
-	SyncItError = SyncItLib.SyncItError;
+var SyncItError = SyncIt_Constant.Error
 
 var dataToLoad = [
 	{

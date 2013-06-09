@@ -1,26 +1,8 @@
-<style type="text/css">
-	table.store-dataset {
-		float: left;
-		margin: 3em;
-	}
-	.container:before,
-	.container:after {
-		content:"";
-		display:table;
-	}
-	.container:after {
-		clear:both;
-	}
-	.container {
-		zoom:1;
-	}
-</style>
-
 # SyncIt
 
 ## What is it for? 
 
-SyncIt is a library to enable you to easily add synchronization to your (offline / phonegap) web Apps. This may be for allowing multiple users / devices to work offline or because the app has a live editing session with other users. 
+SyncIt is a library to enable you to easily add synchronization to your (offline / phonegap or live) web Apps. This may be for allowing multiple users / devices to work offline or because the app has a live editing session with other users. 
 
 ## What does it do?
 
@@ -46,31 +28,33 @@ SyncIt takes it's main ideas from Version Control software, but specifically [Su
 
 ### Everything is versioned
 
-Versioning in essential to synchronization, withing a version number or hash it is impossible to check if anything has changed.
+Versioning in essential to synchronization, without a version number or hash it is impossible to check if anything has changed or detect conflicts.
 
 ### There is one central version of truth - The Server
 
-A central server is required for synchronization to occur and that server will only hold information which is to be shared with other users/devices.
+A central server is required for synchronization to occur, it should hold all patches ever sent to the server
+
+> Note: all documentation refers to a Server, because that is the normal use case, but it could be any central location.
 
 ### Clients must know what is on the server and be able to create local patches
 
 Clients must be able to download information from the server. This server information can then have local patches applied to it.
 
-### Local data not on server must be seperated from data on the server
+### Local data not on server must be separated from data on the server
 
-Local changes must be kept seperate from data that is on the server, this enables easy identification of what needs to be uploaded to the server and will allow rollback and merges of those local changes when errors occur.
+Local changes must be kept separate from data that is on the Server, this enables easy identification of what needs to be uploaded to the server and will allow rollback and merges of those local changes when errors occur.
 
 ### Local users must read the result of the stored data and patches
 
-Users will always have the expectation that their changes will be successfully applied to the server, so to the user their locally modified data is __the__ so the API must support reading the result of taking the known-to-be-on-the-server data and applying local patches to it.
+Users will always have the expectation that their changes will be successfully applied to the server, so to the user their locally modified data is __the__ data. The API must support reading the result of taking the known-to-be-on-the-server data and applying local patches to it.
 
-### Must be possible to send patches to send to the server
+### Must be possible to get patches to send to the server
 
-We must be able to send our patches to the server, which will the either accept or reject those changes, primarily based on version number.
+We must be able to get patches to send to the server, which will the either accepted or rejected, primarily based on version number.
 
 ### Merges happen locally
 
-If patches are rejected, the client should be able to download the new patches from the server and merge they with local patches, at which point it can then upload those patches to the server.
+If patches are rejected by the server, the client should be able to download the new patches from the server and merge they with local patches, at which point it can then upload those merged patches to the server.
 
 ## How does it work?
 
@@ -80,7 +64,7 @@ SyncIt has two areas where it stores data, one is called the [Store](#store) and
 
 ### The Store
 
-Data within the Store is organized into a Datasets and a Datakeys. A Dataset is somewhat like a table in [MySql](http://www.mysql.com/) or a collection in [MongoDB](http://www.mongodb.org/) and the Datakey is like a primary key, so you could have a data structure like the folling:
+Data within the Store is organized into a Datasets and Datakeys. A Dataset is somewhat like a table in [MySql](http://www.mysql.com/) or a collection in [MongoDB](http://www.mongodb.org/) and the Datakey is like a primary key, so you could have a data structure like the folling:
 
 <div class="container">
 <table class="store-dataset">
@@ -99,11 +83,11 @@ Data within the Store is organized into a Datasets and a Datakeys. A Dataset is 
 </table>
 </div>
 
-SyncIt also store the Version and Modifier of data in the Store. Data in the Store is what is already on the Server and is therefore guaranteed not to be rolled back. The records within the Store are called [Jrec](#jrec).
+SyncIt will also store the Version and Modifier of data in the Store. Data in the Store is what is already on the Server and is therefore guaranteed not to be rolled back. The records within the Store are called [Storerecord](#storerecord).
 
 ### The Queue
 
-The Queue stores local modifications to the data within the Store. When data is being read from SyncIt it will first read the Jrec from the Store and then read through every Queueitem for that same Dataset and Datakey to give you the result. The table below illustrates an example reading process for Car/Subaru.
+The Queue stores local modifications to the data within the Store. When data is being read from SyncIt it will first read the Storerecord from the Store and then read through every Queueitem for that same Dataset and Datakey to give you the result. The table below illustrates an example reading process for Car/Subaru.
 
 ![Reading data from SyncIt](bin/README/img/read-request.png)
 
@@ -111,11 +95,15 @@ The Queue stores local modifications to the data within the Store. When data is 
 
 #### Your App downloads updates from the Server
 
-The App should download (or be pushed) an Array of Queueitem from the Server these may come from an AJAX request when reconnected or from something like Socket.io.
+The App should download (or be pushed) an Array of Queueitem from the Server these may come from an AJAX request or from something like Socket.io or anything else.
+
+![Download updates from Server](bin/README/img/download_updates_from_server.png)
 
 #### Your App should Feed them into SyncIt
 
 Once your App has the Array of Queueitem from the Server it will need to Feed them into SyncIt. This is done with one API call:
+
+![Feed that data into SyncIt](bin/README/img/feed_into_syncit.png)
 
 ```javascript
 syncIt.feed(
@@ -125,11 +113,13 @@ syncIt.feed(
 );
 ```
 
-This API call will eventually fire the final callback, when it does and the Errorcode is zero then the data has been imported into the Store.
+This API call will eventually fire the final callback, when it does and the Errorcode is zero then the data has been imported into the SyncIt's Store.
 
-#### Your App can work with the data locally
+#### Your App can now work with the data locally
 
 Now SyncIt knows the state of the data on the Server it can work with it locally, this might be reading:
+
+![Work Locally](bin/README/img/work_locally_get.png)
 
 ```javascript
 syncIt.get(
@@ -149,6 +139,8 @@ syncIt.get(
 
 You may also choose to write data:
 
+![Work Locally](bin/README/img/work_locally_set.png)
+
 ```javascript
 syncIt.set(
     'cars',
@@ -166,13 +158,16 @@ syncIt.set(
 );
 ```
 
-The set operation will and a Queueitem to the end of the Queue, TODO Diagram
+The set operation will add a Queueitem to the end of the Queue.
 
 #### At some point you will want to put these local updates onto the server
 
-The App also can access outstanding local changes which need uploading to the Server. These are stored as Queueitem from the local Queue.
+Because SyncIt does not know anything about the implementation details of the server pushing changes it a two stage process. These are:
 
-Just like downloading from the Server, SyncIt does not attempt to communicate with the Server. SyncIt is only capable of giving you the first Queueitem which needs uploading.
+ 1. Your App should request the next Queueitem that needs uploading to the Server from SyncIt then begin communicating that to the server ( SyncIt.getFirst() ).
+ 2. The server will either Accept or Reject your Queueitem, assuming it is accepted your App should notify SyncIt it has been uploaded ( SyncIt.apply() ).
+
+![Uploading to server and applying accepted changes](bin/README/img/getfirst_and_apply.png)
 
 ```javascript
 syncIt.getFirst(function(err,queueitem) {
@@ -217,26 +212,56 @@ jamesSyncIt.apply( function(err, appliedQueueitem, storedrecord ) {
 
 ### What happens if the data is modified by two different users / devices?
 
-At some point, you will find that data has been modified by two different users or devices. The first thing to note about this is that, just like Subversion, Git or Mercurial the overall process for your App will probably look something like the following:
+At some point, you will find that data has been modified by two different users or devices. The first thing to note about this is that, just like Subversion, Git or Mercurial SyncIt does not dictate how conflicts should be resolved but instead exposes a callback which exposes all required information for doing so. This is the middle parameter to the `SyncIt.feed()` function:
+
+```javascript
+syncIt.feed(
+	[{Queueitem},{Queueitem}],
+	function(dataset, datakey, storedrecord, localChanges, remoteChanges, resolved) {
+		// The resolved function takes two parameter. The first is whether you have 
+		// merged or not and the second are local changes to apply afterward the
+		// remove changes.
+		return resolved(true,[]);
+	},
+	function(err,remoteUpdatesNotFed) {
+		// If you pass false into the resolved function, the Array removeUpdatesNotFed 
+		// will have the remaining items in it and err will be NOT_RESOLVED.
+	}
+);
+```
+
+the overall process for your App will probably look something like the following:
 
 ![Recommended Process](bin/README/img/process.png)
 
 Should all uploads be successfully applied your App is then fully synchronized with the Server.
 
-If however conflicts do occur we will need to perform something similar to a merge operation that occurs in Subversion, Mercurial or Git. The key to this is the second argument of the `SyncIt.feed()` function:
+### Your App can register to recieve events for all the three types of operations:
 
 ```javascript
-syncIt.feed(
-    [{Queueitem},{Queueitem}],
-    function(dataset, datakey, storedrecord, localChanges, remoteChanges, resolved) {
-        // The resolved function takes two parameter. The first is whether you have 
-		// merged or not and the second are local changes to apply afterwards
-        return resolved(true,[]);
-    },
-    function(err,remoteUpdatesNotFed) {
-		// If you pass false into the resolved function, the Array removeUpdatesNotFed 
-		// will have the remaining items in it.
-    }
+syncIt.listenForAddedToQueue(
+	function(dataset, datakey, queueitem) {
+		// Redraw display for user
+		// or something else?
+	}
+);
+```
+
+```javascript
+syncIt.listenForFed(
+	function(dataset, datakey, queueitem, resultingStorerecord) {
+		// Redraw display for user
+		// or something else?
+	}
+);
+```
+
+```javascript
+syncIt.listenForApplied(
+	function(dataset, datakey, queueitem, resultingStorerecord) {
+		// Redraw display for user
+		// or something else?
+	}
 );
 ```
 
@@ -431,9 +456,7 @@ I need to do the following:
 
  * Public Facing
     * Add a license to all files (It'll be MIT/BSD)
-    * Auto Build of GitHub pages
-    * Add scrollbars to the help sections in the Demo (use the scrollwheel in the meantime!)
-    * Make demo work in FireFox and IE
+    * Test demo (and everythign else!) in IE
  * Client SyncIt
     * localStorage for SyncIt (Store)
     * Add Async wrappers for Store & Persist
@@ -467,22 +490,22 @@ A Datakey is a single (well two if you consider the Queue and Store) location wh
 Conflicts occur when Feeding data for which there is local Queueitem for the same Dataset / Datakey. This will fire the conflict resolution callback.
 
 #### Apply
-To update a Jrec stored at a Dataset / Datakey Queueitem are applied to it. The Application of Queueitem cannot be undone by SyncIt so should be done after the Queueitem has been successfully sent to the server.
+To update a Storerecord stored at a Dataset / Datakey Queueitem are applied to it. The Application of Queueitem cannot be undone by SyncIt so should be done after the Queueitem has been successfully sent to the server.
 
 #### Feed
 Feeding is the process of taking Queueitem from the Server and attempting to Apply them to the local Store. If there are Queueitem for any of the Dataset / Datakey which are being fed, Feeding will stop and a Conflict will occur.
 
 #### Queueitem
-Queueitems are patches to Jrec. Queueitem come from one of two places, from the Server or locally. If they come from the Server they are Fed, otherwise they are either Applied or removed during Conflict.
+Queueitems are patches to Storerecord. Queueitem come from one of two places, from the Server or locally. If they come from the Server they are Fed, otherwise they are either Applied or removed during Conflict.
 
 ##### Operation
-Queueitem perform an operation with an Update to modify a Jrec. Examples of Operations are "set", "update" and "remove".
+Queueitem perform an operation with an Update to modify a Storerecord. Examples of Operations are "set", "update" and "remove".
 
 ##### Update
 For "set" and "update" modifications, the data take the update as to control how the data is modified.
 
 ##### Basedonversion
-All Queueitem are based on a Jrec version unless there is no Jrec version in which case it is 0. If you have two Queueitem for the same Dataset / Datakey the second Queueitem will have a Basedonversion one higher than the first.
+All Queueitem are based on a Storerecord version unless there is no Storerecord version in which case it is 0. If you have two Queueitem for the same Dataset / Datakey the second Queueitem will have a Basedonversion one higher than the first.
 
 ##### Modificationtime
 The time at which the Queueitem was created.
@@ -490,14 +513,14 @@ The time at which the Queueitem was created.
 ##### Modifier
 This uniquely identifies a client. If you are using this library from multiple device synchronization the modifier should not be only tied to the User, but tied to the User and Device combination.
 
-#### Jrec
-A Jrec is what data is called within the Store. Jrec should be data which is confirmed to be on the Server. Jrec can only be change by Feeding or Applying Queueitem. Jrec hold most metadata which is part of Queueitem but have two specific pieces which do not directly belong to Queueitem.
+#### Storerecord
+A Storerecord is what data is called within the Store. Storerecord should be data which is confirmed to be on the Server. Storerecord can only be change by Feeding or Applying Queueitem. Storerecord hold most metadata which is part of Queueitem but have two specific pieces which do not directly belong to Queueitem.
 
 ##### Version
 The first Version for a Dataset / Datakey is 1. Subsequent Apply or Feed will increment this version.
 
 ##### Info
-Data which is stored in a Jrec is called Info. This is the result of Queueitem Update. 
+Data which is stored in a Storerecord is called Info. This is the result of Queueitem Update. 
 
 #### Errorcode
 When errors occur in SyncIt they will issue Errorcode back, it is usually the first parameter of callbacks.

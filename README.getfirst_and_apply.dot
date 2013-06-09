@@ -1,0 +1,29 @@
+digraph a { 
+	subgraph clusteryourcode {
+		label = "App"
+		subgraph clustersapp {
+			label = "Your Code";
+			subgraph clusterg1 {
+				style=invis;
+				App [label="Initiate Sync", rank=1];
+				SyncItCallback [label="syncIt.getFirst() Callback"];
+			}
+			subgraph clusterg2 {
+				style=invis;
+				JLibCallback [label="XHR Callback"]
+				SyncItEventHandler [label="Applied listener"];
+				SyncItCallback2 [label="syncIt.apply() Callback"]
+			}
+		}
+		JLib [label="JQuery / Dojo etc"];
+		SyncIt [shape="record", label="{ <sf> syncIt.getFirst() } | { <sa> syncIt.Apply() }"];
+	}
+	App -> SyncIt:sf [label="syncIt.getFirst()"];
+	SyncIt:sf -> SyncItCallback -> JLib;
+	JLib -> Server [label="XHR?" style="dashed"];
+	Server -> JLib [style="dashed"];
+	JLib -> JLibCallback;
+	JLibCallback -> SyncIt:sa [label="SyncIt.apply()"];
+	SyncIt:sa -> SyncItCallback2;
+	SyncIt:sa -> SyncItEventHandler;
+}

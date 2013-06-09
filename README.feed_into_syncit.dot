@@ -1,0 +1,22 @@
+digraph a { 
+	subgraph clusteryourcode {
+		label = "App"
+		subgraph clustersapp {
+			label = "Your Code"
+			App [label="Request Updates", rank=1];
+			JLibCallback [label=Callback]
+			SyncItCallback [label=Callback];
+			SyncItEventHandler [label="Fed listener"];
+		}
+		JLib [label="JQuery / Dojo etc"];
+		SyncIt;
+	}
+	App -> JLib [fontcolor=white, color=white];
+	JLib -> Server [fontcolor=white, color=white, label="XHR? (2 & 3)"];
+	Server -> JLib [fontcolor=white, color=white];
+	JLib -> JLibCallback [fontcolor=white, color=white];
+	JLibCallback -> SyncIt;
+	SyncIt -> SyncItCallback;
+	SyncIt -> SyncItEventHandler;
+	SyncIt -> SyncItEventHandler;
+}

@@ -14,7 +14,7 @@
 			factory
 		);
 	} else {
-		root.SyncItLib = factory(
+		root.SyncIt = factory(
 			root.SyncIt_Constant,
 			root.SyncIt_updateResult
 		);
@@ -24,6 +24,8 @@
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
 // Copyright: Matthew Forrester
 // License: MIT/BSD-style
+
+"use strict";
 
 var _filter = function(arr,filterFunc) {
 	var i = 0,
@@ -39,57 +41,6 @@ var _filter = function(arr,filterFunc) {
 	return r;
 };
 
-"use strict";
-
-/**
- * ## Dictionary
- *
- *  * **`persist`** - Storage for both *queue* and `store`
- *  * **`store/data`** - Contains information that has been processed from the 
- *    queue
- *  * **`queueitem`** - An *update* as well as some metadata.
- *  * **`outqueueitem`** - An *update* but made more readable.
- *  * **`queue`** - A queue that modification instructions are added to and which
- *    will eventually need applying so it can be stored in the `store`
- *  * **`s/dataset`** - A categorization of the data you are storing, similar to
- *    an SQL table.
- *  * **`k/datakey`** - Something that uniquely identifies a unique thing within
- *    a *dataset*, simalar to a primary key within SQL.
- *  * **`jrec`** - All the data stored within a *datakey*.
- *  * **`jread`** - All the data stored within a *datakey* as well as outstanding
- *    in the *queue*.
- *  * **`metadata`** - Stores data about *info* for data maintenance/tracking
- *    purposes.
- *  * **`i/info`** - Stored within a *jrec* and holds the real data as apposed to
- *    *metadata*.
- *  * **`u/update`** - A *update* is the data portion of an *update*.
- *  * **`e/fed`** - Boolean stored in queueitem to mark an update as coming from
- *    feed.
- *  * **`f/fieldpath`** - Stored within an *updateDataField* *update* descibing
- *    a path within the *info*, to update for example *eyes* in the a 
- *    dataset/datakey *person*, but you could have `hair.color` and `hair.length`
- *    which would describe a structre simiar to `{hair:{color:red, length:long}}`.
- *  * **`g/fieldvalue`** - Stored within an *updateDataField* *update* and is the 
- *    data which will be put into the *fieldpath*.
- *  * **`v/version`** - The version of a *jrec*.
- *  * **`b/basedonversion`** - An *update* is based on a *jrec* *version* and
- *    preceding `queueitem`
- *  * **`m/modifier`** Stored within both `update`s and *jrec* and is a unique
- *    reference on the entity that is modifying data. It could be potentially be a
- *    *user* but more likely is unique to a user/device combination.
- *  * **`r/removed`** - Stored in *jrec* and denotes that the data has been
- *    removed.
- *  * **`o/operation`** - Describes the type of *operation* that an *update* will
- *    perform.
- *  * **`t/modificationtime`** - Both *jrec* and *update* include a 
- *    *modificationtime*, this is what is returned from `(new Date).getTime()`
- *    
- *    
- * Classes are documented like `ThisIsAClass`
- * Variables are documented like `theVariable`
- * 
- */
-
 /**
  * ## SyncIt
  * 
@@ -101,7 +52,7 @@ var _filter = function(arr,filterFunc) {
  * 
  * * **@param {Store} `store`** Used to store data which is known to be synced onto the *Server*.
  * * **@param {Queue} `queue`** Used to store data which is still to be synced to the *Server*.
- * * **@param {Modifier} `modifier`** The User/Device which is using the instance of SyncIt.
+ * * **@param {Modifier} `modifier`** The UNIQUE User/Device which is using the instance of SyncIt.
  */
 var SyncIt = function(store, queue, modifier) {
 	this._store = store;
@@ -285,9 +236,11 @@ SyncIt.prototype.listenForAddedToQueue = function(listener) {
  * 
  * #### Parameters
  * 
- * * **@param {Function} `listener`** Signature: `function(queueitem, newStoredJrec)`.
+ * * **@param {Function} `listener`** Signature: `function(queueitem, newStorerecord)`.
+ *   * **@param {Dataset} `listener.dataset`** The *dataset* of the applied.
+ *   * **@param {Datakey} `listener.datakey`** The *datakey* that was.applied.
  * *   **@param {Queueitem} `listener.queueitem`** The *queueitem* that was applied.
- * *   **@param {Jrec} `listener.newStoredJrec`** The *jrec* which is now stored.
+ * *   **@param {Storerecord} `listener.newStorerecord`** The *storerecord* which is now stored.
  */
 SyncIt.prototype.listenForApplied = function(listener) {
 	return this.listen('applied', listener);
@@ -301,9 +254,11 @@ SyncIt.prototype.listenForApplied = function(listener) {
  * 
  * #### Parameters
  * 
- * * **@param {Function} `listener`** Signature: `function(queueitem, newStoredJrec)`.
+ * * **@param {Function} `listener`** Signature: `function(queueitem, newStorerecord)`.
+ *   * **@param {String} `listener.dataset`** The dataset of the just fed Queueitem.
+ *   * **@param {String} `listener.datakey`** The datakey of the just fed Queueitem.
  * *   **@param {Queueitem} `listener.queueitem`** The *queueitem* that was applied.
- * *   **@param {Jrec} `listener.newStoredJrec`** The *jrec* which is now stored.
+ * *   **@param {Storerecord} `listener.newStorerecord`** The *storerecord* which is now stored.
  */
 SyncIt.prototype.listenForFed = function(listener) {
 	return this.listen('fed', listener);
@@ -402,19 +357,20 @@ SyncIt.prototype.update = function(dataset, datakey, update, whenAddedToQueue) {
  * #### Parameters
  * 
  * * **@param {Array} `feedQueueitems`** These are the items which are being fed from the *Server*.
- * * **@param {Function} `resolutionFunction`** Called when conflict occurs, Signature: `function(dataset, datakey, jrec, serverQueueitems, localQueueitems, resolved)`.
+ * * **@param {Function} `resolutionFunction`** Called when conflict occurs, Signature: `function(dataset, datakey, storerecord, serverQueueitems, localQueueitems, resolved)`.
  *   * **@param {Array} `resolutionFunction.dataset`** The *Dataset* of the conflict.
  *   * **@param {Array} `resolutionFunction.datakey`** The *Datakey* of the conflict.
- *   * **@param {Array} `resolutionFunction.jrec`** What is in the local *Store* for that *Dataset* / *Datakey*.
+ *   * **@param {Array} `resolutionFunction.storerecord`** What is in the local *Store* for that *Dataset* / *Datakey*.
  *   * **@param {Array} `resolutionFunction.localQueueitems`** The *Queueitem* that has been added using functions such as [SyncIt.set()](#syncit.set--) but is now conflicting with the data from the *Server*.
  *   * **@param {Array} `resolutionFunction.serverQueueitems`** The extra *Queueitem* that are on the Server.
  *   * **@param {Function} `resolutionFunction.resolved`** This should be called from inside resolutionFunction and will add *Queueitem* after the *Server* supplied *Queueitem*. Signature: `function(resolved, mergedLocalsToApplyAfterwards)`
  *      * **@param {Boolean} `resolutionFunction.resolved.resolved`** use false to halt the feeding, true otherwise
  *      * **@param {Array} `resolutionFunction.resolved.mergedLocalsToApplyAfterwards`** These will be added to the *Queue* __after__ (currently) all serverQueueitems have been applied to the *Store*.
- * * **@param {Function} `feedDone`** Callback for when done. Signature: `function(err, fedItemsFailed, conflictResolutionQueueitemFailed, resultingJrec)`;
+ * * **@param {Function} `feedDone`** Callback for when done. Signature: `function(err, fedItemsFailed, conflictResolutionQueueitemFailed, resultingStorerecord)`;
  *   * **@param {Errorcode} `feedDone.err`** See SyncIt_Constant.Error.
  *   * **@param {Array} `feedDone.fedItemsFailed`** Array of items fed from the *Server* which could not be processed.
  *   * **@param {Array} `feedDone.conflictResolutionQueueitemFailed`** Array of items created in conflict resolution (using `resolutionFunction.resolved`) which have failed to be added to the local *Queue*.
+ *   * **@param {Storerecord} `feedDone.resultingStorerecord`** What is now stored on the Store.
  */
 SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 	
@@ -440,17 +396,17 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 	
 	var allLocalToApplyAfterwards = [];
 	
-	var prepareServerQueueItemForResolutionFunction = function(jrec, applyQueue) {
+	var prepareServerQueueItemForResolutionFunction = function(storerecord, applyQueue) {
 		var r = [],
 			i = 0,
 			l = 0,
 			firstQueueitem = applyQueue[0];
 		
 		var filterFunc = function(elem) {
-			if (jrec === null) {
+			if (storerecord === null) {
 				return true;
 			}
-			return (elem.b >= jrec.v);
+			return (elem.b >= storerecord.v);
 		};
 		
 		for (i=0, l=applyQueue.length; i<l; i++) {
@@ -475,25 +431,46 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 	};
 	
 	var addToStoreAndContinue = function(applyQueue) {
-		inst._addQueueitemToStore(applyQueue[0], function(err, appliedQueueitem, jrec) {
+		inst._addQueueitemToStore(applyQueue[0], function(err, appliedQueueitem, storerecord) {
 			if (err !== SyncIt_Constant.Error.OK) {
 				return unlockAndError(err, applyQueue);
 			}
 			applyQueue.shift();
-			inst._emit('fed', appliedQueueitem, jrec);
+			inst._emit('fed', appliedQueueitem.s, appliedQueueitem.k, appliedQueueitem, storerecord);
 			return feedOne(false);
 		});
 	};
 		
-	var fireConflictResolution = function(jrec, applyQueue, queueitemInQueue) {
+	var fireConflictResolution = function(storerecord, applyQueue, queueitemInQueue) {
+		
+		var queueitemInQueueAndPreviousLocalsToApplyAfterwards = function(queueitemInQueue,localsAfterwards) {
+			var r = [],
+				i = 0,
+				l = 0;
+
+			var addArray = function(ar) {
+				for (i=0, l=ar.length; i<l; i++) {
+					r.push(ar[i]);
+				}
+			};
+
+			addArray(queueitemInQueue);
+			addArray(localsAfterwards);
+
+			return r;
+		};
+
 		resolutionFunction.call(
 			inst,
 			applyQueue[0].s,
 			applyQueue[0].k,
-			jrec.v === 0 ? null : jrec,
-			queueitemInQueue,
+			storerecord.v === 0 ? null : storerecord,
+			queueitemInQueueAndPreviousLocalsToApplyAfterwards(
+				queueitemInQueue,
+				allLocalToApplyAfterwards
+			),
 			prepareServerQueueItemForResolutionFunction(
-				jrec,
+				storerecord,
 				applyQueue
 			),
 			function(resolved, localsToApplyAfterwards) {
@@ -558,21 +535,30 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 		inst._store.get(
 			applyQueue[0].s,
 			applyQueue[0].k,
-			function(err, jrec) {
+			function(err, storerecord) {
 				
 				// It is quite likely that we are feeding data into a 
 				// dataset / datakey that does not already exist.
 				if (err === SyncIt_Constant.Error.NO_DATA_FOUND) {
-					jrec = inst._getEmptyJrec();
+					storerecord = inst._getEmptyStorerecord();
 				}
 
-				// It is possible we have stale items in our queue, if so, we just skip
-				// over them
-				while (
+				// It might be that we are trying to feed data which is 
+				// based on an old storerecord, if we are just skip over it
+				if (applyQueue[0].b < storerecord.v) {
+					applyQueue.shift();
+					return feedOne(false);
+				}
+				
+				// It is possible we have stale items in our queue
+				if (
 					queueitemInQueue.length && 
-					(queueitemInQueue[0].b < jrec.v) &&
-					(queueitemInQueue[0].m == jrec.m)) {
-					queueitemInQueue.shift();
+					(queueitemInQueue[0].b < storerecord.v)
+				) {
+					return unlockAndError(
+						SyncIt_Constant.Error.STALE_FOUND_IN_QUEUE,
+						applyQueue
+					);
 				}
 
 				// It is quite possible all queueitem where stale, in which case just
@@ -591,29 +577,10 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 					);
 				}
 
-				// It might be that we are trying to feed data which is 
-				// based on an old version, if we are error with code to 
-				// indicate whether it is a duplicate or not.
-				if (jrec.v > applyQueue[0].b) {
-					if (
-						(jrec.v - 1 == applyQueue[0].b) &&
-						(jrec.m == applyQueue[0].m)
-					) {
-						return unlockAndError(
-							SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_ALREADY_APPLIED,
-							applyQueue
-						);
-					}
-					return unlockAndError(
-						SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_BASED_ON_OLD_VERSION,
-						applyQueue
-					);
-				}
-				
 				// fire conflict resolution with the item shifted. It does
 				// not matter because it will either succeed, removing all
 				// Queueitem for that dataset / datakey or fail.
-				fireConflictResolution(jrec, applyQueue, queueitemInQueue);
+				fireConflictResolution(storerecord, applyQueue, queueitemInQueue);
 			}
 		);
 		
@@ -774,11 +741,10 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 		return inst._locked > 0;
 	};
 	
-	var extractInfoFromQueueitems = function(jrec, queueitems) {
+	var extractInfoFromQueueitems = function(storerecord, queueitems) {
 		var info = {
-			alreadyDone: false,
-			removed: jrec.r,
-			version: jrec.v
+			removed: storerecord.r,
+			version: storerecord.v
 		};
 		
 		(function(queue) {
@@ -789,14 +755,6 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 				info.version = queue[i].b + 1;
 				if (queue[i].o == 'remove') {
 					info.removed = true;
-				}
-				if (queue[i].m != inst.getModifier()) {
-					if (
-						(queue[i].m == queueitem.m) &&
-						(queue[i].b == queueitem.b)
-					) {
-						info.alreadyDone = true;
-					}
 				}
 			}
 		})(queueitems);
@@ -821,14 +779,14 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 		
 	};
 	
-	var checkAndStore = function(queueitem, jrec, existingQueueitems, whenAddedToQueue)
+	var checkAndStore = function(queueitem, storerecord, existingQueueitems, whenAddedToQueue)
 	{
 		
 		if (queueitem.t === null) {
 			queueitem.t = (new Date()).getTime();
 		}
 
-		var info = extractInfoFromQueueitems(jrec, existingQueueitems);
+		var info = extractInfoFromQueueitems(storerecord, existingQueueitems);
 		
 		if (info.removed) {
 			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
@@ -857,10 +815,10 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 
 	this._locked = this._locked | SyncIt_Constant.Locking.PROCESSING;
 	
-	inst._store.get(dataset, datakey, function(err, jrec) {
+	inst._store.get(dataset, datakey, function(err, storerecord) {
 		
 		if (err === SyncIt_Constant.Error.NO_DATA_FOUND) {
-			jrec = inst._getEmptyJrec();
+			storerecord = inst._getEmptyStorerecord();
 			err = SyncIt_Constant.Error.OK;
 		}
 		
@@ -878,7 +836,7 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 			
 			checkAndStore(
 				queueitem,
-				jrec,
+				storerecord,
 				existingQueueitems,
 				whenAddedToQueue
 			);
@@ -890,11 +848,11 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, mod
 };
 
 /**
- * **SyncIt._getEmptyJrec()**
+ * **SyncIt._getEmptyStorerecord()**
  *
  * When applying a *Queueitem* either because SyncIt is moving data from the *Queue* to the *Store* or just because it is processing a `[SyncIt.get()](#syncit.get--) it is possible that no data already exists at the *Store* for that *Dataset* / *Datakey*. It's handy to use this function to get something that looks like stored data to limit code complexity.
  */
-SyncIt.prototype._getEmptyJrec = function() {
+SyncIt.prototype._getEmptyStorerecord = function() {
 	return {
 		i:{},
 		v:0,
@@ -911,7 +869,7 @@ SyncIt.prototype._getEmptyJrec = function() {
  * Parameters
  * 
  * * **{Queueitem} `update`** The *Queueitem* we are testing to see if it can be applied.
- * * **{Jrec} `storeddata`** This is the data currently in the *Store* or null if there is nothing stored for that *Dataset* / *Datakey* currently.
+ * * **{Storerecord} `storeddata`** This is the data currently in the *Store* or null if there is nothing stored for that *Dataset* / *Datakey* currently.
  * 
  * Returns
  * 
@@ -928,17 +886,9 @@ SyncIt._versionCheck = function(storeddata, update) {
 		return SyncIt_Constant.Error.OK;
 	}
 	
-	// If something in store then we could be trying to re-apply the same
-	// version if we are the author or it will be an error if we are not.
-	if (storeddata.v == update.b + 1) {
-		if (storeddata.m == update.m) {
-			return SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_ALREADY_APPLIED;
-		}
-	}
-	
 	// If we are trying to apply something old then we must fail.
 	if (storeddata.v > update.b) {
-		return SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_BASED_ON_OLD_VERSION;
+		return SyncIt_Constant.Error.STALE_FOUND_IN_QUEUE;
 	}
 	
 	// Could be trying to apply something at a future version... This is silly
@@ -959,17 +909,17 @@ SyncIt._versionCheck = function(storeddata, update) {
  * * **{Function} `next`** The function to fire when applied.
  *   * **{err} `next.err`** See SyncIt_Constant.Error.
  *   * **{Queueitem} `next.firstInQueue`** This is the Queueitem that was added.
- *   * **{Jrec} `next.jrec`** This is the new data stored in the *Store* or `undefined` on failure.
+ *   * **{Storerecord} `next.storerecord`** This is the new data stored in the *Store* or `undefined` on failure.
  */
 SyncIt.prototype._addQueueitemToStore = function(firstInQueue, next) {
 	
 	var r = 0,
 		storeItemRetrieved;
 		
-	storeItemRetrieved = function(e, jrec) {
+	storeItemRetrieved = function(e, storerecord) {
 		
 		if (e === SyncIt_Constant.Error.NO_DATA_FOUND) {
-			jrec = this._getEmptyJrec();
+			storerecord = this._getEmptyStorerecord();
 			e = SyncIt_Constant.Error.OK;
 		}
 		
@@ -978,21 +928,21 @@ SyncIt.prototype._addQueueitemToStore = function(firstInQueue, next) {
 			return next(r, firstInQueue);
 		}
 		
-		r = SyncIt._versionCheck(jrec, firstInQueue);
+		r = SyncIt._versionCheck(storerecord, firstInQueue);
 
 		if (r !== SyncIt_Constant.Error.OK)
 		{
 			return next(r, firstInQueue);
 		}
 		
-		var updatedJrec = updateResult(jrec, firstInQueue, this._cloneObj);
+		var updatedStorerecord = updateResult(storerecord, firstInQueue, this._cloneObj);
 		
 		this._store.set(
 			firstInQueue.s,
 			firstInQueue.k,
-			updatedJrec,
+			updatedStorerecord,
 			function(err) {
-				next(err, firstInQueue, updatedJrec);
+				next(err, firstInQueue, updatedStorerecord);
 			}
 		);
 		
@@ -1008,29 +958,17 @@ SyncIt.prototype._addQueueitemToStore = function(firstInQueue, next) {
  *
  * #### Parameters
  * 
- * * **@param {Function} `done`** Callback when the operation is complete (or not). Signature: `function(errorCode, queueitem, jrec)`
+ * * **@param {Function} `done`** Callback when the operation is complete (or not). Signature: `function(errorCode, queueitem, storerecord)`
  *   * **@param {ErrorCode} `done.errorCode`** See SyncIt_Constant.Error.
  *   * **@param {Queueitem} `done.queueitem`** The *Queueitem* we are trying to apply. `Null` only if queue is empty.
- *   * **@param {Jrec} `done.jrec`** The new *Jrec* that is now in the Store, `undefined` on everything but success.
+ *   * **@param {Storerecord} `done.storerecord`** The new *Storerecord* that is now in the Store, `undefined` on everything but success.
  */
 SyncIt.prototype.apply = function(done) {
 	var whenAddedToQueue,
 		inst = this;
 	
-	whenAddedToQueue = function(e, firstInQueue, storedJrec) {
+	whenAddedToQueue = function(e, firstInQueue, newStorerecord) {
 
-		// It could be that there is a stale item in the queue, in which case
-		// we should advance the queue only.
-		if (e == SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_ALREADY_APPLIED) {
-			return inst._queue.advance(function(e) {
-				inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-				if (e !== SyncIt_Constant.Error.OK) {
-					return done(SyncIt_Constant.Error.STALE_FOUND_QUEUE_COULD_NOT_ADVANCE, firstInQueue);
-				}
-				return done(SyncIt_Constant.Error.STALE_FOUND_QUEUE_ADVANCED, firstInQueue);
-			});
-		}
-		
 		if (e !== SyncIt_Constant.Error.OK) {
 			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
 			return done(e, firstInQueue);
@@ -1041,8 +979,8 @@ SyncIt.prototype.apply = function(done) {
 			if (e !== 0) {
 				return done(SyncIt_Constant.Error.COULD_NOT_ADVANCE_QUEUE, firstInQueue);
 			}
-			inst._emit('applied', firstInQueue, storedJrec);
-			return done(SyncIt_Constant.Error.OK, firstInQueue, storedJrec);
+			inst._emit('applied', firstInQueue.s, firstInQueue.k, firstInQueue, newStorerecord);
+			return done(SyncIt_Constant.Error.OK, firstInQueue, newStorerecord);
 		});
 
 	};
@@ -1113,7 +1051,7 @@ SyncIt.prototype.getFull = function(dataset, datakey, whenDataRetrieved) {
 				i = 0;
 			
 			if (e === SyncIt_Constant.Error.NO_DATA_FOUND) {
-				r = inst._getEmptyJrec();
+				r = inst._getEmptyStorerecord();
 				e = SyncIt_Constant.Error.OK;
 			}
 			
@@ -1127,7 +1065,7 @@ SyncIt.prototype.getFull = function(dataset, datakey, whenDataRetrieved) {
 			r.s = dataset;
 			r.k = datakey;
 
-			if (r.v == 0) {
+			if (r.v === 0) {
 				return whenDataRetrieved(SyncIt_Constant.Error.NO_DATA_FOUND,null);
 			}
 			return whenDataRetrieved(e, r);
@@ -1279,167 +1217,64 @@ SyncIt.prototype.getDatakeysInDataset = function(datasetName, inWhere, whenDatak
 };
 
 /**
- * ## Store
- * 
- * *Store* is where the information that has been synced to the *Server* is stored.
- */
-
-/**
- * ### new Store()
- * 
+ * ### SyncIt.removeStaleFromQueue()
+ *
+ * If somehow a Queueitem is applied to the store, but could not be removed then
+ * this function should be used to remove them from the Queue at a later date.
+ *
  * #### Parameters
- * 
- * * **@param {Persist} `persist`**
+ *
+ * * **@param {Function} `whenDatakeysKnown`** Signature: `function(err)`
  */
-var Store = function(persist) {
-	this._persist = persist;
-};
-Store.prototype._keyCheck = function(dataset, datakey) {
-	var checkRe = /(\.)|(^[0-9])|(^_)/,
-		toCheck = {Dataset: dataset, Datakey: datakey},
-		msg = '',
-		k=0;
-		
-	for (k in toCheck) {
-		if (toCheck.hasOwnProperty(k)) {
-			if (checkRe.test(toCheck[k])) {
-				msg = 'SyncIt.Store does not support '+k+' '+
-					'which includes a "." or starts with a "_" or number';
-			}
-			if (toCheck[k].length < 2) {
-				msg = 'SyncIt.Store does not support '+k+' '+
-					'with a length less than 2';
-			}
-			if (msg) {
-				throw 'SyncIt.Store.Invalid'+k+': '+msg;
-			}
-		}
+SyncIt.prototype.removeStaleFromQueue = function(done) {
+	
+	if (this._locked > 0) {
+		done(SyncIt_Constant.Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
 	}
-};
 
-/**
- * ### Store.get()
- * 
- * Gets the data in the *Store* for a specfic *Dataset* / *Datakey*.
- * 
- * #### Parameters
- * 
- * * **@param {Dataset} `dataset`**
- * * **@param {Datakey} `datakey`**
- * * **@param {Function} `whenRetrieved`** Signature: `function(err, jrec)
- *   * **@param {Errorcode} `whenRetrieved.err`**
- *   * **@param {Jrec} `whenRetrieved.jrec`** The value stored at the *Dataset* / *Datakey*.
- */
-Store.prototype.get = function(dataset, datakey, whenRetrieved) {
-	this._keyCheck(dataset, datakey);
-	this._persist.get(dataset+'.'+datakey, whenRetrieved);
-};
-
-/**
- * ### Store.set()
- * 
- * Sets the data in the *Store* for a specfic *Dataset* / *Datakey*.
- * 
- * #### Parameters
- * 
- * * **@param {Dataset} `dataset`**
- * * **@param {Datakey} `datakey`**
- * * **@param {Function} `whenSet`** Signature: `function(err)
- *   * **@param {Errorcode} `whenSet.err`**
- */
-Store.prototype.set = function(dataset, datakey, value, whenSet) {
-	this._keyCheck(dataset, datakey);
-	this._persist.set(dataset+'.'+datakey, value, whenSet);
-};
-
-/**
- * **Store._getPersistStorageKeys()**
- * 
- * Returns the name of all keys stored in the *Persist*.
- * 
- * In practice the storage keys are the form [`Dataset`].[`Datakey`] so you are
- * getting a somewhat easy to parse list of the *Dataset* / *Datakey*.
- * 
- * **Parameters**	
- * 
- * * **@param {Function} `dataRetrieved`** Signature: `function(err, storageKeys)
- *   * **@param {Errocode} `dataRetrieved.err`**
- *   * **@param {Array} `dataRetrieved.storageKeys`** A list of all storage keys in the `Persist`
- */
-Store.prototype._getPersistStorageKeys = function(dataRetrieved) {
-	this._persist.getKeys(function(err, persistKeys) {
-		if (err) {
-			return dataRetrieved(err);
-		}
-		var r = [];
-		for (var i = 0; i < persistKeys.length; i++) {
-			if (persistKeys[i].match(/\S+\.\S+/)) {
-				r.push(persistKeys[i]);
+	this._locked = this._locked | SyncIt_Constant.Locking.PROCESSING;
+	
+	var working = function() {
+	
+		var unlock = function(err) {
+			this._locked = this._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
+			done(err);
+		}.bind(this);
+	
+		this._queue.getFirst(function(err,queueitem) {
+			
+			if (err !== SyncIt_Constant.Error.OK) {
+				if (err == SyncIt_Constant.Error.NO_DATA_FOUND) {
+					return unlock(SyncIt_Constant.Error.OK);
+				}
+				return unlock(err);
 			}
-		}
-		dataRetrieved(SyncIt_Constant.Error.OK, r);
-	});
+	
+			this._store.get(queueitem.s,queueitem.k,function(err,storerecord) {
+				
+				if (err !== SyncIt_Constant.Error.OK) {
+					return unlock(err);
+				}
+				if (queueitem.b >= storerecord.v) {
+					return unlock(SyncIt_Constant.Error.OK);
+				}
+	
+				this._queue.advance(function(err) {
+					if (err !== SyncIt_Constant.Error.OK) {
+						return unlock(err);
+					}
+					return working(done);
+				}.bind(this));
+	
+			}.bind(this));
+	
+		}.bind(this));
+
+	}.bind(this);
+
+	working();
 };
 
-
-/**
- * ### Store.getDatasetNames()
- * 
- * Will retrieve the `Dataset`s which are in use in the *Store*.
- * 
- * #### Parameters
- * 
- * * **@param {Function} `setsRetrieved`** Signature: `function(err, sets)`
- *   * **@param {Errorcode} `setsRetrieved.err`** 
- *   * **@param {Array} `setsRetrieved.sets`** An array of names of `Dataset`s
- */
-Store.prototype.getDatasetNames = function(setsRetrieved) {
-	this._getPersistStorageKeys(function(err, persistData) {
-		var r = [];
-		if (err) {
-			return setsRetrieved(err);
-		}
-		for (var i = 0; i < persistData.length; i++) {
-			var datasetName = persistData[i].replace(/\..*/, '');
-			if (r.indexOf(datasetName) == -1) {
-				r.push(datasetName);
-			}
-		}
-		setsRetrieved(SyncIt_Constant.Error.OK, r);
-	});
-};
-
-
-/**
- * ### Store.getDatakeyNames()
- * 
- * Will retrieve the Keys which are in use within a *Dataset* in the *Store*.
- * 
- * #### Parameters
- * 
- * * **@param {String} `dataset`**
- * * **@param {Function} `keysRetrieved`** Signature: function(err, keys)
- *   * **@param {Errorcode} `keysRetrieved.err`** 
- *   * **@param {Array} `keysRetrieved.keys`** An array of names of `Datakey`s
- */
-Store.prototype.getDatakeyNames = function(dataset, keysRetrieved) {
-	this._getPersistStorageKeys(function(err, persistData) {
-		var r = [];
-		if (err) {
-			return keysRetrieved(err);
-		}
-		for (var i = 0; i < persistData.length; i++) {
-			if (persistData[i].replace(/\..*/, '') == dataset) {
-				r.push(persistData[i].replace(/.*\./, ''));
-			}
-		}
-		keysRetrieved(SyncIt_Constant.Error.OK, r);
-	});
-};
-
-return {
-	SyncIt: SyncIt,
-	Store: Store
-};
+return SyncIt;
 
 });

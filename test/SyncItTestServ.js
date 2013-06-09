@@ -6,7 +6,6 @@
         // like Node.
         module.exports = factory(
             require('../node_modules/expect.js/expect.js'),
-            require('../js/SyncIt.js'),
             require('../js/SyncItTestServ.js'),
             require('../js/ServerPersist/MemoryAsync.js'),
             require('../js/Constant.js')
@@ -14,32 +13,19 @@
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(
-            ['expect.js','syncit/SyncIt','syncIt/SyncItTestServer',
-            'syncIt/ServerPersist/MemoryAsync','syncit/Constant'],
+            ['expect.js','syncIt/SyncItTestServer','syncit/ServerPersist/MemoryAsync','syncit/Constant'],
             factory
         );
     } else {
         // Browser globals (root is window)
         root.returnExports = factory(
             root.expect,
-            root.SyncItLib,
             root.SyncItTestServ,
             root.SyncIt_ServerPersist_MemoryAsync,
             root.SyncIt_Constant
         );
     }
-})(this, function (expect, SyncItLib, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync, SyncIt_Constant) {
-
-SyncIt = SyncItLib.SyncIt;
-SyncItError = SyncItLib.SyncItError;
-Queue = SyncItLib.Queue;
-QueueWithHistory = SyncItLib.QueueWithHistory;
-Store = SyncItLib.Store;
-SyncItError = SyncItLib.SyncItError;
-Persist = SyncItLib.Persist;
-
-
-var di = {SyncItError: SyncItLib.SyncItError, getUpdateResult: SyncItLib.getUpdateResult};
+})(this, function (expect, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync,SyncIt_Constant) {
 
 describe('When SyncItTestServ responds to a getDatasetNames request',function() {
     
@@ -60,7 +46,9 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
     var emitCount = 0;
     var lastEmitQueueitem = null;
     var lastEmitJrec = null;
-    syncItTestServer.listenForFed(function(queueitem,jrec) {
+    syncItTestServer.listenForFed(function(dataset,datakey,queueitem,jrec) {
+		expect(dataset).to.equal('xx');
+		expect(datakey).to.equal('yy');
         emitCount = emitCount + 1;
         lastEmitJrec = jrec;
         lastEmitQueueitem = queueitem;

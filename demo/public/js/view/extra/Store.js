@@ -67,15 +67,15 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 			dojoStore
 		);
 
-		syncIt.listenForApplied(function(queueitem) {
+		syncIt.listenForApplied(function(dataset, datakey, queueitem, storerecord) {
 			regenerateStore(dojoStore,syncItStore);
 		});
 		
-		syncIt.listenForFed(function(queueitem) {
+		syncIt.listenForFed(function(dataset, datakey, queueitem, storerecord) {
 			regenerateStore(dojoStore,syncItStore);
 		});
 		
-		syncIt.listenForAddedToQueue(function(dataset,datakey,patch) {
+		syncIt.listenForAddedToQueue(function(dataset, datakey, queueitem) {
 			regenerateStore(dojoStore,syncItStore);
 		});
 

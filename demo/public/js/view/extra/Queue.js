@@ -17,7 +17,7 @@ return function(queueElementId,syncIt,syncItQueue) {
 		viewExtraCommon.emptyDojoStore(dojoStore);
 		
 		// Display Queue
-		syncItQueue._getQueue({},function(err,items) {
+		syncItQueue.getFullQueue(function(err,items) {
 			for (i=0,l=items.length; i<l; i++) {
 				dojoStore.put(items[i]);
 			}
@@ -48,15 +48,15 @@ return function(queueElementId,syncIt,syncItQueue) {
 		dojoStore
 	);
 
-	syncIt.listenForApplied(function(queueitem) {
+	syncIt.listenForApplied(function(dataset, datakey, queueitem, storerecord) {
 		regenerateQueue(dojoStore,syncItQueue);
 	});
 	
-	syncIt.listenForFed(function(queueitem) {
+	syncIt.listenForFed(function(queueitem, datakey, queueitem, storerecord) {
 		regenerateQueue(dojoStore,syncItQueue);
 	});
 	
-	syncIt.listenForAddedToQueue(function(dataset,datakey,patch) {
+	syncIt.listenForAddedToQueue(function(dataset, datakey, queueitem) {
 		regenerateQueue(dojoStore,syncItQueue);
 	});
 

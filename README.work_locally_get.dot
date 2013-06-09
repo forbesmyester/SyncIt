@@ -1,0 +1,21 @@
+digraph a { 
+
+	subgraph clusteryourcode {
+		label = "Your Code";
+		App [label="Request Data", rank=1];
+		SyncItCallback [label=Callback];
+		SyncItEventHandler [label="Event Handler", style=invis]
+	}
+	
+	subgraph clustersyncit {
+		label = "SyncIt"
+		SyncIt;
+		Queue;
+		Store;
+	}
+
+	App -> SyncIt [label="syncIt.get()"];
+	SyncIt -> Store -> SyncIt -> Queue -> SyncIt -> SyncItCallback;
+	SyncIt ->SyncItEventHandler [style=invis];
+
+}

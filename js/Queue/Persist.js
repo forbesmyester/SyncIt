@@ -3,7 +3,7 @@
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
 	if (typeof exports === 'object') {
 		module.exports = factory(
-			require('./Constant.js')
+			require('../Constant.js')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		define(
@@ -15,7 +15,7 @@
 			root.SyncIt_Constant
 		);
 	}
-})(this, function (Constant) {
+})(this, function (SyncIt_Constant) {
 
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
 // Copyright: Matthew Forrester
@@ -230,13 +230,12 @@ Queue.prototype._setQueue = function(queueitem, callback) {
  * 
  * #### Parameters
  * 
- * * **@param {Object} `filter`** Filtering parameters. See [basic filtering method](#queue._basicfiltermethod--)
  * * **@param {Function} `retrieved`** Called when count retrieved. Signature: `function(err, length)`
  *   * **@param {ErrorCode} `retrieved.err`**
  *   * **@param {Number} `retrieved.length`** The amount of items in the list matching the filter
  */
-Queue.prototype.getCountInQueue = function(filter, retrieved) {
-	this._getQueue(filter, function(e, queue) {
+Queue.prototype.getCountInQueue = function(retrieved) {
+	this._getQueue({}, function(e, queue) {
 		if (e !== SyncIt_Constant.Error.OK) {
 			retrieved(e);
 		}

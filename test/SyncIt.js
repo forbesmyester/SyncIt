@@ -8,6 +8,9 @@
 			require('../node_modules/expect.js/expect.js'),
 			require('../js/SyncIt.js'),
 			require('../js/Queue/Persist.js'),
+			require('../js/Queue/LocalStorage.js'),
+			require('../js/Store/Persist.js'),
+			require('../js/FakeLocalStorage.js'),
 			require('../js/Constant.js'),
 			require('../js/updateResult.js'),
 			require('../js/Persist/Memory.js'),
@@ -20,6 +23,9 @@
 				'expect.js',
 				'syncit/SyncIt',
 				'syncit/Queue/Persist',
+				'syncit/Queue/LocalStorage',
+				'syncit/Store/Persist',
+				'syncit/FakeLocalStorage',
 				'syncit/Constant',
 				'syncit/updateResult',
 				'syncit/Persist/Memory',
@@ -31,8 +37,11 @@
 		// Browser globals (root is window)
 		root.returnExports = factory(
 			root.expect,
-			root.SyncItLib,
+			root.SyncIt,
 			root.SyncIt_Queue_Persist,
+			root.SyncIt_Queue_LocalStorage,
+			root.SyncIt_Store_Persist,
+			root.SyncIt_FakeLocalStorage,
 			root.SyncIt_Constant,
 			root.SyncIt_updateResult,
 			root.SyncIt_Persist_Memory,
@@ -41,8 +50,11 @@
 	}
 })(this, function (
 	expect,
-	SyncItLib,
+	SyncIt,
 	SyncIt_Queue_Persist,
+	SyncIt_Queue_LocalStorage,
+	SyncIt_Store_Persist,
+	SyncIt_SyncIt_FakeLocalStorage,
 	SyncIt_Constant,
 	updateResult,
 	SyncIt_Persist_Memory,
@@ -50,9 +62,8 @@
 ) {
 // =============================================================================
 
-var SyncIt = SyncItLib.SyncIt;
 var Queue = SyncIt_Queue_Persist;
-var Store = SyncItLib.Store;
+var Store = SyncIt_Store_Persist;
 var Persist = SyncIt_Persist_MemoryAsync;
 
 describe('_cloneObj',function() {
@@ -138,16 +149,8 @@ describe('_versionCheck',function() {
 						storedData,
 						{b:i,m:'sync dude',i:{gender:'M'}}
 					)
-				).to.equal(SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_BASED_ON_OLD_VERSION);
+				).to.equal(SyncIt_Constant.Error.STALE_FOUND_IN_QUEUE);
 			}
-		});
-		it('unless the modifier is the same and is the last update',function() {
-			expect(
-				SyncIt._versionCheck(
-					storedData,
-					{b:(storedData.v-1),m:storedData.m,i:{gender:'M'}}
-				)
-			).to.equal(SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_ALREADY_APPLIED);
 		});
 	});
 	it('will also reject applications to versions in the future',function() {
@@ -395,7 +398,7 @@ describe('SyncIt',function() {
 				syncIt.apply(function(err) {
 					expect(err).to.equal(0);
 					var doneCount = 0;
-					syncIt.listenForFed(function(queueitem) {
+					syncIt.listenForFed(function(dataset, datakey, queueitem) {
 						{
 							
 							if (
@@ -405,6 +408,8 @@ describe('SyncIt',function() {
 								return;
 							}
 						}
+						expect(dataset).to.equal('user');
+						expect(datakey).to.equal('bob');
 						expect(queueitem.o).to.equal('set');
 							expect(queueitem.m).to.equal('bb');
 						expect(queueitem.b).to.equal(1);
@@ -415,7 +420,7 @@ describe('SyncIt',function() {
 					});
 					var checks = function(err,fedFailed,conflictFailed,jrec) {
 						expect(err).to.equal(0);
-						queue.getCountInQueue({},function(l) {
+						queue.getCountInQueue(function(l) {
 							expect(l).to.equal(SyncIt_Constant.Error.OK);
 								syncIt.getFull('user','bob',function(err,jread) {
 									if (++doneCount == 2) {
@@ -468,7 +473,7 @@ describe('SyncIt',function() {
 		it('... is really stored',function(done) {
 			syncIt.getFull('user','bob',function(e,jrec) {
 				expect(jrec.i.hair.color).to.eql('red');
-				queue.getCountInQueue({},function(e,l) {
+				queue.getCountInQueue(function(e,l) {
 					expect(l).to.equal(0);
 					done();
 				});
@@ -538,7 +543,7 @@ describe('SyncIt',function() {
 				});
 			});
 
-			it('should not fire conflict resolution on feed because of the uncleared queueitem',function(done) {
+			it('will be told it\'s stale on feed',function(done) {
 
 				var dupQueue = new Queue(new Persist());
 				var dupStore = new Store(new Persist());
@@ -557,7 +562,7 @@ describe('SyncIt',function() {
 						}],
 						function() { expect().fail("This should not have been called"); },
 						function(err) {
-							expect(err).to.equal(SyncIt_Constant.Error.OK)
+							expect(err).to.equal(SyncIt_Constant.Error.STALE_FOUND_IN_QUEUE)
 							done();
 						}
 					);
@@ -565,7 +570,7 @@ describe('SyncIt',function() {
 
 			});
 
-			it('can be fed then set and will skip over the stale queueitem for both',function(done) {
+			it('will still be able to use update - tested, set and remove - untested',function(done) {
 
 				var dupQueue = new Queue(new Persist());
 				var dupStore = new Store(new Persist());
@@ -576,53 +581,21 @@ describe('SyncIt',function() {
 					dupSyncIt.update('user','jack',{'$set':{'age':43}},function(err,dataset,datakey,queueitem) {
 						expect(err).to.equal(SyncIt_Constant.Error.OK);
 						expect(queueitem.b).to.equal(1);
-						dupSyncIt.feed(
-							[{
-								o: 'update',
-								s: 'user',
-								k: 'jack',
-								u: {'$set':{'eyes':'blue'}},
-								m: 'bob',
-								b: 1,
-								t: (new Date().getTime())-5000
-							}],
-							function(
-								dataset,
-								datakey,
-								stored,
-								localChanges,
-								remoteChanges,
-								resolved
-							) {
-								expect(localChanges.length).to.equal(1);
-								conflictResolutionCalled = true;
-								resolved(true,[]);
-							},
-							function(err) {
-								expect(conflictResolutionCalled).to.equal(true);
-								expect(err).to.equal(SyncIt_Constant.Error.OK)
-								dupSyncIt.getFull('user','jack',function(e,jread) {
-									expect(e).to.equal(SyncIt_Constant.Error.OK);
-									expect(jread.v).to.eql(2);
-									expect(jread.m).to.eql('bob');
-									done();
-								});
-							}
-						);
+						done();
 					});
 				});
 
 			});
 
-			it('can apply and will clear the duplicate queueitem before doing the next one',function(done) {
+			it('can be removed it with removeStaleFromQueue',function(done) {
 
 				var dupQueue = new Queue(new Persist());
 				var dupStore = new Store(new Persist());
 				var dupSyncIt = new SyncIt(dupStore,dupQueue,'aa');
 
 				prepare(dupSyncIt,function() {
-					dupSyncIt.apply(function(err) {
-						expect(err).to.equal(SyncIt_Constant.Error.STALE_FOUND_QUEUE_ADVANCED);
+					dupSyncIt.removeStaleFromQueue(function(err) {
+						expect(err).to.equal(SyncIt_Constant.Error.OK);
 						dupSyncIt._queue.getFullQueue(function(e,queueitems) {
 							expect(e).to.equal(SyncIt_Constant.Error.OK);
 							expect(queueitems.length).to.equal(0);
@@ -1121,7 +1094,7 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 							},
 							function(err) {
 								expect(err).to.equal(SyncIt_Constant.Error.OK);
-								queue.getCountInQueue({},function(err,length) {
+								queue.getCountInQueue(function(err,length) {
 									expect(length).to.equal(0);
 									syncIt.getFull('cars','bmw',function(err,jread) {
 										expect(jread.v).to.equal(2);
@@ -1178,7 +1151,7 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 							function(err) {
 								expect(err).to.equal(SyncIt_Constant.Error.NOT_RESOLVED);
 								expect(syncIt._locked).to.equal(0);
-								queue.getCountInQueue({},function(err,length) {
+								queue.getCountInQueue(function(err,length) {
 									expect(length).to.equal(1);
 									syncIt.getFull('cars','bmw',function(err,jread) {
 										expect(jread.v).to.equal(2);
@@ -1247,18 +1220,16 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 						t: new Date().getTime() - 500
 					}
 				],
-				function(dataset, datakey, jrec, localQueueItems, serverQueueItems, resolved ) {
+				function(dataset, datakey, jrec, localQueueitems, serverQueueitems, resolved ) {
+					return resolved(true,[]);
 					expect().fail("This should not have been called");
 				},
 				function(err,stillToProcess) {
-					expect(stillToProcess.length).to.equal(3);
-					expect(err).to.equal(SyncIt_Constant.Error.TRYING_TO_APPLY_UPDATE_BASED_ON_OLD_VERSION);
+					expect(err).to.equal(SyncIt_Constant.Error.OK);
+					expect(stillToProcess.length).to.equal(0);
 					store.get('cars','bmw',function(err,jrec) {
-						expect(jrec.v).to.equal(2);
-						queue.getItemsForDatasetAndDatakey('cars', 'bmw', function(err,queueitem) {
-							expect(queueitem.length).to.equal(1);
-							done();
-						});
+						expect(jrec.v).to.equal(4);
+						done();
 					});
 				}
 			);
@@ -1286,8 +1257,8 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 					function() {
 						syncIt.apply(function(err,done) {
 							expect(err).to.equal(0);
-							// three BMW now stored now, two in queue, one in store..
-							queue.getCountInQueue({},function(err,len) {
+							// three BMW now process now, one in store (2), one in queue(3)..
+							queue.getCountInQueue(function(err,len) {
 								expect(err).to.equal(0);
 								expect(len).to.equal(1);
 								syncIt.getFull('cars','bmw',function(err,jread) {
@@ -1525,24 +1496,24 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 		var syncIt = new SyncIt(store,queue,'aa');
 		var resolvedCalledCount = 0;
 
-		var resolver = function(dataset, datakey, jrec, localQueueItems, serverQueueItems, resolved ) {
+		var resolver = function(dataset, datakey, jrec, localQueueitems, serverQueueitems, resolved ) {
 			expect(++resolvedCalledCount).to.equal(1);
-			expect(serverQueueItems.length).to.equal(1);
-			expect(localQueueItems.length).to.equal(2);
-			expect(serverQueueItems[0].u.seats).to.equal('leather');
-			expect(localQueueItems[0].u.drive).to.equal('rear');
-			expect(localQueueItems[0].u.hasOwnProperty('color')).to.equal(false);
-			expect(localQueueItems[1].u.drive).to.equal('rear');
-			expect(localQueueItems[1].u.color).to.equal('blue');
-			var r0 = syncIt._cloneObj(localQueueItems[0]);
+			expect(serverQueueitems.length).to.equal(1);
+			expect(localQueueitems.length).to.equal(2);
+			expect(serverQueueitems[0].u.seats).to.equal('leather');
+			expect(localQueueitems[0].u.drive).to.equal('rear');
+			expect(localQueueitems[0].u.hasOwnProperty('color')).to.equal(false);
+			expect(localQueueitems[1].u.drive).to.equal('rear');
+			expect(localQueueitems[1].u.color).to.equal('blue');
+			var r0 = syncIt._cloneObj(localQueueitems[0]);
 			r0.u.seats = 'leather';
 			r0.o = 'set';
 			r0.m = 'this_should_revert_to_aa';
-			r0.original = syncIt._cloneObj(localQueueItems[0]);
-			var r1 = syncIt._cloneObj(localQueueItems[1]);
+			r0.original = syncIt._cloneObj(localQueueitems[0]);
+			var r1 = syncIt._cloneObj(localQueueitems[1]);
 			r1.u.seats = 'leather';
 			r1.m = 'this_should_revert_to_aa';
-			r1.original = syncIt._cloneObj(localQueueItems[1]);
+			r1.original = syncIt._cloneObj(localQueueitems[1]);
 			resolved(true,[r0,r1]);
 		};
 		
@@ -1585,7 +1556,7 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 										status:'high',
 										seats: 'leather'
 									},
-									m: 'ben',
+									m: 'aben',
 									b: 1,
 									t: new Date().getTime() - 1000
 								},
@@ -1600,6 +1571,20 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 									m: 'ben',
 									b: 0,
 									t: new Date().getTime() - 1000
+								},
+								{
+									s: 'cars',
+									k: 'bmw',
+									o: 'set',
+									u: {
+										price:'medium',
+										size:'medium',
+										status:'high',
+										seats: 'leather'
+									},
+									m: 'ben',
+									b: 2,
+									t: new Date().getTime() - 1000
 								}
 							],
 							resolver,
@@ -1613,7 +1598,8 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 										speed: 'medium',
 										drive: 'usually front'
 									});
-									// expect(jread.modifier).to.equal('aa');
+									expect(jread.m).to.equal('aa');
+									expect(jread.v).to.equal(2);
 									if (--toCheck === 0) {
 										done();
 									}
@@ -1627,7 +1613,8 @@ describe('SyncItFeeder can manage Data from a server when',function() {
 										color: 'blue',
 										seats: 'leather'
 									});
-									// expect(jread.modifier).to.equal('aa');
+									expect(jread.m).to.equal('aa');
+									expect(jread.v).to.equal(5); // original, 2 set, 2 conflict resolution
 									if (--toCheck === 0) {
 										done();
 									}

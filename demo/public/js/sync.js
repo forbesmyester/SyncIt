@@ -1,7 +1,7 @@
 require(
-["dojo/request/xhr", 'syncit/SyncIt', 'syncit/Constant', 'syncit/Persist/Memory', "syncitserv/view/extra/ConsLog", "syncitserv/TabControl", 'syncit/Unsupported/SyncItStore', 'syncit/SyncItTestServ', 'syncit/ServerPersist/MemoryAsync', 'syncitserv/ServerSimulator', 'syncitserv/view/extra/Queue', 'syncitserv/view/extra/Store', 'syncitserv/view/extra/Server', 'syncitserv/SyncItLog', "dojox/html/entities", 'dojo/dom-construct', "dojo/dom-class", 'dojo/query', 'dojo/dom-attr', "dgrid/Grid", 'dojo/store/Memory', "dojo/store/Observable", "dgrid/OnDemandGrid", 'dojo/Deferred', "dojo/promise/all", 'dojo/dom', 'dojo/on', "dojo/dom-form", "dijit/Dialog", "dojo/NodeList-traverse", "dojo/NodeList-manipulate","dojo/domReady!"
+["dojo/request/xhr", 'syncit/SyncIt', 'syncit/Store/Persist','syncit/FakeLocalStorage', 'syncit/Queue/LocalStorage', 'syncit/Constant', 'syncit/Queue/Persist', 'syncit/Persist/Memory', "syncitserv/view/extra/ConsLog", "syncitserv/TabControl", 'syncit/Unsupported/SyncItStore', 'syncit/SyncItTestServ', 'syncit/ServerPersist/MemoryAsync', 'syncitserv/ServerSimulator', 'syncitserv/view/extra/Queue', 'syncitserv/view/extra/Store', 'syncitserv/view/extra/Server', 'syncitserv/SyncItLog', "dojox/html/entities", 'dojo/dom-construct', "dojo/dom-class", 'dojo/query', 'dojo/dom-attr', "dgrid/Grid", 'dojo/store/Memory', "dojo/store/Observable", "dgrid/OnDemandGrid", 'dojo/Deferred', "dojo/promise/all", 'dojo/dom', 'dojo/on', "dojo/dom-form", "dijit/Dialog", "dojo/NodeList-traverse", "dojo/NodeList-manipulate","dojo/domReady!"
 ],
-function(xhr, SyncItLib, SyncIt_Constant, SyncIt_Persist_Memory, ConsLog, TabControl, SyncItStore, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync, ServerSimulator, viewExtraQueue, viewExtraStore, viewExtraServer, syncItLog, htmlEntities, domConstruct, domClass, domQuery, domAttr, Grid, Memory, Observable, OnDemandGrid, Deferred, promiseAll, dom, on, domForm, dijitDialog) {
+function(xhr, SyncIt, Store, SyncIt_FakeLocalStorage, SyncIt_Queue_LocalStorage, SyncIt_Constant, Queue, SyncIt_Persist_Memory, ConsLog, TabControl, SyncItStore, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync, ServerSimulator, viewExtraQueue, viewExtraStore, viewExtraServer, syncItLog, htmlEntities, domConstruct, domClass, domQuery, domAttr, Grid, Memory, Observable, OnDemandGrid, Deferred, promiseAll, dom, on, domForm, dijitDialog) {
 
 dojo.byId('clienttwo-holder').innerHTML = dojo.byId('clientone-holder').innerHTML.replace(/lhs/g,'rhs');
 
@@ -17,11 +17,15 @@ serverTabControl.startup();
 var clientTabControl = new TabControl(dom.byId('client-tab-holder'),'client-tab',{});
 clientTabControl.startup();
 
-var dialogShowText = function(title,text,width) {
+var dialogShowText = function(title,text,width,height) {
+	var style = 'overflow: auto' + (
+		height ?
+			"; width: "+width+'; height:'+height :
+			"; width: "+width
+	);
 	var myDialog = new dijitDialog({
 		title: title,
-		content: text,
-		style: "width: "+width
+		content: '<div style="'+style+'">'+text+'</div>',
 	});
 	
 	myDialog.show();
@@ -67,23 +71,27 @@ var getErrorDisplayer = function(method) {
 	}
 }
 
-//dialogShowText(
-//	"Isn't this screen rather complicated?",
-//	(function() {
-//	var node = dojo.byId("help-demo-overview");
-//	return (node === null) ?
-//		'Cannot find content' : 
-//		node.innerHTML;
-//	})(),
-//	'900px'
-//);
+/*
+dialogShowText(
+	"Isn't this screen rather complicated?",
+	(function() {
+	var node = dojo.byId("help-demo-overview");
+	return (node === null) ?
+		'Cannot find content' : 
+		node.innerHTML;
+	})(),
+	'900px'
+);
+*
+*/
 
 var conflictResolutionFunc = function(dataset ,datakey ,jrec ,localQueueItems, serverQueueItems ,resolved) {
 		
 	var myDialog = new dijitDialog({
 		title: "Conflict at "+dataset+"."+datakey,
-		content: dojo.byId('conflict-resolution-dialog').innerHTML,
-		style: "width: 760px"
+		content: '<div style="width: 640px; overflow: auto">' + 
+			dojo.byId('conflict-resolution-dialog').innerHTML +
+			'</div>'
 	});
 	
 	var getDlForJread = function(jread) {
@@ -203,9 +211,9 @@ var syncIts = (function() {
 		r = {};
 	for (var i=0; i<sides.length; i++) {
 		r[sides[i]] = {};
-		r[sides[i]]['queue'] = new SyncItLib.Queue(new SyncIt_Persist_Memory());
-		r[sides[i]]['store'] = new SyncItLib.Store(new SyncIt_Persist_Memory());
-		r[sides[i]]['syncIt'] = new SyncItLib.SyncIt(
+		r[sides[i]]['queue'] = new Queue(new SyncIt_Persist_Memory());
+		r[sides[i]]['store'] = new Store(new SyncIt_Persist_Memory());
+		r[sides[i]]['syncIt'] = new SyncIt(
 			r[sides[i]]['store'],
 			r[sides[i]]['queue'],
 			sides[i]
@@ -522,11 +530,6 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 
 (function() { // Setup Server
 	
-	var syncItServerDi = {
-		SyncItError: SyncItLib.SyncItError,
-		getUpdateResult: SyncItLib.getUpdateResult
-	};
-	
 	var syncItTestServer = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
 	
 	serverGrid = viewExtraServer('server-view',syncItTestServer);
@@ -610,10 +613,6 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 	serverSimulator.start();
 	
 	setTimeout(function() {
-		var di = {
-			SyncItError: SyncItLib.SyncItError, 
-			getUpdateResult: SyncItLib.getUpdateResult
-		};
 		var req = {
 			body:{ s:'xxx', k:'yyy', b:0, m:'another', r:false, t:new Date().getTime(), u:{b:'c'}, o:'set' }
 		};

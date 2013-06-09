@@ -24,11 +24,6 @@ function(declare,ColumnResizer,Grid,OnDemandGrid,DijitRegistry) {
 			sort: [{attribute: 't', descending: true}]
 		}, elementId); // attach to a DOM id
 		
-		setTimeout(
-			function() {columns.push({label:'x',field:'k'}); },
-			5000
-		);
-		
 		grid.startup();
 
 		return grid;

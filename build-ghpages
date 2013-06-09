@@ -1,4 +1,11 @@
 #!/bin/sh
+
+# First arg of cmd must be destination directory
+
+rm -rf docs
 docker -i js  -o docs/
 rm -rf $1/docs
 tar -c docs | tar -x -C $1
+rm -rf $1/demo
+mkdir $1/demo
+tar -ch -C demo/public . | tar -x -C $1/demo

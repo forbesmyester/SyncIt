@@ -1,0 +1,7 @@
+#!/bin/sh
+mocha test/manip.js
+mocha test/Queue.js
+mocha test/Unsupported/DojoTest.js
+mocha test/SyncIt.js
+mocha test/ServerPersist/MemoryAsync.js
+mocha test/SyncItTestServ.js

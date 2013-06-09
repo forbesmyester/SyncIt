@@ -10,6 +10,7 @@
 			require('../js/Persist/Memory.js'),
 			require('../js/Persist/MemoryAsync.js'),
 			require('../js/Queue/LocalStorage.js'),
+			require('../js/FakeLocalStorage.js'),
 			require('../js/Queue/Persist.js')
 		);
 	} else if (typeof define === 'function' && define.amd) {
@@ -21,6 +22,7 @@
 				'syncit/Persist/Memory',
 				'syncit/Persist/MemoryAsync',
 				'syncit/Queue/LocalStorage.js',
+				'syncit/FakeLocalStorage.js',
 				'syncit/Queue/Persist.js'
 			],
 			factory
@@ -33,6 +35,7 @@
 			root.SyncIt_Persist_Memory,
 			root.SyncIt_Persist_MemoryAsync,
 			root.SyncIt_Queue_LocalStorage,
+			root.SyncIt_FakeLocalStorage,
 			root.SyncIt_Queue_Persist
 		);
 	}
@@ -42,53 +45,10 @@
 	SyncIt_Persist_Memory,
 	SyncIt_Persist_MemoryAsync,
 	SyncIt_Queue_LocalStorage,
+	SyncIt_FakeLocalStorage,
 	SyncIt_Queue_Persist
 ) {
 // =============================================================================
-
-var LocalStorage = function() {
-    this.data = {};
-	this.keys = [];
-};
-
-LocalStorage.prototype.setItem = function(k,v) {
-	this.data[k] = v;
-	this._regen();
-};
-
-LocalStorage.prototype._regen = function() {
-	this.keys = [];
-	this.length = 0;
-	for (var k in this.data) {
-		if (this.data.hasOwnProperty(k)) {
-			this.keys.push(k);
-		}
-	}
-	this.length = this.keys.length;
-}
-
-LocalStorage.prototype.clear = function() {
-    this.data = {};
-	this._regen();
-}
-
-LocalStorage.prototype.key = function(i) {
-	return this.keys[i];
-}
-
-LocalStorage.prototype.getItem = function(k) {
-    if (!this.data.hasOwnProperty(k)) {
-        return null;
-    }
-    return this.data[k];
-}
-
-LocalStorage.prototype.removeItem = function(key) {
-	if (this.data.hasOwnProperty(key)) {
-		delete this.data[key];
-		this._regen();
-	}
-}
 
 describe('Queue',function() {
 
@@ -116,7 +76,11 @@ describe('Queue',function() {
 
 		var queueAsync = new SyncIt_Queue_Persist(new SyncIt_Persist_MemoryAsync());
 		var queueSync = new SyncIt_Queue_Persist(new SyncIt_Persist_Memory());
-		var queueLocalStorage = new SyncIt_Queue_LocalStorage('aabbcc',new LocalStorage());
+		var queueLocalStorage = new SyncIt_Queue_LocalStorage(
+			'aabbcc',
+			new SyncIt_FakeLocalStorage()
+			//window.localStorage
+		);
 
 		addArrayToQueue(queueAsync,JSON.parse(JSON.stringify(dataToAdd)),next);
 		addArrayToQueue(queueSync,JSON.parse(JSON.stringify(dataToAdd)),next);
