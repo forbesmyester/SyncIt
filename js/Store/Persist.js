@@ -1,19 +1,22 @@
+/* jshint strict: true, smarttabs: true, es3: true, forin: true, immed: true, latedef: true, newcap: true, noarg: true, undef: true, unused: true, es3: true, bitwise: false, curly: true, latedef: true, newcap: true, noarg: true, noempty: true */
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
 	if (typeof exports === 'object') {
 		module.exports = factory(
-			require('../Constant.js')
+			require('../Constant.js'),
+			require('./LocalStorage.js')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		define(
-			['syncit/Constant'],
+			['syncit/Constant','syncit/Store/LocalStorage'],
 			factory
 		);
 	} else {
 		root.SyncIt_Store_Persist = factory(
-			root.SyncIt_Constant
+			root.SyncIt_Constant,
+			root.SyncIt_Store_LocalStorage
 		);
 	}
-})(this, function (SyncIt_Constant) {
+})(this, function (SyncIt_Constant,SyncIt_Store_LocalStorage) {
 
 "use strict";
 
@@ -34,28 +37,7 @@ var Store = function(persist) {
 	this._persist = persist;
 };
 
-Store.prototype._keyCheck = function(dataset, datakey) {
-	var checkRe = /(\.)|(^[0-9])|(^_)/,
-		toCheck = {Dataset: dataset, Datakey: datakey},
-		msg = '',
-		k=0;
-		
-	for (k in toCheck) {
-		if (toCheck.hasOwnProperty(k)) {
-			if (checkRe.test(toCheck[k])) {
-				msg = 'SyncIt.Store does not support '+k+' '+
-					'which includes a "." or starts with a "_" or number';
-			}
-			if (toCheck[k].length < 2) {
-				msg = 'SyncIt.Store does not support '+k+' '+
-					'with a length less than 2';
-			}
-			if (msg) {
-				throw 'SyncIt.Store.Invalid'+k+': '+msg;
-			}
-		}
-	}
-};
+Store.prototype._keyCheck = SyncIt_Store_LocalStorage.prototype._keyCheck;
 
 /**
  * ### Store.get()

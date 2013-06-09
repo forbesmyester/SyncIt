@@ -1,0 +1,11 @@
+digraph structs {
+	subgraph x {
+	Server [rank=min];
+	node [shape=record];
+	subgraph clusterqueue {
+		label = "Queue";
+		structqueue [shape=record,label="{ Position | 0 | 1 | 2 | 3 | 4 } | { Dataset | <f1> Car | Car | Person | Car | <f2> Car }|{ Datakey | Subaru | Ford | Simon | Ford | Subaru }|{ Operation | Set | Update | Set | Remove | Update }|{ Update | <f3> \{\"Seats\": \"Leather\"\} | \{...\} | \{...\} | \{...\} | <f4> \{ \"$inc \{ \"Likes\": 1 \}\} }"];
+	}
+	structqueue:f3 -> Server [color="red",style="bold"];
+	}
+}

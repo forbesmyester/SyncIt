@@ -13,6 +13,7 @@ cat README.download_updates_from_server.dot | dot -Gdpi=64 -Tpng:cairo:cairo > b
 cat README.feed_into_syncit.dot | dot -Gdpi=64 -Tpng:cairo:cairo > bin/README/img/feed_into_syncit.png
 cat README.work_locally_get.dot| dot -Gdpi=64 -Tpng:cairo:cairo > bin/README/img/work_locally_get.png
 cat README.work_locally_set.dot| dot -Gdpi=64 -Tpng:cairo:cairo > bin/README/img/work_locally_set.png
+cat README.getfirst.dot | dot -Gdpi=64 -Tpng:cairo:cairo > bin/README/img/getfirst.png
 cat README.getfirst_and_apply.dot | dot -Gdpi=64 -Tpng:cairo:cairo > bin/README/img/getfirst_and_apply.png
 dia -e bin/README/img/process.png -O /tmp README.process.dia
 marked -i README.md -o README.html

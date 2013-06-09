@@ -2,7 +2,7 @@ digraph a {
 
 	subgraph clusteryourcode {
 		label = "Your Code";
-		App [label="Request Data", rank=1];
+		App [label="Change Data", rank=1];
 		SyncItCallback [label=Callback];
 		SyncItEventHandler [label="Added to Queue listener"];
 	}

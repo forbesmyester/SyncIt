@@ -1,3 +1,4 @@
+/* jshint strict: true, smarttabs: true, es3: true, forin: true, immed: true, latedef: true, newcap: true, noarg: true, undef: true, unused: true, es3: true, bitwise: false, curly: true, latedef: true, newcap: true, noarg: true, noempty: true */
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
 	if (typeof exports === 'object') {
 		module.exports = factory(
@@ -15,7 +16,6 @@
 	}
 })(this, function (SyncIt_Constant) {
 
-/* jshint strict: true, smarttabs: true, es3: true, forin: true, immed: true, latedef: true, newcap: true, noarg: true, undef: true, unused: true, es3: true, bitwise: false, curly: true, latedef: true, newcap: true, noarg: true, noempty: true */
 "use strict";
 
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
@@ -27,7 +27,6 @@
 var Lsq = function(namespace,localStorage,stringifyFunc,parseFunc,maxOrderDigitLength) {
 	this._ns = namespace;
     this._ls = localStorage;
-	this._listening = false;
 	this._stringifyFunc = stringifyFunc ?
 		stringifyFunc : 
 		function(ob) {

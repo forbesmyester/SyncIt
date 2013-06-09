@@ -15,7 +15,7 @@ digraph a {
 	JLib -> Server [style=dashed, label="XHR? (2 & 3)"]; 
 	Server -> JLib [style=dashed]; 
 	JLib -> JLibCallback [label="(4)"];
-	JLibCallback -> SyncIt [fontcolor=white, color=white];
+	JLibCallback -> SyncIt [label="syncIt.feed()", fontcolor=white, color=white];
 	SyncIt -> SyncItCallback [fontcolor=white, color=white];
 	SyncIt -> SyncItEventHandler [fontcolor=white, color=white];
 	SyncIt -> SyncItEventHandler [fontcolor=white, color=white];

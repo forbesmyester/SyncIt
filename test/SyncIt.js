@@ -54,7 +54,7 @@
 	SyncIt_Queue_Persist,
 	SyncIt_Queue_LocalStorage,
 	SyncIt_Store_Persist,
-	SyncIt_SyncIt_FakeLocalStorage,
+	SyncIt_FakeLocalStorage,
 	SyncIt_Constant,
 	updateResult,
 	SyncIt_Persist_Memory,

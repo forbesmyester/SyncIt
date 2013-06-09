@@ -164,10 +164,9 @@ The set operation will add a Queueitem to the end of the Queue.
 
 Because SyncIt does not know anything about the implementation details of the server pushing changes it a two stage process. These are:
 
- 1. Your App should request the next Queueitem that needs uploading to the Server from SyncIt then begin communicating that to the server ( SyncIt.getFirst() ).
- 2. The server will either Accept or Reject your Queueitem, assuming it is accepted your App should notify SyncIt it has been uploaded ( SyncIt.apply() ).
+Your App should request the next Queueitem that needs uploading to the Server from SyncIt then begin communicating that to the server ( SyncIt.getFirst() ).
 
-![Uploading to server and applying accepted changes](bin/README/img/getfirst_and_apply.png)
+##### Code
 
 ```javascript
 syncIt.getFirst(function(err,queueitem) {
@@ -184,9 +183,15 @@ syncIt.getFirst(function(err,queueitem) {
 });
 ```
 
+##### Diagram
+
+![SyncIt.getFirst()](bin/README/img/getfirst.png)
+
 Note: This will not change the Queue in any way.
 
 Assuming the Queueitem is accepted by the Server, the first local Queueitem should then be applied to the local Store so that Dataset/Datakey matches the state on the Server in the Store and the Queueitem should then be removed.
+
+##### Code
 
 ```javascript
 jamesSyncIt.apply( function(err, appliedQueueitem, storedrecord ) {
@@ -209,6 +214,10 @@ jamesSyncIt.apply( function(err, appliedQueueitem, storedrecord ) {
 ##### Diagram of the Applying process - After:
 
 ![What happens during a syncIt.apply() - After](bin/README/img/apply-after.png)
+
+##### Full overall diagram
+
+![Uploading to server and applying accepted changes](bin/README/img/getfirst_and_apply.png)
 
 ### What happens if the data is modified by two different users / devices?
 
@@ -278,12 +287,14 @@ There is a (reasonably) complete set of [API Docs](http://forbesmyester.github.i
 
 User James is sat on the the underground using an application developed using SyncIt. He is trying to decide what car to buy and the App performs the following change while out of mobile coverage.
 
-    jamesSyncIt.set(
-        'cars',
-        'Subaru',
-        { color: 'blue' }
-        function(err) { if (err === SyncIt_Constant.Error.OK) {  success(); } }
-    );
+```javascript
+jamesSyncIt.set(
+    'cars',
+    'Subaru',
+    { color: 'blue' }
+    function(err) { if (err === SyncIt_Constant.Error.OK) {  success(); } }
+);
+```
 
 User  | Dataset | Datakey | Store | Queueitem Update
 ------|---------|---------|-------|-----------------
@@ -297,28 +308,30 @@ James is happy because he is making progress on deciding on his next car.
 
 Later, when James exits the underground the App detects that it can connect and makes the following API call:
 
-    syncIt.getFirst(function(err,queueitem) {
-        if (err !== SyncIt_Constant.Error.OK) {
-            // throw?
+```javascript
+syncIt.getFirst(function(err,queueitem) {
+    if (err !== SyncIt_Constant.Error.OK) {
+        // throw?
+    }
+    xhr(
+        'http://server/' + queueitem.s + '/' + queueitem.k,
+        {
+            method: 'PATCH',
+            ...
         }
-        xhr(
-            'http://server/' + queueitem.s + '/' + queueitem.k,
-            {
-                method: 'PATCH',
+    ).then(
+        function() {
+            // data now stored on server
+            jamesSyncIt.apply(function(err) {
                 ...
-            }
-        ).then(
-            function() {
-                // data now stored on server
-                jamesSyncIt.apply(function(err) {
-                    ...
-                });
-            },
-            function(err) {
-                // something went wrong... throw err?
-            }
-        );
-    });
+            });
+        },
+        function(err) {
+            // something went wrong... throw err?
+        }
+    );
+});
+```
 
 User  | Dataset | Datakey | Store                                  | Queueitem
 ------|---------|---------|----------------------------------------|-----------
@@ -332,11 +345,13 @@ The reason this is two steps as apposed to the one commit step for Subversion is
 
 His wife, Emily is using the same App and either through a push notification or polling gets James's update from the server which calls:
 
-    emilySyncIt.feed(
-        [Queueitem], // The update from James
-        function( ... ) { ... }, // Conflict Resolution - We'll get to this soon
-        function(err) { ... }
-    );
+```javascript
+emilySyncIt.feed(
+    [Queueitem], // The update from James
+    function( ... ) { ... }, // Conflict Resolution - We'll get to this soon
+    function(err) { ... }
+);
+```
 
 User  | Dataset | Datakey | Store                                  | Queueitem
 ------|---------|---------|----------------------------------------|-----------
@@ -347,11 +362,13 @@ This will add the change to the local store, assuming that there are no local ch
 
 Emily does not like the idea of thier car being a Subaru and makes the following changes:
 
-    emilySyncIt.set(
-        'cars',
-        'Subaru',
-        { color: 'blue', style: 'a bit too boy racer for Emily' }
-    );
+```javascript
+emilySyncIt.set(
+    'cars',
+    'Subaru',
+    { color: 'blue', style: 'a bit too boy racer for Emily' }
+);
+```
 
 User  | Dataset | Datakey | Store                                  | Queueitem
 ------|---------|---------|----------------------------------------|-----------
@@ -364,12 +381,14 @@ Because she is still in the park and has good mobile coverage that change is upl
 
 James is again out of mobile coverage and is completely unaware of Emily's change but has discovered that Subaru's are four wheel drive...
 
-    jamesSyncIt.update(
-        'cars',
-        'Subaru',
-        { $set: { pluspoints: ['has 4WD'] }, $inc { votes: 1 } },
-        function(err) { if (err === SyncIt_Constant.Error.OK) {  success(); } }
-    );
+```javascript
+jamesSyncIt.update(
+    'cars',
+    'Subaru',
+    { $set: { pluspoints: ['has 4WD'] }, $inc { votes: 1 } },
+    function(err) { if (err === SyncIt_Constant.Error.OK) {  success(); } }
+);
+```
 
 User  | Dataset | Datakey | Store                                  | Queueitem                                                     | Reads
 ------|---------|---------|----------------------------------------|---------------------------------------------------------------|------------
@@ -384,18 +403,20 @@ What is the correct course of action that James's App should take in this situat
 
 Internally SyncIt stores everything including a Modifier and a Version. The data structure looks something like the following:
 
-    {
-        s: "cars", // dataset
-        k: "Subaru", // datakey
-        b: 1, // what version this Queueitem is based on (so this is version 2)
-        m: "james", // the user/device that made the change
-        o: "update", // the operation that was performed
-        t: 1369345483365, // timestamp when the operation was performed
-        u: { // the data for the operation
-            "$set": { "pluspoints": ["has 4WD"] },
-            "$inc" { "votes": 1 }
-        } 
-    }
+```javascript
+{
+    s: "cars", // dataset
+    k: "Subaru", // datakey
+    b: 1, // what version this Queueitem is based on (so this is version 2)
+    m: "james", // the user/device that made the change
+    o: "update", // the operation that was performed
+    t: 1369345483365, // timestamp when the operation was performed
+    u: { // the data for the operation
+        "$set": { "pluspoints": ["has 4WD"] },
+        "$inc" { "votes": 1 }
+    } 
+}
+```
 
 So conflicts are possible to detect by comparing versions.
 
@@ -405,43 +426,45 @@ The second part of the solution is that `SyncIt.feed()` includes a callback para
 
 The reason for conflict resolution being a callback function I feel it would be impossible for SyncIt to dictate and could be part of your core application logic. So the code/data for feeding data into SyncIt could end up looking something like the following:
 
-    SyncIt.feed(
-        [{ 
-            // The data which has been recieved from other parties via a server
-            "s": "cars",
-            "k": "Subaru",
-            "u": { color:'blue', style:'a bit too boy racer for Emily' },
-            "o": "set", "b": 1, "m": "emily", "t": 1369345483321
-        }],
-        function(dataset, datakey, stored, localChanges, remoteChanges, resolved) {
-            
-            // This is a super basic, perhaps too basic, example of a conflict
-            // resolution function that will apply the local update on top of 
-            // the remote update if it has a later timestamp
-            
-            if (
-                localChanges[localChanges.length - 1].t >
-                    remoteChanges[remoteChanges.length - 1].t
-            ) {
-                // James made the last change, so blindly take it!
-                return resolved(
-                    true,
-                    [remoteChanges[remoteChanges.length - 1]]
-                );
-            }
-            
-            // Emily made the last change, so we will throw away our changes
-            return resolved(true,[]);
-        },
-        function(err,remoteUpdatesNotFed) {
-            if (err === SyncIt_Constant.Error.OK) {
-                return success();
-            }
-            // err explains the reason for the error
-            // remoteUpdatesNotFed includes the update that are on the server 
-            // which we could not feed due to the error.
+```javascript
+SyncIt.feed(
+    [{ 
+        // The data which has been recieved from other parties via a server
+        "s": "cars",
+        "k": "Subaru",
+        "u": { color:'blue', style:'a bit too boy racer for Emily' },
+        "o": "set", "b": 1, "m": "emily", "t": 1369345483321
+    }],
+    function(dataset, datakey, stored, localChanges, remoteChanges, resolved) {
+        
+        // This is a super basic, perhaps too basic, example of a conflict
+        // resolution function that will apply the local update on top of 
+        // the remote update if it has a later timestamp
+        
+        if (
+            localChanges[localChanges.length - 1].t >
+                remoteChanges[remoteChanges.length - 1].t
+        ) {
+            // James made the last change, so blindly take it!
+            return resolved(
+                true,
+                [localChanges[localChanges.length - 1]]
+            );
         }
-    );
+        
+        // Emily made the last change, so we will throw away our changes
+        return resolved(true,[]);
+    },
+    function(err,remoteUpdatesNotFed) {
+        if (err === SyncIt_Constant.Error.OK) {
+            return success();
+        }
+        // err explains the reason for the error
+        // remoteUpdatesNotFed includes the update that are on the server 
+        // which we could not feed due to the error.
+    }
+);
+```
 
 User  | Dataset | Datakey | Store                                  | Queueitem                                                     | Reads
 ------|---------|---------|----------------------------------------|---------------------------------------------------------------|------------
@@ -458,8 +481,8 @@ I need to do the following:
     * Add a license to all files (It'll be MIT/BSD)
     * Test demo (and everythign else!) in IE
  * Client SyncIt
-    * localStorage for SyncIt (Store)
-    * Add Async wrappers for Store & Persist
+	* Add persistance to `allLocalToApplyAfterwards` in SyncIt.feed() (Important)
+    * Add Async wrappers for IndexedDb Store and Persist...
  * Server SyncIt
     * Create a real SyncItServer based on SyncItTestServer, it should be pretty easy, because SyncItTestServer is pretty abstracted.
     * I want to make ServerPersist for both MongoDB and DynamoDB.

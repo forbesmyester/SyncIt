@@ -2,7 +2,7 @@ digraph structs {
 	node [shape=record];
 	subgraph clusterqueue {
 		label = "Queue";
-		structqueue [shape=record,label="{ Positon | | 0 | 1 | 2 | 3 } | { Dataset | <f1> | Car | Person | Car | <f2> Car }|{ Datakey | | Ford | Simon | Ford | Subaru }|{ Version | | 2 | 6 | 3 | 4 }|{ Operation | | Update | Set | Remove | Update }|{ Update | <f3> | \{...\} | \{...\} | \{...\} | <f4> \{ \"$inc \{ \"Likes\": 1 \}\} }"];
+		structqueue [shape=record,label="{ Positon | | 0 | 1 | 2 | 3 } | { Dataset | <f1> | Car | Person | Car | <f2> Car }|{ Datakey | | Ford | Simon | Ford | Subaru }|{ Operation | | Update | Set | Remove | Update }|{ Update | <f3> | \{...\} | \{...\} | \{...\} | <f4> \{ \"$inc \{ \"Likes\": 1 \}\} }"];
 	}
 	subgraph clusterstore {
 		label = "Store";
