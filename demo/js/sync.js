@@ -614,7 +614,7 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 	
 	setTimeout(function() {
 		var req = {
-			body:{ s:'xxx', k:'yyy', b:0, m:'another', r:false, t:new Date().getTime(), u:{b:'c'}, o:'set' }
+			body:{ s:'cars', k:'Subaru', b:0, m:'another', r:false, t:new Date().getTime(), u:{Color:'Red'}, o:'set' }
 		};
 		syncItTestServer.PUT(req, function(resp) {
 			if (resp != 'created') {
