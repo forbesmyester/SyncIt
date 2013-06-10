@@ -145,7 +145,7 @@ You may also choose to write data:
 syncIt.set(
     'cars',
     'Subaru',
-	{ "Optional Extras": ["Alloys"] },
+	{ "Seats": "Leather" },
     function(err,result) {
         if (err) {
             // Something went wront... throw?
@@ -194,7 +194,7 @@ Assuming the Queueitem is accepted by the Server, the first local Queueitem shou
 ##### Code
 
 ```javascript
-jamesSyncIt.apply( function(err, appliedQueueitem, storedrecord ) {
+syncIt.apply( function(err, appliedQueueitem, storedrecord ) {
 	if (err) {
         // Something went wront... throw?
 	}

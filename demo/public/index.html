@@ -145,14 +145,14 @@
 									<form class="form-set">
 										<label>
 											The dataset 
-											<input type="text" value="xxx" name="dataset"/>
+											<input type="text" value="cars" name="dataset"/>
 										</label>
 										<label>
 											and datakey
-											<input type="text" value="yyy" name="datakey"/>
+											<input type="text" value="Subaru" name="datakey"/>
 										</label>
 										with the JSON encoded string:
-										<input type="text"  name="json" value='{"aaa":"bbb"}'/>
+										<input type="text"  name="json" value='{"Seats":"Leather"}'/>
 										should be 
 										<input type="submit" value="put into the Queue"/>.
 									</form>
@@ -161,14 +161,14 @@
 									<form class="form-update">
 										<label>
 											The dataset 
-											<input type="text" value="xxx" name="dataset"/>
+											<input type="text" value="cars" name="dataset"/>
 										</label>
 										<label>
 											and datakey
-											<input type="text" value="yyy" name="datakey"/>
+											<input type="text" value="Subaru" name="datakey"/>
 										</label>
 										with this update in a JSON encoded string:
-										<input type="text"  name="json" value='{"$set":{"path.to":"data"}}'/>
+										<input type="text"  name="json" value='{"$inc":{"likes":1}}'/>
 										should be 
 										<input type="submit" value="put into the Queue"/>.
 									</form>
