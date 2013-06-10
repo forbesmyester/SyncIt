@@ -183,7 +183,8 @@ manip.addManipulation('unset',function(ob,jsonSnippet) {
 manip.addManipulation('inc',function(ob,jsonSnippet) {
 	var k = '';
 	for (k in jsonSnippet) { if (jsonSnippet.hasOwnProperty(k)) {
-		var x = manip._getKey(ob,k);
+		var x = parseInt(manip._getKey(ob,k));
+		if (!x) { x = 0; }
 		x = x + jsonSnippet[k];
 		ob = manip._setKey(ob,k,x);
 	} }
