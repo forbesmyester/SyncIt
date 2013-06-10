@@ -109,7 +109,7 @@ Once your App has the Array of Queueitem from the Server it will need to Feed th
 syncIt.feed(
     [{Queueitem},{Queueitem},{Queueitem}], // The update from James
     function( ... ) { ... }, // Conflict Resolution - We'll get to this soon
-    function(errorcode) { ... } // Callback when complete
+    function(errorcode,unappliedQueueitem) { ... } // Callback when complete
 );
 ```
 
@@ -281,6 +281,7 @@ There sure is. It's located [here](http://forbesmyester.github.io/SyncIt/demo/in
 ## Have you got API Documentation?
 
 There is a (reasonably) complete set of [API Docs](http://forbesmyester.github.io/SyncIt/docs/SyncIt.js.html).
+
 ## Lets take a closer look at an example how this may work in real life.
 
 ### James changes data while offline
@@ -473,6 +474,10 @@ Emily | Cars    | Subaru  | { color: 'blue', style: 'a bit too boy racer for Emi
 
 At this point Emily's change is stored in the Store with a locally Queueitem in the Queue for James adding the fact it is four wheel drive and with James's vote. If James still has mobile coverate after downloading the change that change can be immediately sent to the server and then applied locally.
 
+## Special Thanks
+
+I want to thank Vivek Manoharan for giving me help with this README and my wife Rei Owada for her support.
+
 ## Todo
 
 I need to do the following:
@@ -482,7 +487,10 @@ I need to do the following:
     * Test demo (and everythign else!) in IE
  * Client SyncIt
 	* Add persistance to `allLocalToApplyAfterwards` in SyncIt.feed() (Important)
-    * Add Async wrappers for IndexedDb Store and Persist...
+	* Test should not fiddle with internals of Queue/Persist
+	* Remove Queueitem.Basedonversion in favour of a two-phase-commit
+	* Remove Queue/Persist in favour of an Async wrapper around Queue/LocalStorage
+	* Add a Queue/IndexedDB
  * Server SyncIt
     * Create a real SyncItServer based on SyncItTestServer, it should be pretty easy, because SyncItTestServer is pretty abstracted.
     * I want to make ServerPersist for both MongoDB and DynamoDB.
