@@ -36,6 +36,12 @@ Error.NO_DATA_FOUND = -1;
 Error.COULD_NOT_ADVANCE_QUEUE = 1;
 
 /**
+ Data wrote from journal into store, but we could not clear the journal record.
+*/
+Error.NOTHING_TO_ADVANCE_TO = 21;
+Error.TRYING_TO_ADD_NON_DEFAULT_ROOT = 22;
+Error.PATH_DOES_NOT_EXISTS = 22;
+/**
  The data is currently locked, please try again.
 */
 Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED = 2;

@@ -18,10 +18,13 @@
 // Copyright: Matthew Forrester
 // License: MIT/BSD-style
 
-return function(epoch) {
+return function(epoch,uniqueLength) {
   
   var lastDate = null;
   var index = -1;
+  if (uniqueLength == undefined) {
+	uniqueLength = 1;
+  }
 
   if (typeof epoch != 'number') {
     throw "Only takes timestamps";
@@ -37,20 +40,48 @@ return function(epoch) {
 	}
     
     if ((lastDate === null) || (now !== lastDate)) {
-      index = 9;
+      index = -1;
     }
+
+	var superUnique = (++index).toString(32);
+	if (superUnique.length < uniqueLength) {
+		superUnique = '0' + superUnique;
+	}
+	var timeEncoded = (now - epoch).toString(32);
+
+	if (superUnique.length > uniqueLength) {
+      throw "getUidGenerator.genUid cannot generate TLId until next millisecond!";
+	}
+
     lastDate = now;
-    if (index>30) {
-      throw "getUidGenerator.genUid cannot generate Uid... "+now+" "+index;
-    }
-    return "X"+(now - epoch).toString(32)+'-'+(++index).toString(32);
+	if (timeEncoded.substr(0,1) <= '9') {
+		return "X"+timeEncoded+superUnique;
+	}
+	return timeEncoded+superUnique;
   };
   
-  var uidToTimestamp = function(uid) {
-    return parseInt(uid.substr(1,uid.length-2),32) + epoch;
+  var uidToTimestamp = function(tlid) {
+	if (tlid.substr(0,1) == 'X') {
+		tlid = tlid.substr(1);
+	}
+	tlid = tlid.substr(0, tlid.length - uniqueLength);
+    return parseInt(tlid,32) + epoch;
   };
+
+  var sort = function(tlidA, tlidB) {
+	if (tlidA.substr(0,1) == 'X') {
+		tlidA = tlidA.substr(1);
+	}
+	if (tlidB.substr(0,1) == 'X') {
+		tlidB = tlidB.substr(1);
+	}
+	if (tlidA.length < tlidB.length) {
+		return -1;
+	}
+	return tlidA < tlidB ? -1 : 1;
+  }
   
-  return {encoder: genUid, decoder: uidToTimestamp};
+  return {encode: genUid, decode: uidToTimestamp, sort: sort};
 };
 
 });

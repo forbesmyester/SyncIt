@@ -14,7 +14,7 @@
 
 "use strict";
 
-return function(inst) {
+return function(inst,asynchronousDelay) {
 	
 	var r = {};
 	var k = '';
@@ -23,15 +23,18 @@ return function(inst) {
 		return function() {
 			var args = Array.prototype.slice.call(arguments);
 			var cb = args.pop();
+			if (asynchronousDelay === false) {
+				return cb(func.apply(inst,args));
+			}
 			setTimeout(function() {
 				cb(func.apply(inst,args));
-			},Math.floor(Math.random() * factor) + 2);
+			},Math.floor(Math.random() * factor) + 1);
 		};
 	};
 
 	for (k in inst) {
 		if (Object.getPrototypeOf(inst).hasOwnProperty(k)) {
-			r[k] = makeLaggy(Object.getPrototypeOf(inst)[k],100);
+			r[k] = makeLaggy(Object.getPrototypeOf(inst)[k],asynchronousDelay);
 		}
 	}
 	

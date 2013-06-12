@@ -8,6 +8,7 @@ fi
 sh extract_github_archive 'http://download.dojotoolkit.org/release-1.8.3/dojo-release-1.8.3-src.zip' 'vendor'
 
 wget http://code.jquery.com/jquery-1.9.1.js -O vendor/jquery-1.9.1.js
+wget http://mdaines.github.io/viz.js/viz.js -O vendor/viz.js
 
 if [ ! -d test/vendor ]; then
 	mkdir test/vendor
