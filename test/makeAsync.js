@@ -21,7 +21,7 @@
 		);
 	} else {
 		// Browser globals (root is window)
-		root.returnExports = factory(
+ 		root.returnExports = factory(
 			root.expect,
 			root.SyncIt_makeAsync,
 			root.SyncIt_FakeLocalStorage
@@ -33,13 +33,9 @@
 	FakeLocalStorage
 ) {
 
-
-// describe('_cloneObj',function() {
-//     var source = {color: 'blue', size: 'large'},
-//         syncIt = new SyncIt();
-//     it('should be able to clone',function() {
-//         expect(syncIt._cloneObj(source).color).to.equal(source.color);
-//     });
+// Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+// Copyright: Matthew Forrester
+// License: MIT/BSD-style
 
 describe('manip',function() {
 	it('can manipulate',function(done) {
