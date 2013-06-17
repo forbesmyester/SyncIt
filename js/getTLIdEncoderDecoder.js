@@ -75,10 +75,10 @@ return function(epoch,uniqueLength) {
 	if (tlidB.substr(0,1) == 'X') {
 		tlidB = tlidB.substr(1);
 	}
-	if (tlidA.length < tlidB.length) {
-		return -1;
+	if (tlidA.length != tlidB.length) {
+		return (tlidA.length < tlidB.length) ? -1 : 1;
 	}
-	return tlidA < tlidB ? -1 : 1;
+	return (tlidA < tlidB) ? -1 : 1;
   }
   
   return {encode: genUid, decode: uidToTimestamp, sort: sort};

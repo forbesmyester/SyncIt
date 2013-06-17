@@ -70,9 +70,23 @@ describe('getTLIdEncoderDecoder',function() {
 			expect(
 				ed.decode(clip1If1L(d,ulen))
 			).to.equal(ed.decode(clip1If1L(c,ulen))+1);
-			var x = [d,c];
-			x.sort(ed.sort);
-			expect(x[0].substr(0,1)).to.equal('X');
+		}
+	});
+	it('can sort',function() {
+		var encoderDecoder = getTLIdEncoderDecoder(new Date(1970,5,5).getTime(),2);
+		var dates = [
+			encoderDecoder.encode(),
+			encoderDecoder.encode(new Date(1980,1,6).getTime()),
+			encoderDecoder.encode(new Date(1981,3,15).getTime()),
+			encoderDecoder.encode(new Date(1986,8,9).getTime()),
+			encoderDecoder.encode(new Date(1983,10,3).getTime()),
+			encoderDecoder.encode(new Date(1982,0,6).getTime())
+		];
+		var newDates = (dates.sort(encoderDecoder.sort));
+		for (var i=1;i<newDates.length;i++) {
+			expect(
+				encoderDecoder.decode(newDates[i-1]) < encoderDecoder.decode(newDates[i])
+			).to.equal(true);
 		}
 	});
 });
