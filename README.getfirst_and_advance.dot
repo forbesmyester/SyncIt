@@ -12,18 +12,18 @@ digraph a {
 				style=invis;
 				JLibCallback [label="XHR Callback"]
 				SyncItEventHandler [label="Applied listener"];
-				SyncItCallback2 [label="syncIt.apply() Callback"]
+				SyncItCallback2 [label="syncIt.advance() Callback"]
 			}
 		}
 		JLib [label="JQuery / Dojo etc"];
-		SyncIt [shape="record", label="{ <sf> syncIt.getFirst() } | { <sa> syncIt.Apply() }"];
+		SyncIt [shape="record", label="{ <sf> syncIt.getFirst() } | { <sa> syncIt.Advance() }"];
 	}
 	App -> SyncIt:sf [label="syncIt.getFirst()"];
 	SyncIt:sf -> SyncItCallback -> JLib;
 	JLib -> Server [label="XHR?" style="dashed"];
 	Server -> JLib [style="dashed"];
 	JLib -> JLibCallback;
-	JLibCallback -> SyncIt:sa [label="SyncIt.apply()"];
+	JLibCallback -> SyncIt:sa [label="SyncIt.advance()"];
 	SyncIt:sa -> SyncItCallback2;
 	SyncIt:sa -> SyncItEventHandler;
 }

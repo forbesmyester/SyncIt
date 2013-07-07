@@ -1,0 +1,26 @@
+{
+	"globals": {
+		"module": false,
+		"require": false,
+		"define": false,
+		"describe": false,
+		"it": false
+	},
+	"strict": true,
+	"smarttabs": true,
+	"es3": true,
+	"forin": true,
+	"immed": true,
+	"latedef": true,
+	"newcap": true,
+	"noarg": true,
+	"undef": true,
+	"unused": true,
+	"es3": true,
+	"bitwise": false,
+	"curly": true,
+	"latedef": true,
+	"newcap": true,
+	"noarg": true,
+	"noempty": true
+}

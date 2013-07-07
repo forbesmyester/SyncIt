@@ -10,12 +10,11 @@ digraph a {
 	subgraph clustersyncit {
 		label = "SyncIt"
 		SyncIt;
-		Queue;
-		Store;
+		PathStorage;
 	}
 
 	App -> SyncIt [label="syncIt.get()"];
-	SyncIt -> Store -> SyncIt -> Queue -> SyncIt -> SyncItCallback;
+	SyncIt -> PathStorage -> SyncIt -> SyncItCallback;
 	SyncIt ->SyncItEventHandler [style=invis];
 
 }

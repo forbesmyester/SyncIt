@@ -1,5 +1,8 @@
 // if the module has no dependencies, the above pattern can be simplified to
 (function (root, factory) {
+	
+	"use strict";
+
 	if (typeof exports === 'object') {
 		// Node. Does not work with strict CommonJS, but
 		// only CommonJS-like enviroments that support module.exports,
@@ -13,6 +16,8 @@
 		root.SyncIt_Constant = factory();
   }
 }(this, function () {
+
+"use strict";
 
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
 // Copyright: 2013 Matthew Forrester
@@ -41,6 +46,7 @@ Error.COULD_NOT_ADVANCE_QUEUE = 1;
 Error.NOTHING_TO_ADVANCE_TO = 21;
 Error.TRYING_TO_ADD_NON_DEFAULT_ROOT = 22;
 Error.PATH_DOES_NOT_EXISTS = 22;
+Error.MULTIPLE_PATHS_FOUND = 23;
 /**
  The data is currently locked, please try again.
 */
@@ -50,11 +56,12 @@ Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED = 2;
  The data is currently locked for feeding, please try again.
 */
 Error.UNABLE_TO_PROCESS_BECAUSE_FEED_LOCKED = 10;
+Error.FEED_VERSION_ERROR = 24;
 
 /**
  Trying to apply an update based on a version number higher than the current.
 */
-Error.TRYING_TO_APPLY_TO_FUTURE_VERSION = 3;
+Error.TRYING_TO_ADVANCE_TO_FUTURE_VERSION = 3;
 
 /**
  Trying to apply an update based on a version which is no longer current.
@@ -141,7 +148,7 @@ Error.INVALID_OPERATION = 17;
 /**
  * Trying to apply an update, but the queue is empty.
  */
-Error.QUEUE_EMPTY = -3;
+Error.PATH_EMPTY = -3;
 
 /**
  * When resolving conflict, we were told not to continue
@@ -161,11 +168,15 @@ Location.IN_STORE = 2;
 
 var Locking = {};
 
-Locking.PROCESSING = 1;
+Locking.ADDING_TO_QUEUE = 1;
 
-Locking.FEEDING = 2;
+Locking.ADVANCING = 2;
 
-Locking.MAXIMUM_BIT_PATTERN = 3;
+Locking.FEEDING = 4;
+
+Locking.CLEANING = 8;
+
+Locking.MAXIMUM_BIT_PATTERN = 15;
 
 var Validation = {};
 
@@ -177,11 +188,18 @@ Validation.MODIFIER_REGEXP = /^[A-Za-z][A-Za-z0-9\-]+$/;
 
 Validation.OPERATION_REGEXP = /^(set)|(update)|(remove)$/;
 
+var FollowInformationType = {};
+FollowInformationType.INFO = 1;
+FollowInformationType.ROOTITEM = 2;
+FollowInformationType.PATHITEM = 3;
+FollowInformationType.OTHER_PATHS = 4;
+
 return {
 	Error: Error,
 	Location: Location,
 	Locking: Locking,
-	Validation: Validation
+	Validation: Validation,
+	FollowInformationType: FollowInformationType
 };
 
 }));

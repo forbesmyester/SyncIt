@@ -1,5 +1,9 @@
 #!/bin/sh
 
+## Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+## Copyright: Matthew Forrester·
+## License: MIT/BSD-style·
+
 if [ $# -ne 2 ]
 then
   echo "Downloads an archive from GitHub and stores the contents of a subdirector in a"

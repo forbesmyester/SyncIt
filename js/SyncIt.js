@@ -1,32 +1,55 @@
-/* jshint strict: true, smarttabs: true, es3: true, forin: true, immed: true, latedef: true, newcap: true, noarg: true, undef: true, unused: true, es3: true, bitwise: false, curly: true, latedef: true, newcap: true, noarg: true, noempty: true */
-
 (function(root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
+	"use strict";
 	/* jshint strict: false */
 	/* globals module: false, require: false, define: true */
-	if (typeof exports === 'object') {
+	if (typeof define === 'function' && define.amd) {
+		define(
+			[
+				'syncit/Constant',
+				'syncit/addEvents',
+				'syncit/addLocking',
+				'syncit/getTLIdEncoderDecoder',
+				'syncit/updateResult'
+			],
+			factory
+		);
+	} else if (typeof exports === 'object') {
 		module.exports = factory(
 			require('./Constant.js'),
+			require('./addEvents.js'),
+			require('./addLocking.js'),
+			require('./getTLIdEncoderDecoder.js'),
 			require('./updateResult.js')
-		);
-	} else if (typeof define === 'function' && define.amd) {
-		define(
-			['syncit/Constant', 'syncit/updateResult'],
-			factory
 		);
 	} else {
 		root.SyncIt = factory(
 			root.SyncIt_Constant,
+			root.SyncIt_addEvents,
+			root.SyncIt_addLocking,
+			root.SyncIt_getTLIdEncoderDecoder,
 			root.SyncIt_updateResult
 		);
 	}
-})(this, function(SyncIt_Constant, updateResult) {
+}(this, function(SyncIt_Constant, addEvents, addLocking, getTLIdEncoderDecoder, updateResult) {
+
+"use strict";
 
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
 // Copyright: Matthew Forrester
 // License: MIT/BSD-style
 
-"use strict";
+var LOCKING = SyncIt_Constant.Locking;
+var ERROR = SyncIt_Constant.Error;
+var FOLLOW_INFORMATION_TYPE = SyncIt_Constant.FollowInformationType;
 
+/**
+ * **_filter()**
+ *
+ * Simple filter function for when Array.filter() is not available.
+ *
+ * * **@param {Array} `arr`** The array to filter.
+ * * **@param {Function} `filterFunc`** The function to use for filtering
+ */
 var _filter = function(arr,filterFunc) {
 	var i = 0,
 		l = 0,
@@ -42,6 +65,35 @@ var _filter = function(arr,filterFunc) {
 };
 
 /**
+ * **_shallowCopyKeys()**
+ *
+ * Will make a shallow copy of `ob` containing `keysToCopy`. If `copyNullEtc`
+ * is true it will not copy `null` or `undefined` values.
+ *
+ * * **@param {Object} `ob`**
+ * * **@param {Array} `keysToCopy`**
+ * * **@param {Boolean} `copyNullEtc`**
+ */
+var _shallowCopyKeys = function(ob,keysToCopy,copyNullEtc) {
+	var k = '',
+		r = {};
+	for (k in ob) {
+		if (
+			ob.hasOwnProperty(k) &&
+			(
+				(keysToCopy === undefined) ||
+				(keysToCopy.indexOf(k) > -1)
+			)
+		) {
+			if (copyNullEtc || ((ob[k] !== null) && (ob[k] !== undefined))) {
+				r[k] = ob[k];
+			}
+		}
+	}
+	return r;
+};
+
+/**
  * ## SyncIt
  * 
  * ### new SyncIt()
@@ -50,21 +102,106 @@ var _filter = function(arr,filterFunc) {
  * 
  * #### Parameters
  * 
- * * **@param {Store} `store`** Used to store data which is known to be synced onto the *Server*.
- * * **@param {Queue} `queue`** Used to store data which is still to be synced to the *Server*.
+ * * **@param {SyncIt_Path_AsyncLocalStorage} `pathstore`** The instance to use for storage.
  * * **@param {Modifier} `modifier`** The UNIQUE User/Device which is using the instance of SyncIt.
  */
-var SyncIt = function(store, queue, modifier) {
-	this._store = store;
-	this._queue = queue;
-	this._locked = 0;
+var SyncIt = function(pathstore, modifier) {
+	this._ps = pathstore;
 	this._modifier = modifier;
-	this._events = {
-		'added_to_queue': [],
-		'applied': [],
-		'fed': []
-	};
 	this._cloneObj = function(ob) { return JSON.parse(JSON.stringify(ob)); };
+	this._autoClean = true;
+};
+
+/**
+ * **SyncIt._getPathWatcher()**
+ *
+ * This is used within SyncIt to connect information about that data stored in
+ * SyncIt._ps (An instance of SyncIt_Path_AsyncLocalStorage) and the logical
+ * values that are stored should all Pathitem be processed.
+ */
+SyncIt.prototype._getPathWatcher = function() {
+	var val = this._getEmptyStorerecord();
+	return {
+
+		/**
+		 * **getWatcher()**
+		 *
+		 * Watches as SyncIt_Path_AsyncLocalStorage follows the path of Pathitem
+		 * and collects information.
+		 *
+		 * This will also prevent
+		 */
+		getWatcher: function() { return function(key,item,inWhere) {
+			var k = '';
+
+			var keyInfo = key.split('.');
+
+			// Info stored at the root only exists once and can probably be
+			// seen as metadata, so just connect it.
+			if (inWhere == FOLLOW_INFORMATION_TYPE.INFO) {
+				val.j = item;
+				return ERROR.OK;
+			}
+			// This is not infact the true root, but the root of the Path, if
+			// the `dataset`/`datakey` has never been `SyncIt.advance()`'d then
+			// there will be no root so this will not be called.
+			if (inWhere == FOLLOW_INFORMATION_TYPE.ROOTITEM) {
+				for (k in item) {
+					if (item.hasOwnProperty(k)) {
+						val[k] = item[k];
+					}
+				}
+				val.s = keyInfo[0];
+				val.k = keyInfo[1];
+				if (item.hasOwnProperty('r') && item.r) {
+					return ERROR.DATA_ALREADY_REMOVED ;
+				}
+				return ERROR.OK;
+			}
+			// getWatcher is always used for collecting information about one
+			// path inside a `dataset`/`datakey`, however there is an
+			// opportunity to collect information about whether other paths
+			// exist or not. This will be an array of the non-follwed path.
+			if (inWhere == FOLLOW_INFORMATION_TYPE.OTHER_PATHS) {
+				val.p = item;
+			}
+			// For every Pathitem that is encounted, we will use updateResult
+			// to figure out the logical value should all the Pathitem be
+			// applied.
+			if (inWhere == FOLLOW_INFORMATION_TYPE.PATHITEM) {
+				if (!item.hasOwnProperty('t')) {
+					item.t = this._ps.getKeyTimeDecoder().call(
+						this._ps,
+						key
+					);
+				}
+				if (!item.hasOwnProperty('m')) {
+					item.m = this.getModifier();
+				}
+				val.q.push(item);
+				val = updateResult(
+					val,
+					item,
+					this._cloneObj
+				);
+				val.s = keyInfo[0];
+				val.k = keyInfo[1];
+				if (item.o == 'remove') {
+					return ERROR.DATA_ALREADY_REMOVED ;
+				}
+			}
+			return ERROR.OK;
+		}.bind(this); }.bind(this),
+
+		/**
+		 * **getReaditem**
+		 *
+		 * Returns the data collected by `getWatcher`.
+		 */
+		getReaditem: function() {
+			return val;
+		}
+	};
 };
 
 /**
@@ -93,128 +230,7 @@ SyncIt.prototype.getModifier = function() {
 };
 
 /**
- * ### SyncIt.isLocked()
- * 
- * #### Returns
- * 
- * * **@return {Boolean}** SyncIt will use an internal lock to deny changes while engaged in modifications to either the *Queue* or the *Store*. This function will return `true` if SyncIt is locked.
- */
-SyncIt.prototype.isLocked = function() {
-	return (this._locked > 0);
-};
-
-/**
- * ### SyncIt.listen()
- * 
- * The following events are emitted by SyncIt.
- * 
- * * added_to_queue - See [SyncIt.listenForAddedToQueue()](#syncit.listenforaddedtoqueue--)
- * * applied - See [SyncIt.listenForApplied()](#syncit.listenforapplied--)
- * * fed - See [SyncIt.listenForFed()](#syncit.listenforfed--)
- * 
- * #### Parameters
- * 
- * * **@param {String} `event`** The name of the event to listen for
- * * **@param {Function} `listener`** The listener to fire when event occurs.
- * 
- * #### Returns
- * 
- * * **@return {Boolean}** True if that event is available to listen to.
- */
-SyncIt.prototype.listen = function(event, listener) {
-	
-	var propertyNames = (function(ob) {
-		var r = [];
-		for (var k in ob) { if (ob.hasOwnProperty(k)) {
-			r.push(k);
-		} }
-		return r;
-	})(this._events);
-	
-	if (propertyNames.indexOf(event) == -1) {
-		return false;
-	}
-	
-	this._events[event].push(listener);
-	return true;
-};
-
-/**
- * ### SyncIt.removeAllListeners()
- *
- * #### Parameters
- * 
- * * **@param {String} `event`** The name of the event you want to remove all listeners for.
- * 
- * #### Returns
- * 
- * * **@return {Array}** The listeners that have just been removed.
- */
-SyncIt.prototype.removeAllListeners = function(event) {
-	
-	var propertyNames = (function(ob) {
-		var r = [];
-		for (var k in ob) { if (ob.hasOwnProperty(k)) {
-			r.push(k);
-		} }
-		return r;
-	})(this._events);
-	
-	if (propertyNames.indexOf(event) == -1) {
-		return [];
-	}
-	
-	var r = this._events[event];
-	this._events[event] = [];
-	return r;
-};
-
-/**
- * ### SyncIt.removeListener()
- *
- * Removes a specific listener from an event.
- *
- * #### Parameters
- * 
- * * **@param {String} `event`** The name of the event you want to remove a listener from.
- * * **@param {Function} `listener`** The listener you want to remove.
- * 
- * #### Returns
- * 
- * * **@return {Boolean}** True if the listener was removed, false otherwise.
- */
-SyncIt.prototype.removeListener = function(event, listener) {
-	
-	var i = 0,
-		replacement = [],
-		successful = false;
-	
-	var propertyNames = (function(ob) {
-		var r = [];
-		for (var k in ob) { if (ob.hasOwnProperty(k)) {
-			r.push(k);
-		} }
-		return r;
-	})(this._events);
-	
-	if (propertyNames.indexOf(event) == -1) {
-		return false;
-	}
-	
-	for (i=0; i<this._events[event].length; i++) {
-		if (this._events[event][i] !== listener) {
-			replacement.push(this._events[event][i]);
-		} else {
-			successful = true;
-		}
-	}
-	this._events[event] = replacement;
-	
-	return successful;
-};
-
-/**
- * ### SyncIt.listenForAddedToQueue()
+ * ### SyncIt.listenForAddedToPath()
  * 
  * Adds a listener for when data is added to the *Queue*.
  * 
@@ -223,27 +239,27 @@ SyncIt.prototype.removeListener = function(event, listener) {
  * * **@param {Function} `listener`** Signature: `function(operation, dataset, datakey)`.
  *   * **@param {Dataset} `listener.dataset`** The *dataset* of the updated.
  *   * **@param {Datakey} `listener.datakey`** The *datakey* that was updated.
- *   * **@param {Queueitem} `listener.queueitem`** The *queueitem* that was just added.
+ *   * **@param {Pathitem} `listener.queueitem`** The *queueitem* that was just added.
  */
-SyncIt.prototype.listenForAddedToQueue = function(listener) {
+SyncIt.prototype.listenForAddedToPath = function(listener) {
 	return this.listen('added_to_queue', listener);
 };
 
 /**
- * ### SyncIt.listenForApplied()
+ * ### SyncIt.listenForAdvanced()
  * 
- * Adds a listener for when data is applied to the *Store*.
+ * Adds a listener for when data is advanced to the *Store*.
  * 
  * #### Parameters
  * 
  * * **@param {Function} `listener`** Signature: `function(queueitem, newStorerecord)`.
- *   * **@param {Dataset} `listener.dataset`** The *dataset* of the applied.
- *   * **@param {Datakey} `listener.datakey`** The *datakey* that was.applied.
- * *   **@param {Queueitem} `listener.queueitem`** The *queueitem* that was applied.
+ *   * **@param {Dataset} `listener.dataset`** The *dataset* of the advanced.
+ *   * **@param {Datakey} `listener.datakey`** The *datakey* that was advanced.
+ * *   **@param {Pathitem} `listener.queueitem`** The *queueitem* that was advanced.
  * *   **@param {Storerecord} `listener.newStorerecord`** The *storerecord* which is now stored.
  */
-SyncIt.prototype.listenForApplied = function(listener) {
-	return this.listen('applied', listener);
+SyncIt.prototype.listenForAdvanced = function(listener) {
+	return this.listen('advanced', listener);
 };
 
 
@@ -257,7 +273,7 @@ SyncIt.prototype.listenForApplied = function(listener) {
  * * **@param {Function} `listener`** Signature: `function(queueitem, newStorerecord)`.
  *   * **@param {String} `listener.dataset`** The dataset of the just fed Queueitem.
  *   * **@param {String} `listener.datakey`** The datakey of the just fed Queueitem.
- * *   **@param {Queueitem} `listener.queueitem`** The *queueitem* that was applied.
+ * *   **@param {Queueitem} `listener.queueitem`** The *queueitem* that was advanced.
  * *   **@param {Storerecord} `listener.newStorerecord`** The *storerecord* which is now stored.
  */
 SyncIt.prototype.listenForFed = function(listener) {
@@ -267,7 +283,7 @@ SyncIt.prototype.listenForFed = function(listener) {
 /**
  * ### SyncIt.set()
  * 
- * Will add a *Queueitem* to the *Queue* that represents a complete overwrite of any existing data.
+ * Will add a *Pathitem* that represents a complete overwrite of any existing data.
  *
  * #### Parameters
  * 
@@ -282,8 +298,6 @@ SyncIt.prototype.set = function(dataset, datakey, update, whenAddedToQueue) {
 		dataset,
 		datakey,
 		update,
-		new Date().getTime(),
-		false,
 		whenAddedToQueue
 	);
 };
@@ -291,7 +305,7 @@ SyncIt.prototype.set = function(dataset, datakey, update, whenAddedToQueue) {
 /**
  * ### SyncIt.remove()
  * 
- * This will add a Queueitem to the Queue that represents the removal of data stored at a Dataset/Datakey.
+ * This will add a Pathitem to the Queue that represents the removal of data stored at a Dataset/Datakey.
  *
  * #### Parameters
  * 
@@ -305,8 +319,6 @@ SyncIt.prototype.remove = function(dataset, datakey, whenAddedToQueue) {
 		dataset,
 		datakey,
 		{},
-		new Date().getTime(),
-		false,
 		whenAddedToQueue
 	);
 };
@@ -343,8 +355,6 @@ SyncIt.prototype.update = function(dataset, datakey, update, whenAddedToQueue) {
 		dataset,
 		datakey,
 		update,
-		new Date().getTime(),
-		false,
 		whenAddedToQueue
 	);
 };
@@ -357,50 +367,43 @@ SyncIt.prototype.update = function(dataset, datakey, update, whenAddedToQueue) {
  * #### Parameters
  * 
  * * **@param {Array} `feedQueueitems`** These are the items which are being fed from the *Server*.
- * * **@param {Function} `resolutionFunction`** Called when conflict occurs, Signature: `function(dataset, datakey, storerecord, serverQueueitems, localQueueitems, resolved)`.
+ * * **@param {Function} `resolutionFunction`** Called when conflict occurs, Signature: `function(dataset, datakey, storerecord, serverQueueitems, localPathitems, resolved)`.
  *   * **@param {Array} `resolutionFunction.dataset`** The *Dataset* of the conflict.
  *   * **@param {Array} `resolutionFunction.datakey`** The *Datakey* of the conflict.
  *   * **@param {Array} `resolutionFunction.storerecord`** What is in the local *Store* for that *Dataset* / *Datakey*.
- *   * **@param {Array} `resolutionFunction.localQueueitems`** The *Queueitem* that has been added using functions such as [SyncIt.set()](#syncit.set--) but is now conflicting with the data from the *Server*.
+ *   * **@param {Array} `resolutionFunction.localPathitems`** The *Pathitem* that has been added using functions such as [SyncIt.set()](#syncit.set--) but is now conflicting with the data from the *Server*.
  *   * **@param {Array} `resolutionFunction.serverQueueitems`** The extra *Queueitem* that are on the Server.
- *   * **@param {Function} `resolutionFunction.resolved`** This should be called from inside resolutionFunction and will add *Queueitem* after the *Server* supplied *Queueitem*. Signature: `function(resolved, mergedLocalsToApplyAfterwards)`
+ *   * **@param {Function} `resolutionFunction.resolved`** This should be called from inside resolutionFunction and will add *Pathitem* after the *Server* supplied *Queueitem*. Signature: `function(resolved, mergedLocalsToDoAfterwards)`
  *      * **@param {Boolean} `resolutionFunction.resolved.resolved`** use false to halt the feeding, true otherwise
- *      * **@param {Array} `resolutionFunction.resolved.mergedLocalsToApplyAfterwards`** These will be added to the *Queue* __after__ (currently) all serverQueueitems have been applied to the *Store*.
- * * **@param {Function} `feedDone`** Callback for when done. Signature: `function(err, fedItemsFailed, conflictResolutionQueueitemFailed, resultingStorerecord)`;
+ *      * **@param {Array} `resolutionFunction.resolved.mergedLocalsToDoAfterwards`** These will be added to the *Queue* __after__ (currently) all serverPathitems have been advanced to the *Store*.
+ * * **@param {Function} `feedDone`** Callback for when done. Signature: `function(err, fedItemsFailed)`;
  *   * **@param {Errorcode} `feedDone.err`** See SyncIt_Constant.Error.
  *   * **@param {Array} `feedDone.fedItemsFailed`** Array of items fed from the *Server* which could not be processed.
- *   * **@param {Array} `feedDone.conflictResolutionQueueitemFailed`** Array of items created in conflict resolution (using `resolutionFunction.resolved`) which have failed to be added to the local *Queue*.
- *   * **@param {Storerecord} `feedDone.resultingStorerecord`** What is now stored on the Store.
  */
 SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 	
-	var inst = this;
-
 	// Make a shallow copy of feedQueueitems so when we `shift()` we are not
 	// fiddling with users data.
-	var applyQueue = (function(items) {
+	var feedQueue = (function(items) {
 		var r = [];
 		for (var i = 0, l = items.length; i < l; i++) {
-			r.push(items[i]);
+			r.push(_shallowCopyKeys(
+				items[i],
+				['s','k','u','t','m','o','b'],
+				false
+			));
 		}
 		return r;
 	})(feedQueueitems);
 
-	//It could be that you're feeding (some) of your own Queueitem.
-	applyQueue = _filter(applyQueue,function(queueitem) {
-		if (queueitem.m == this.getModifier()) {
-			return false;
-		}
-		return true;
-	}.bind(this));
-	
-	var allLocalToApplyAfterwards = [];
-	
-	var prepareServerQueueItemForResolutionFunction = function(storerecord, applyQueue) {
+	// If a conflict occurs we want to feed the resolutionFunction only items from
+	// the same dataset / datakey that are based on a version higher than the one
+	// currently in the Pathroot.
+	var prepareServerQueueItemForResolutionFunction = function(storerecord, feedQueue) {
 		var r = [],
 			i = 0,
 			l = 0,
-			firstQueueitem = applyQueue[0];
+			firstQueueitem = feedQueue[0];
 		
 		var filterFunc = function(elem) {
 			if (storerecord === null) {
@@ -409,286 +412,291 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			return (elem.b >= storerecord.v);
 		};
 		
-		for (i=0, l=applyQueue.length; i<l; i++) {
+		for (i=0, l=feedQueue.length; i<l; i++) {
 			if (
-				(applyQueue[i].s != firstQueueitem.s) ||
-				(applyQueue[i].k != firstQueueitem.k)
+				(feedQueue[i].s != firstQueueitem.s) ||
+				(feedQueue[i].k != firstQueueitem.k)
 			) {
 				return _filter(r,filterFunc);
 			}
-			r.push(applyQueue[i]);
+			r.push(feedQueue[i]);
 		}
 		return _filter(r,filterFunc);
 	};
 	
+	// Simple helper function that will unlock SyncIt and call the feedDone callback.
 	var unlockAndError = function(err) {
-		inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.FEEDING);
+		this._unlockFor(LOCKING.FEEDING);
 		return feedDone(
 			err,
-			applyQueue,
-			allLocalToApplyAfterwards
+			feedQueue
 		);
-	};
+	}.bind(this);
 	
-	var addToStoreAndContinue = function(applyQueue) {
-		inst._addQueueitemToStore(applyQueue[0], function(err, appliedQueueitem, storerecord) {
-			if (err !== SyncIt_Constant.Error.OK) {
-				return unlockAndError(err, applyQueue);
-			}
-			applyQueue.shift();
-			inst._emit('fed', appliedQueueitem.s, appliedQueueitem.k, appliedQueueitem, storerecord);
-			return feedOne(false);
-		});
-	};
+	// This function is called from resolutionFunction.resolved and will check
+	// that resolutionFunction actually did resolve the conflict, if it did it
+	// will add any resolving PathItem to the "c" (conflict) branch so they can
+	// be applied later and remove all local Pathitem from the "a" branch as 
+	// they conflict with the items sent from the server.
+	var perhapsResolved = function(storedrecord,fedForSameDatasetAndDatakey,resolved,mergePathitem,next) {
 		
-	var fireConflictResolution = function(storerecord, applyQueue, queueitemInQueue) {
-		
-		var queueitemInQueueAndPreviousLocalsToApplyAfterwards = function(queueitemInQueue,localsAfterwards) {
-			var r = [],
-				i = 0,
-				l = 0;
+		if (!resolved) {
+			unlockAndError(ERROR.NOT_RESOLVED);
+		}
 
-			var addArray = function(ar) {
-				for (i=0, l=ar.length; i<l; i++) {
-					r.push(ar[i]);
+		if (!mergePathitem.length) {
+			return this._ps.removePathitemFromPath(feedQueue[0].s,feedQueue[0].k,'a',this._autoClean,next);
+		}
+
+		// TODO: Sanitize the merge queue
+
+		this._ps.pushPathitemsToNewPath(
+			feedQueue[0].s,
+			feedQueue[0].k,
+			'c',
+			mergePathitem,
+			function(err) {
+				if (err) {
+					return unlockAndError(err,feedQueue);
 				}
-			};
-
-			addArray(queueitemInQueue);
-			addArray(localsAfterwards);
-
-			return r;
-		};
-
-		resolutionFunction.call(
-			inst,
-			applyQueue[0].s,
-			applyQueue[0].k,
-			storerecord.v === 0 ? null : storerecord,
-			queueitemInQueueAndPreviousLocalsToApplyAfterwards(
-				queueitemInQueue,
-				allLocalToApplyAfterwards
-			),
-			prepareServerQueueItemForResolutionFunction(
-				storerecord,
-				applyQueue
-			),
-			function(resolved, localsToApplyAfterwards) {
-				
-				if (!resolved) {
-					inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.FEEDING);
-					return feedDone(
-						SyncIt_Constant.Error.NOT_RESOLVED,
-						applyQueue,
-						allLocalToApplyAfterwards
+				var info = {cv: storedrecord.v + fedForSameDatasetAndDatakey.length};
+				this._ps.setInfo(feedQueue[0].s,feedQueue[0].k,info,function(err) {
+					if (err !== ERROR.OK) {
+						unlockAndError(err);
+					}
+					return this._ps.removePathitemFromPath(
+						feedQueue[0].s,
+						feedQueue[0].k,
+						'a',
+						this._autoClean,
+						next
 					);
-				}
-				
-				while (localsToApplyAfterwards.length) {
-					var v = localsToApplyAfterwards.shift();
-					v.m = inst.getModifier();
-					if (!v.hasOwnProperty('t')) {
-						v.t = new Date().getTime();
-					}
-					v.b = null;
-					allLocalToApplyAfterwards.push(v);
-				}
-				return feedOne(true);
-			}
+				}.bind(this));
+			}.bind(this)
 		);
-	};
-	
-	var queueitemsRetrieved = function(err, queueitemInQueue, removeSameDatasetDatakeyFromQueue) {
 		
-		queueitemInQueue.sort(function(localQiA, localQiB) {
-			return localQiA.b - localQiB.b;
-		});
+	}.bind(this);
+
+	// One by one, process the Pathitem which have been fed.
+	var feedOne = function() {
 		
-		var removeQueueitemInQueueForDatasetDatakeyAndStore = function() {
-			return inst._queue._removeByDatasetAndDatakey(
-				applyQueue[0].s,
-				applyQueue[0].k,
-				function(err) {
-					if (err !== SyncIt_Constant.Error.OK) {
-						return unlockAndError(err, applyQueue);
-					}
-					return addToStoreAndContinue(applyQueue);
+		if (feedQueue.length === 0) {
+			this._unlockFor(LOCKING.FEEDING);
+			return feedDone(ERROR.OK,[]);
+		}
+
+		var storerecord = this._getEmptyStorerecord();
+		var otherpaths = [];
+		var queue = [];
+		var info = {};
+
+		// Read the path, collecting information.
+		this._ps.followPath(
+			feedQueue[0].s,
+			feedQueue[0].k,
+			'a',
+			function(key,item,inWhere) {
+				if (inWhere == FOLLOW_INFORMATION_TYPE.INFO) {
+					info = item;
+					return;
 				}
-			);
-		};
-		
-		if (err !== SyncIt_Constant.Error.OK) {
-			return unlockAndError(err, applyQueue);
-		}
-		
-		if (queueitemInQueue.length === 0) {
-			return addToStoreAndContinue(applyQueue);
-		}
-		
-		
-		// If conflict resolution has already cleared, we remove items in 
-		// the same Dataset / Datakey
-		if (removeSameDatasetDatakeyFromQueue) {
-			return removeQueueitemInQueueForDatasetDatakeyAndStore();
-		}
-		
-		inst._store.get(
-			applyQueue[0].s,
-			applyQueue[0].k,
-			function(err, storerecord) {
-				
-				// It is quite likely that we are feeding data into a 
-				// dataset / datakey that does not already exist.
-				if (err === SyncIt_Constant.Error.NO_DATA_FOUND) {
-					storerecord = inst._getEmptyStorerecord();
+				if (inWhere == FOLLOW_INFORMATION_TYPE.ROOTITEM) {
+					storerecord = item;
+					return;
+				}
+				if (inWhere == FOLLOW_INFORMATION_TYPE.OTHER_PATHS) {
+					otherpaths = item;
+				}
+				if (inWhere == FOLLOW_INFORMATION_TYPE.PATHITEM) {
+					queue.push(item);
+				}
+			},
+			function(err) {
+				if ((err !== ERROR.NO_DATA_FOUND) && (err !== ERROR.OK)) {
+					unlockAndError(err);
 				}
 
 				// It might be that we are trying to feed data which is 
 				// based on an old storerecord, if we are just skip over it
-				if (applyQueue[0].b < storerecord.v) {
-					applyQueue.shift();
-					return feedOne(false);
-				}
-				
-				// It is possible we have stale items in our queue
-				if (
-					queueitemInQueue.length && 
-					(queueitemInQueue[0].b < storerecord.v)
-				) {
-					return unlockAndError(
-						SyncIt_Constant.Error.STALE_FOUND_IN_QUEUE,
-						applyQueue
-					);
-				}
-
-				// It is quite possible all queueitem where stale, in which case just
-				// go right ahead and process the fed queueitem!
-				if (queueitemInQueue.length === 0) {
-					return addToStoreAndContinue(applyQueue);
+				if (feedQueue[0].b < storerecord.v) {
+					feedQueue.shift();
+					return feedOne();
 				}
 
 				// If we have items in our local queue with a basedonversion which is
-				// lower than what we are being fed, it is likely that we have unapplied
+				// lower than what we are being fed, it is likely that we have unadvanced
 				// items which we have already uploaded.
-				if (queueitemInQueue[0].b < applyQueue[0].b) {
+				if (queue.length && (queue[0].b < feedQueue[0].b)) {
 					return unlockAndError(
-						SyncIt_Constant.Error.BASED_ON_IN_QUEUE_LESS_THAN_BASED_IN_BEING_FED,
-						applyQueue
+						Error.BASED_ON_IN_QUEUE_LESS_THAN_BASED_IN_BEING_FED,
+						feedQueue
 					);
 				}
 
-				// fire conflict resolution with the item shifted. It does
-				// not matter because it will either succeed, removing all
-				// Queueitem for that dataset / datakey or fail.
-				fireConflictResolution(storerecord, applyQueue, queueitemInQueue);
-			}
+				// Continue with the Feed passing the information found from 
+				// this._ps.followPath();Continue with the Feed.
+				return feedOneWorker(storerecord,queue,info,otherpaths);
+
+			}.bind(this)
 		);
 		
-	};
+	}.bind(this);
 	
-	var addConflictResolvingQueueitemToQueue = function(allLocalToApplyAfterwards) {
-		
-		if (allLocalToApplyAfterwards.length === 0) {
-			return feedDone(
-				SyncIt_Constant.Error.OK,
-				[],
-				allLocalToApplyAfterwards
+	// All data is now collected about what is in the Path so we can go ahead and
+	// take appropriate action...
+	var feedOneWorker = function(storerecord,queue,info) {
+
+		// If there is items in the Path then feed them into resolutionFunction
+		if (queue.length) {
+
+			var fedForSameDatasetAndDatakey = prepareServerQueueItemForResolutionFunction(
+				storerecord,
+				feedQueue
+			);
+
+			return resolutionFunction.call(
+				this,
+				feedQueue[0].s,
+				feedQueue[0].k,
+				(function() {
+					if (storerecord.v === 0) {
+						return null;
+					}
+					storerecord.s = feedQueue[0].s;
+					storerecord.k = feedQueue[0].k;
+					if (!storerecord.hasOwnProperty('m')) {
+						storerecord.m = this.getModifier();
+					}
+					return storerecord;
+				}.bind(this))(),
+				queue,
+				fedForSameDatasetAndDatakey,
+				function(resolved,mergePathitem) {
+					perhapsResolved(storerecord,fedForSameDatasetAndDatakey,resolved,mergePathitem,feedOne);
+				}
 			);
 		}
-		
-		inst._addToQueue(
-			allLocalToApplyAfterwards[0].o,
-			allLocalToApplyAfterwards[0].s,
-			allLocalToApplyAfterwards[0].k,
-			allLocalToApplyAfterwards[0].u,
-			allLocalToApplyAfterwards[0].t,
-			true,
-			function(err) {
-				if (err === SyncIt_Constant.Error.OK) {
-					allLocalToApplyAfterwards.shift();
-					return addConflictResolvingQueueitemToQueue(allLocalToApplyAfterwards);
-				}
-				feedDone(
-					err,
-					[],
-					allLocalToApplyAfterwards
-				);
-			}
-			
-		);
-	};
-	
-	var feedOne = function(removeSameDatasetDatakeyFromQueue) {
-		
-		if (applyQueue.length === 0) {
-			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.FEEDING);
-			return addConflictResolvingQueueitemToQueue(allLocalToApplyAfterwards);
+
+		// Just make sure that the Pathitem is the correct version to apply.
+		if (storerecord.v != feedQueue[0].b) {
+			return unlockAndError(
+				ERROR.FEED_VERSION_ERROR,
+				feedQueue
+			);
 		}
-		
-		inst._queue.getItemsForDatasetAndDatakey(
-			applyQueue[0].s,
-			applyQueue[0].k,
-			function(err, queueitemInQueue) {
-				queueitemsRetrieved(
-					err,
-					queueitemInQueue,
-					removeSameDatasetDatakeyFromQueue
-				);
-			}
+
+		// This will basically apply the first Pathitem to the existing
+		// Pathroot, giving the new Pathroot
+		var newRoot = _shallowCopyKeys(
+			updateResult(
+				storerecord,
+				feedQueue[0],
+				this._cloneObj
+			),
+			['i','v','m','t','r']
 		);
-	};
+		
+		var joinCPathToA = function(dataset,datakey,next) {
+			return this._ps.changePath(dataset,datakey,'c','a',this._autoClean,function(err) {
+				if (err) {
+					return unlockAndError(err,feedQueue);
+				}
+				return this._ps.followPath(
+					dataset,
+					datakey,
+					'a',
+					function(storagekey,item,itemtype) {
+						if (itemtype !== FOLLOW_INFORMATION_TYPE.PATHITEM) {
+							return ERROR.OK;
+						}
+						this._emit(
+							'added_to_queue',
+							dataset,
+							datakey,
+							this._addObviousInforation(
+								dataset,
+								datakey,
+								storagekey.replace(/.*\./,''),
+								item
+							)
+						);
+						return ERROR.OK;
+					}.bind(this),
+					function(err) {
+						if (err) {
+							return unlockAndError(err,feedQueue);
+						}
+						next();
+					}
+				);
+			}.bind(this));
+		}.bind(this);
+		
+		// Set the new Pathroot, once this is done, emit the fact an item has
+		// been fed and check that if we should be applying the conflict path
+		// (c), if we should, do so. Once all this is done, go back and call
+		// `feedOne()` to go and get the next item.
+		this._ps.setPathroot(
+			feedQueue[0].s,
+			feedQueue[0].k,
+			'a',
+			newRoot,
+			function(err) {
+				if (err !== ERROR.OK) {
+					return unlockAndError(err);
+				}
+				var dataset = feedQueue[0].s;
+				var datakey = feedQueue[0].k;
+				this._emit(
+					'fed',
+					dataset,
+					datakey,
+					feedQueue[0],
+					this._addObviousInforation(
+						feedQueue[0].s,
+						feedQueue[0].k,
+						null,
+						newRoot
+					)
+				);
+				feedQueue.shift();
+				if (newRoot.v == info.cv) {
+					return joinCPathToA(dataset,datakey,feedOne);
+				}
+				feedOne();
+			}.bind(this)
+		);
+	}.bind(this);
 	
 	var i=0,
 		l=0,
 		queueitemValidationError = 0;
 	
-	if (this._locked) {
+	// If locked, just exit.
+	if (this.isLocked()) {
 		return feedDone(
 			SyncIt_Constant.Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED,
-			feedQueueitems,
-			allLocalToApplyAfterwards
+			feedQueueitems
 		);
 	}
 	
+	// Perform basic validation.
 	for (i=0, l=feedQueueitems.length;i<l;i++) {
 		queueitemValidationError = this._basicValidationForQueueitem(feedQueueitems[i]);
 		if (queueitemValidationError != SyncIt_Constant.Error.OK) {
 			return feedDone(
 				queueitemValidationError,
-				feedQueueitems,
-				allLocalToApplyAfterwards
+				feedQueueitems
 			);
 		}
 	}
 	
-	inst._locked = inst._locked | SyncIt_Constant.Locking.FEEDING;
+	// Then lock
+	this._lockFor(LOCKING.FEEDING);
 	
-	feedOne(false);
+	// Process the first item.
+	feedOne();
 	
-};
-
-/**
- * **SyncIt._emit()**
- * 
- * Emits an Event.
- * 
- * **Parameters**
- * 
- * * **@param {String} `event`** The name of the Event you wish to emit.
- * * **@param {} `param2, param3, ...`** Extra parameters will be passed to the event listener.
- */
-SyncIt.prototype._emit = function(event /*, other arguments */) {
-	
-	var i = 0,
-		args = Array.prototype.slice.call(arguments, 1);
-	
-	if (!this._events.hasOwnProperty(event)) {
-		throw "SyncIt._emit(): Attempting to fire unknown event '"+event+"'";
-	}
-	
-	for (i=0; i<this._events[event].length; i++) {
-		this._events[event][i].apply(this, args);
-	}
 };
 
 SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
@@ -713,7 +721,7 @@ SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
 /**
  * **SyncIt._addToQueue()**
  * 
- * Adds a Queueitem to the Queue.
+ * Adds a Pathitem to the Queue.
  * 
  * **Parameters**
  * 
@@ -723,294 +731,205 @@ SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
  * * **@param {Update} `update`**
  * * **@param {Modifier} `modifier`**
  * * **@param {Basedonversion} `basedonversion`**
- * * **@param {Modificationtime} `modificationtime`**
- * * **@param {Boolean} `allowFeedLock`** Usually adding to the *Queue* would be denied when feeding, but [SyncIt.feed()](#syncit.feed--) itself can add items to the *Queue* this parameter will enable that posibility.
  * * **@param {Function} `whenAddedToQueue`** Callback for when adding is complete. Signature: `function(errorCode, dataset, datakey, queueitem)`
  *   * **@param {Errorcode} `whenAddedToQueue.errorCode`** See SyncIt_Constant.Error.
- *   * **@param {Dataset} `whenAddedToQueue.dataset`** The Dataset of the Queueitem.
- *   * **@param {Datakey} `whenAddedToQueue.datakey`** The Datakey of the Queueitem.
- *   * **@param {Queueitem} `whenAddedToQueue.queueitem`** The Queueitem that has just been added.
+ *   * **@param {Dataset} `whenAddedToQueue.dataset`** The Dataset of the Pathitem.
+ *   * **@param {Datakey} `whenAddedToQueue.datakey`** The Datakey of the Pathitem.
+ *   * **@param {Pathitem} `whenAddedToQueue.queueitem`** The Pathitem that has just been added.
+ *   * **@param {Readrecord} `whenAddedToQueue.readrecord`** The now logical value of the data.
  */
-SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, modificationtime, allowFeedLock, whenAddedToQueue) {
-	var inst = this;
-	
-	var amILocked = function() {
-		if (allowFeedLock) {
-			return inst._locked & SyncIt_Constant.Locking.PROCESSING;
-		}
-		return inst._locked > 0;
-	};
-	
-	var extractInfoFromQueueitems = function(storerecord, queueitems) {
-		var info = {
-			removed: storerecord.r,
-			version: storerecord.v
-		};
-		
-		(function(queue) {
-			var l = 0,
-				i = 0;
-			
-			for (i=0, l=queue.length; i<l; i++) {
-				info.version = queue[i].b + 1;
-				if (queue[i].o == 'remove') {
-					info.removed = true;
-				}
-			}
-		})(queueitems);
-		return info;
-	};
-	
-	var storeIt = function(queueitem) {
-		
-		var unlockandComplete = function() {
-			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-			var r = [SyncIt_Constant.Error.OK, queueitem.s, queueitem.k, queueitem];
-			whenAddedToQueue.apply(inst, r);
-			r.shift();
-			r.unshift('added_to_queue');
-			inst._emit.apply(inst, r);
-		};
-		
-		inst._queue.push(
-			queueitem,
-			unlockandComplete
-		);
-		
-	};
-	
-	var checkAndStore = function(queueitem, storerecord, existingQueueitems, whenAddedToQueue)
-	{
-		
-		if (queueitem.t === null) {
-			queueitem.t = (new Date()).getTime();
-		}
+SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, whenAddedToQueue) {
 
-		var info = extractInfoFromQueueitems(storerecord, existingQueueitems);
-		
-		if (info.removed) {
-			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-			return whenAddedToQueue(SyncIt_Constant.Error.DATA_ALREADY_REMOVED);
-		}
-		
-		queueitem.b = info.version;
-		
-		storeIt(queueitem);
-		
-	};
-
-	
-	if (amILocked()) {
-		whenAddedToQueue(SyncIt_Constant.Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
+	// If locked, exit.
+	if (this.isLocked()) {
+		whenAddedToQueue(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
 		return false;
 	}
 	
-	
-	var queueitem = {o:operation, s:dataset, k:datakey, u:update, t:modificationtime, m:this.getModifier()};
+	var queueitem = {
+		o: operation, 
+		u: update
+	};
 
-	var validateQueueitemErr = inst._basicValidationForQueueitem(queueitem,['m']);
-	if (validateQueueitemErr !== SyncIt_Constant.Error.OK) {
-		return whenAddedToQueue(validateQueueitemErr);
-	}
+	// Adds information which is not necessary to store in the Pathitems itself.
+	var _makeFullReaditem = function(dataFromStore) {
+		var k = '';
+		var defaults = {
+			m: this.getModifier(),
+			r: false
+		};
+		for (k in defaults) {
+			if (!dataFromStore.hasOwnProperty(k)) {
+				dataFromStore[k] = defaults[k];
+			}
+		}
+		return dataFromStore;
+	}.bind(this);
 
-	this._locked = this._locked | SyncIt_Constant.Locking.PROCESSING;
+	var pathWatcher = this._getPathWatcher();
 	
-	inst._store.get(dataset, datakey, function(err, storerecord) {
-		
-		if (err === SyncIt_Constant.Error.NO_DATA_FOUND) {
-			storerecord = inst._getEmptyStorerecord();
-			err = SyncIt_Constant.Error.OK;
-		}
-		
-		if (err !== SyncIt_Constant.Error.OK) {
-			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-			return whenAddedToQueue(err);
-		}
-		
-		inst._queue.getItemsForDatasetAndDatakey(dataset, datakey, function(err, existingQueueitems) {
-			
-			if (err !== SyncIt_Constant.Error.OK) {
-				inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
+	this._lockFor(LOCKING.ADDING_TO_QUEUE);
+
+	this._ps.push(
+		dataset,
+		datakey,
+		'a',
+		queueitem,
+		true,
+		pathWatcher.getWatcher(),
+		function(err,ref) {
+			this._unlockFor(LOCKING.ADDING_TO_QUEUE);
+			if (err !== ERROR.OK) {
 				return whenAddedToQueue(err);
 			}
-			
-			checkAndStore(
-				queueitem,
-				storerecord,
-				existingQueueitems,
-				whenAddedToQueue
+			this._emit(
+				'added_to_queue',
+				dataset,
+				datakey,
+				this._addObviousInforation(dataset,datakey,ref,queueitem)
 			);
-			
-		});
-	});
-
-	return true;
+			whenAddedToQueue(
+				err,
+				dataset,
+				datakey,
+				queueitem,
+				_makeFullReaditem(pathWatcher.getReaditem())
+			);
+		}.bind(this)
+	);
 };
 
 /**
  * **SyncIt._getEmptyStorerecord()**
  *
- * When applying a *Queueitem* either because SyncIt is moving data from the *Queue* to the *Store* or just because it is processing a `[SyncIt.get()](#syncit.get--) it is possible that no data already exists at the *Store* for that *Dataset* / *Datakey*. It's handy to use this function to get something that looks like stored data to limit code complexity.
+ * When advancing a *Pathitem* either because SyncIt is moving data from the *Queue* to the *Store* or just because it is processing a `[SyncIt.get()](#syncit.get--) it is possible that no data already exists at the *Store* for that *Dataset* / *Datakey*. It's handy to use this function to get something that looks like stored data to limit code complexity.
  */
 SyncIt.prototype._getEmptyStorerecord = function() {
 	return {
 		i:{},
 		v:0,
+		j:{},
+		p:[],
+		q:[],
 		r:false,
-		t:(new Date()).getTime(),
-		m:this._modifier
+		t:(new Date()).getTime()
 	};
 };
 
 /**
- * Will perform checks to determine whether a *Queueitem* can be applied 
- * based on versioning. returns {SyncIt_Constant.ErrorCode}**
- * 
- * Parameters
- * 
- * * **{Queueitem} `update`** The *Queueitem* we are testing to see if it can be applied.
- * * **{Storerecord} `storeddata`** This is the data currently in the *Store* or null if there is nothing stored for that *Dataset* / *Datakey* currently.
- * 
- * Returns
- * 
- * * **{err} `next.err`** See SyncIt_Constant.Error.
- */ 
-SyncIt._versionCheck = function(storeddata, update) {
-	
-	// If there is nothing in store at the location, then the version we
-	// are applying must be to version 0;
-	if (storeddata === null) {
-		if (update.b !== 0) {
-			return SyncIt_Constant.Error.TRYING_TO_APPLY_TO_FUTURE_VERSION;
-		}
-		return SyncIt_Constant.Error.OK;
-	}
-	
-	// If we are trying to apply something old then we must fail.
-	if (storeddata.v > update.b) {
-		return SyncIt_Constant.Error.STALE_FOUND_IN_QUEUE;
-	}
-	
-	// Could be trying to apply something at a future version... This is silly
-	if (storeddata.v < update.b) {
-		return SyncIt_Constant.Error.TRYING_TO_APPLY_TO_FUTURE_VERSION;
-	}
-	
-	return SyncIt_Constant.Error.OK;
-};
-
-/*
- * This function adds a *Queueitem* into the *Store* if it passes some version 
- * checking.
- * 
- * Parameters
- * 
- * * **{Queueitem} `firstInQueue`** The *Queueitem* to apply.
- * * **{Function} `next`** The function to fire when applied.
- *   * **{err} `next.err`** See SyncIt_Constant.Error.
- *   * **{Queueitem} `next.firstInQueue`** This is the Queueitem that was added.
- *   * **{Storerecord} `next.storerecord`** This is the new data stored in the *Store* or `undefined` on failure.
- */
-SyncIt.prototype._addQueueitemToStore = function(firstInQueue, next) {
-	
-	var r = 0,
-		storeItemRetrieved;
-		
-	storeItemRetrieved = function(e, storerecord) {
-		
-		if (e === SyncIt_Constant.Error.NO_DATA_FOUND) {
-			storerecord = this._getEmptyStorerecord();
-			e = SyncIt_Constant.Error.OK;
-		}
-		
-		if (e !== SyncIt_Constant.Error.OK)
-		{
-			return next(r, firstInQueue);
-		}
-		
-		r = SyncIt._versionCheck(storerecord, firstInQueue);
-
-		if (r !== SyncIt_Constant.Error.OK)
-		{
-			return next(r, firstInQueue);
-		}
-		
-		var updatedStorerecord = updateResult(storerecord, firstInQueue, this._cloneObj);
-		
-		this._store.set(
-			firstInQueue.s,
-			firstInQueue.k,
-			updatedStorerecord,
-			function(err) {
-				next(err, firstInQueue, updatedStorerecord);
-			}
-		);
-		
-	}.bind(this);
-	
-	this._store.get(firstInQueue.s, firstInQueue.k, storeItemRetrieved);
-};
-
-/**
- * ### SyncIt.apply()
+ * ### SyncIt.advance()
  *
- * Applies the very first *Queueitem* in the *Queue* onto the data already in the *Store* for that *Dataset* / *Datakey*.
+ * Applies the very first *Pathitem* in the *Queue* onto the data already in the *Store* for that *Dataset* / *Datakey*.
  *
  * #### Parameters
  * 
  * * **@param {Function} `done`** Callback when the operation is complete (or not). Signature: `function(errorCode, queueitem, storerecord)`
  *   * **@param {ErrorCode} `done.errorCode`** See SyncIt_Constant.Error.
- *   * **@param {Queueitem} `done.queueitem`** The *Queueitem* we are trying to apply. `Null` only if queue is empty.
- *   * **@param {Storerecord} `done.storerecord`** The new *Storerecord* that is now in the Store, `undefined` on everything but success.
+ *   * **@param {Dataset} `done.dataset`**
+ *   * **@param {Datakey} `done.datakey`**
+ *   * **@param {Pathitem} `done.queueitem`** The *Pathitem* that was just advanced
+ *   * **@param {Storerecord} `done.storerecord`** The new *Storerecord*
  */
-SyncIt.prototype.apply = function(done) {
-	var whenAddedToQueue,
-		inst = this;
+SyncIt.prototype.advance = function(done) {
 	
-	whenAddedToQueue = function(e, firstInQueue, newStorerecord) {
-
-		if (e !== SyncIt_Constant.Error.OK) {
-			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-			return done(e, firstInQueue);
-		}
-
-		inst._queue.advance(function(e) {
-			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-			if (e !== 0) {
-				return done(SyncIt_Constant.Error.COULD_NOT_ADVANCE_QUEUE, firstInQueue);
-			}
-			inst._emit('applied', firstInQueue.s, firstInQueue.k, firstInQueue, newStorerecord);
-			return done(SyncIt_Constant.Error.OK, firstInQueue, newStorerecord);
-		});
-
-	};
-	
-	if (inst._locked) {
-		done(SyncIt_Constant.Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
+	if (this.isLocked()) {
+		done(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
 		return false;
 	}
 	
-	inst._locked = inst._locked | SyncIt_Constant.Locking.PROCESSING;
+	this._lockFor(LOCKING.ADVANCING);
+	var addedPathkey = '';
 	
-	inst._queue.getFirst(function(e, firstItem) {
-		
-		if (e == SyncIt_Constant.Error.NO_DATA_FOUND) {
-			e = SyncIt_Constant.Error.QUEUE_EMPTY;
+	this._ps.findFirstDatasetDatakey('a',function(err,dataset,datakey) {
+		if (err !== ERROR.OK) {
+			this._unlockFor(LOCKING.ADVANCING);
+			return done(err);
 		}
-		if (e !== SyncIt_Constant.Error.OK) {
-			inst._locked = inst._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-			return done(e);
-		}
-		return inst._addQueueitemToStore(firstItem, whenAddedToQueue);
-	});
+		var newRoot = {};
+		this._ps.advance(
+			dataset, 
+			datakey,
+			this._autoClean,
+			function(pathRoot,key,item,newRootCb) {
+				if (pathRoot === null) {
+					pathRoot = this._getEmptyStorerecord();
+				}
+				addedPathkey = key;
+				// Filter to just keys r, v, i and possibly t anything else can
+				// be recreated.
+				newRoot = updateResult(pathRoot,item,this._cloneObj);
+				newRoot = _shallowCopyKeys(
+					this._addObviousInforation(dataset,datakey,addedPathkey,newRoot),
+					['i','t','v','r'],
+					false
+				);
+				newRootCb(newRoot);
+			}.bind(this),
+			function(err,item) {
+				this._unlockFor(LOCKING.ADVANCING);
+				if (err !== ERROR.OK) {
+					return done(err,dataset,datakey);
+				}
+				this._emit(
+					'advanced',
+					dataset,
+					datakey,
+					this._addObviousInforation(dataset,datakey,addedPathkey,item),
+					this._addObviousInforation(dataset,datakey,addedPathkey,newRoot)
+				);
+				return done(
+					err,
+					dataset,
+					datakey,
+					this._addObviousInforation(dataset,datakey,addedPathkey,item),
+					this._addObviousInforation(dataset,datakey,addedPathkey,newRoot)
+				);
+			}.bind(this)
+		);
+	}.bind(this));
 	
-	return true;
+};
+
+/**
+ * **SyncIt._addObviousInforation**
+ *
+ * Maybe, all the information got here is not obvious, but it can be calculated
+ * from other information... Every Pathitem must have been created locally so
+ * we must be the modifier, so we don't store that. The modificationtime is 
+ * can also be retrieved from the Pathitem reference.
+ *
+ * **@param {Dataset} `dataset`**
+ * **@param {Datakey} `datakey`**
+ * **@param {Pathref} `reference`**
+ * **@param {Pathitem} `ob`** The item to add the "obvious" information to.
+ * **@return {Object} `ob` with the "obvious" information.
+ */
+SyncIt.prototype._addObviousInforation = function(dataset,datakey,reference,ob) {
+	var r = _shallowCopyKeys(ob),
+		k = '';
+	r.s = dataset;
+	r.k = datakey;
+	if (!r.hasOwnProperty('m')) {
+		r.m = this.getModifier();
+	}
+	if (!r.hasOwnProperty('t')) {
+		if ((reference === undefined) || (reference === null)) {
+			throw "No time and no time found in key";
+		}
+		r.t = (this._ps.getKeyTimeDecoder())(reference);
+	}
+	for (k in r) {
+		if (k.match(/^_/)) {
+			delete r[k];
+		}
+	}
+	return r;
 };
 
 /**
  * ### SyncIt.get()
  * 
- * Will retrieve information from SyncIt by reading what is first in the *Store* and then applying *Queueitem* from the *Queue* on top of it.
+ * Will retrieve information from SyncIt by reading what is first in the *Store* and then every *Pathitem* for the same Dataset / Datakey.
  * 
  * #### Parameters
  * 
@@ -1025,6 +944,47 @@ SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
 		whenDataRetrieved(e, r.i);
 	});
 };
+
+/**
+ * ### SyncIt.getFirst()
+ *
+ * Gets the Pathitem which should be next uploaded to the server or will be advanced
+ * should `SyncIt.advance()` be called.
+ *
+ * #### Parameters
+ * 
+ * * **@param {Function} `done`** Callback. Signature: Function(err, pathitem)
+ *   * **@param {ErrorCode} `done.err`** See SyncIt_Constant.Error.
+ *   * **@param {Pathitem} `done.pathitem`** The Pathitem.
+ */
+SyncIt.prototype.getFirst = function(done) {
+	
+	this._ps.getFirstPathitem(
+		'a',
+		function(err,dataset,datakey,reference,queueitem) {
+
+			if (err !== ERROR.OK) {
+				return done(err);
+			}
+
+			var qi = this._addObviousInforation(dataset,datakey,reference,queueitem);
+			this._ps.getRootItem(dataset,datakey,'a',function(err,root) {
+				if (err === ERROR.NO_DATA_FOUND) {
+					err = ERROR.OK;
+					root = this._getEmptyStorerecord();
+				}
+
+				if (err !== ERROR.OK) {
+					return done(err);
+				}
+				qi.b = root.v;
+				return done(err,qi);
+			}.bind(this));
+		}.bind(this)
+	);
+	
+};
+
 
 /**
 
@@ -1042,80 +1002,17 @@ SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
  */
 SyncIt.prototype.getFull = function(dataset, datakey, whenDataRetrieved) {
 	
-	var inst = this;
+	var pathWatcher = this._getPathWatcher();
 	
-	inst._queue.getItemsForDatasetAndDatakey(dataset, datakey, function(e, queue) {
-		
-		inst._store.get(dataset, datakey, function(e, r) {
-			var len = queue.length,
-				i = 0;
-			
-			if (e === SyncIt_Constant.Error.NO_DATA_FOUND) {
-				r = inst._getEmptyStorerecord();
-				e = SyncIt_Constant.Error.OK;
-			}
-			
-			for (i=0;i<len;i++) {
-				e = SyncIt_Constant.Error.OK;
-				if (queue[i].b == r.v) {
-					r = updateResult(r, queue[i], inst._cloneObj);
-				}
-			}
-
-			r.s = dataset;
-			r.k = datakey;
-
-			if (r.v === 0) {
-				return whenDataRetrieved(SyncIt_Constant.Error.NO_DATA_FOUND,null);
-			}
-			return whenDataRetrieved(e, r);
-		});
-	});
-	
-};
-
-/**
- * _mergeArraysWhenCountIs()
- * 
- * Will merge and return all the sub array in `arrayOfArrays` if `targetResolved == isResolved`, otherwise it will return false.
- * 
- * This is only here because it's shared between `getDatasetNames.getDatasetNames()` and `SyncIt.getDatakeysInDataset()`. It does not form part of the API
- * 
- * Parameters
- * 
- * * **@param {Number} `targetResolved`** See result.
- * * **@param {Number} `isResolved`** See result.
- * * **@param {Array} `arrayOfArrays`** An array of sub arrays.
- * 
- * Returns
- * 
- * * **@return {False|Array}** False if `targetResolved` != `isResolved`, Array otherwise.
- */
-var _mergeArraysWhenCountIs = function(targetResolved, isResolved, arrayOfArrays) {
-	if (targetResolved != isResolved) { return false; }
-	
-	var vals = (function(ar) {
-		while (ar.length > 1) {
-			var toAdd = ar.pop();
-			toAdd.unshift(0);
-			toAdd.unshift(ar[0].length);
-			ar[0].splice.apply(ar[0], toAdd);
+	this._ps.followPath(dataset,datakey,'a',pathWatcher.getWatcher(),function(err) {
+		if (err !== ERROR.OK) {
+			return whenDataRetrieved(err);
 		}
-		return ar[0];
-	})(arrayOfArrays);
-	
-	var r = [],
-		i = 0,
-		l = 0;
-	
-	for (i=0, l=vals.length; i<l; i++) {
-		if (r.indexOf(vals[i]) === -1) {
-			r.push(vals[i]);
-		}
-	}
-	
-	return r;
-	
+		return whenDataRetrieved(
+			err,
+			this._addObviousInforation(dataset,datakey,null,pathWatcher.getReaditem())
+		);
+	}.bind(this));
 };
 
 /**
@@ -1125,45 +1022,13 @@ var _mergeArraysWhenCountIs = function(targetResolved, isResolved, arrayOfArrays
  * 
  * #### Parameters
  * 
- * * **@param {Number} `inWhere`** Selects if you want *Dataset* names in the *Queue*, *Store* or both, Sum your desired SyncIt_Constant.Location.IN_QUEUE + SyncIt_Constant.Location.IN_STORE
  * * **@param {Function} `whenDatasetsKnown`** Signature: `function(err, arrayOfNames)`
  *   * **@param {ErrorCode} `whenDatasetsKnown.err`** See `SyncIt_Constant.Error`.
  *   * **@param {Array} `whenDatasetsKnown.arrayOfNames`** An array of *dataset* names
  */
-SyncIt.prototype.getDatasetNames = function(inWhere, whenDatasetsKnown) {
+SyncIt.prototype.getDatasetNames = function(whenDatasetsKnown) {
 	
-	var rs = [],
-		resolved = 0,
-		tmpR = false;
-	
-	var possiblySend = function() {
-		tmpR = _mergeArraysWhenCountIs(inWhere, resolved, rs);
-		if (tmpR !== false) {
-			whenDatasetsKnown(SyncIt_Constant.Error.OK, tmpR);
-		}
-	};
-	
-	if (inWhere & SyncIt_Constant.Location.IN_STORE) {
-		this._store.getDatasetNames(function(err, names) {
-			if (err) {
-				whenDatasetsKnown(err);
-			}
-			resolved = resolved + SyncIt_Constant.Location.IN_STORE;
-			rs.push(names);
-			possiblySend();
-		});
-	}
-	
-	if (inWhere & SyncIt_Constant.Location.IN_QUEUE) {
-		this._queue.getDatasetNames(function(err, datasetNames) {
-			if (err !== SyncIt_Constant.Error.OK) {
-				whenDatasetsKnown(err);
-			}
-			resolved = resolved + SyncIt_Constant.Location.IN_QUEUE;
-			rs.push(datasetNames);
-			possiblySend();
-		});
-	}
+	this._ps.getDatasetNames(whenDatasetsKnown);
 	
 };
 
@@ -1180,101 +1045,131 @@ SyncIt.prototype.getDatasetNames = function(inWhere, whenDatasetsKnown) {
  *   * **@param {ErrorCode} `whenDatakeysKnown.err`** See SyncIt_Constant.Error.
  *   * **@param {Array} `whenDatakeysKnown.arrayOfNames`** An array of *Datakey* names
  */
-SyncIt.prototype.getDatakeysInDataset = function(datasetName, inWhere, whenDatakeysKnown) {
-	var rs = [],
-		resolved = 0,
-		tmpR = false;
+SyncIt.prototype.getDatakeysInDataset = function(datasetName, whenDatakeysKnown) {
 	
-	var possiblySend = function() {
-		tmpR = _mergeArraysWhenCountIs(inWhere, resolved, rs);
-		if (tmpR !== false) {
-			whenDatakeysKnown(SyncIt_Constant.Error.OK, tmpR);
-		}
-	};
-	
-	if (inWhere & SyncIt_Constant.Location.IN_STORE) {
-		this._store.getDatakeyNames(datasetName, function(err, names) {
-			if (err !== SyncIt_Constant.Error.OK) {
-				return whenDatakeysKnown(err);
-			}
-			resolved = resolved + SyncIt_Constant.Location.IN_STORE;
-			rs.push(names);
-			possiblySend();
-		});
-	}
-	
-	if (inWhere & SyncIt_Constant.Location.IN_QUEUE) {
-		this._queue.getDatakeyInDataset(datasetName, function(err, datakeys) {
-			if (err !== SyncIt_Constant.Error.OK) {
-				return whenDatakeysKnown(err);
-			}
-			resolved = resolved + SyncIt_Constant.Location.IN_QUEUE;
-			rs.push(datakeys);
-			possiblySend();
-		});
-	}
+	this._ps.getDatakeysInDataset(datasetName, whenDatakeysKnown);
 	
 };
 
 /**
- * ### SyncIt.removeStaleFromQueue()
+ * ### SyncIt.clean()
  *
- * If somehow a Queueitem is applied to the store, but could not be removed then
- * this function should be used to remove them from the Queue at a later date.
+ * Will remove the remnants of conflict resolution, these __should__ only be
+ * `cv` Info in Root of a Dataset/Datakey but should there be any 
+ * disconnected Pathitem from unsafe shutdowns it will remove those too. Note
+ * that these disconnected Pathitem or old `cv` records in the Info of the
+ * Dataset / Datakey Root's do not cause ill effects, except for the tiny
+ * amounts of space.
  *
  * #### Parameters
  *
- * * **@param {Function} `whenDatakeysKnown`** Signature: `function(err)`
+ * * **@param {Function} `done`** Signature: `function(err)`
  */
-SyncIt.prototype.removeStaleFromQueue = function(done) {
-	
-	if (this._locked > 0) {
-		done(SyncIt_Constant.Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
-	}
+SyncIt.prototype.clean = function(done) {
 
-	this._locked = this._locked | SyncIt_Constant.Locking.PROCESSING;
+	if (this.isLocked()) {
+		done(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
+		return false;
+	}
 	
-	var working = function() {
+	this._lockFor(LOCKING.CLEANING);
 	
-		var unlock = function(err) {
-			this._locked = this._locked & (SyncIt_Constant.Locking.MAXIMUM_BIT_PATTERN ^ SyncIt_Constant.Locking.PROCESSING);
-			done(err);
-		}.bind(this);
-	
-		this._queue.getFirst(function(err,queueitem) {
-			
-			if (err !== SyncIt_Constant.Error.OK) {
-				if (err == SyncIt_Constant.Error.NO_DATA_FOUND) {
-					return unlock(SyncIt_Constant.Error.OK);
+	var cleanDatakey = function(dataset,datakey,next) {
+
+		var pathWatcher = this._getPathWatcher();
+
+		this._ps.followPath(dataset,datakey,'a',pathWatcher.getWatcher(),function(err) {
+			var info = pathWatcher.getReaditem();
+			var removeConflictInfo = function() {
+				if (!info.j.hasOwnProperty('cv')) {
+					return next(err);
 				}
-				return unlock(err);
+				delete info.j.cv;
+				this._ps.setInfo(dataset,datakey,info.j,function(err) {
+					next(err);
+				});
+			}.bind(this);
+			var removeCPath = function() {
+				this._ps.removePath(dataset,datakey,'c',false,removeConflictInfo);
+			}.bind(this);
+			if (err !== ERROR.OK) {
+				return next(err);
 			}
-	
-			this._store.get(queueitem.s,queueitem.k,function(err,storerecord) {
-				
-				if (err !== SyncIt_Constant.Error.OK) {
-					return unlock(err);
+			if (info.p.length > 1) {
+				throw "How did we end up with more than two paths?";
+			}
+			if (info.p.length) {
+				if (info.p[0] !== 'c') {
+					throw "How did we end up with paths other than 'c' and 'a'?";
 				}
-				if (queueitem.b >= storerecord.v) {
-					return unlock(SyncIt_Constant.Error.OK);
-				}
-	
-				this._queue.advance(function(err) {
-					if (err !== SyncIt_Constant.Error.OK) {
-						return unlock(err);
-					}
-					return working(done);
-				}.bind(this));
-	
-			}.bind(this));
-	
+				return removeCPath();
+			}
+			return removeConflictInfo();
 		}.bind(this));
 
 	}.bind(this);
 
-	working();
+	var cleanDataset = function(dataset,next) {
+		this.getDatakeysInDataset(dataset,function(err,datakeys) {
+			if (err !== ERROR.OK) { return next(err); }
+			var i = 0,
+				todo = datakeys.length,
+				terminated = false;
+
+			var cleanDatakeyCallback = function(err) {
+				if (err !== ERROR.OK) {
+					if (terminated) {
+						return;
+					}
+					terminated = true;
+					return next(err);
+				}
+				if ((--todo === 0) && (!terminated)) {
+					next(ERROR.OK);
+				}
+			};
+			for (i=todo-1; i>=0; i--) {
+				cleanDatakey(dataset,datakeys[i],cleanDatakeyCallback );
+			}
+		});
+	}.bind(this);
+
+	this._ps.getDatasetNames(function(err,datasets) {
+		var i = 0,
+			terminated = false,
+			todo = datasets.length;
+
+		var cleanDatasetCallback = function(err) {
+			if (err !== ERROR.OK) {
+				if (terminated) {
+					return;
+				}
+				terminated = true;
+				this._unlockFor(LOCKING.CLEANING);
+				return done(err);
+			}
+			if ((--todo === 0) && (!terminated)) {
+				this._ps.clean(function(err) {
+					this._unlockFor(LOCKING.CLEANING);
+					done(err);
+				}.bind(this));
+			}
+		}.bind(this);
+		if (err !== ERROR.OK) { 
+			this._unlockFor(LOCKING.CLEANING);
+			return done(err); 
+		}
+		for (i=todo-1; i>=0; i--) {
+			cleanDataset(datasets[i],cleanDatasetCallback);
+		}
+		
+	}.bind(this));
+
 };
+
+addEvents(SyncIt,['fed','advanced','added_to_queue']);
+addLocking(SyncIt,LOCKING.MAXIMUM_BIT_PATTERN);
 
 return SyncIt;
 
-});
+}));

@@ -5,7 +5,7 @@
 	<link href="test/vendor/mocha.css" rel="stylesheet"/>
 </head>
 <body>
-  <svg id="graph" xmlns="http://www.w3.org/2000/svg" version="1.1" height="240"></svg>
+  <div id="graph"></div>
   <div id="mocha"></div>
 </body>
 	<script>
@@ -23,12 +23,14 @@
 	
 	<script src="js/Constant.js"></script>
 	<script src="js/addEvents.js"></script>
+	<script src="js/makeAsync.js"></script>
 	<script src="js/FakeLocalStorage.js"></script>
+	<script src="js/SyncLocalStorage.js"></script>
 	<script src="js/AsyncLocalStorage.js"></script>
 	<script src="js/getTLIdEncoderDecoder.js"></script>
 	<script src="js/Path/AsyncLocalStorage.js"></script>
 	<script src="js/FakeLocalStorage.js"></script>
-	<script src="js/makeAsync.js"></script>
+	<script src="js/Unsupported/PathStorageAnalysis.js"></script>
 	<script src="test/Path/AsyncLocalStorage.js"></script>
 	<script>
 		$(document).ready(function() {

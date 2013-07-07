@@ -1,7 +1,7 @@
 require(
-["dojo/request/xhr", 'syncit/SyncIt', 'syncit/Store/Persist','syncit/FakeLocalStorage', 'syncit/Queue/LocalStorage', 'syncit/Constant', 'syncit/Queue/Persist', 'syncit/Persist/Memory', "syncitserv/view/extra/ConsLog", "syncitserv/TabControl", 'syncit/Unsupported/SyncItStore', 'syncit/SyncItTestServ', 'syncit/ServerPersist/MemoryAsync', 'syncitserv/ServerSimulator', 'syncitserv/view/extra/Queue', 'syncitserv/view/extra/Store', 'syncitserv/view/extra/Server', 'syncitserv/SyncItLog', "dojox/html/entities", 'dojo/dom-construct', "dojo/dom-class", 'dojo/query', 'dojo/dom-attr', "dgrid/Grid", 'dojo/store/Memory', "dojo/store/Observable", "dgrid/OnDemandGrid", 'dojo/Deferred', "dojo/promise/all", 'dojo/dom', 'dojo/on', "dojo/dom-form", "dijit/Dialog", "dojo/NodeList-traverse", "dojo/NodeList-manipulate","dojo/domReady!"
+["dojo/request/xhr", 'syncit/SyncIt','syncit/AsyncLocalStorage', 'syncit/getTLIdEncoderDecoder', 'syncit/Path/AsyncLocalStorage', 'syncit/FakeLocalStorage', 'syncit/Constant', 'syncit/Unsupported/PathStorageAnalysis', "syncitserv/view/extra/ConsLog", 'syncitserv/SyncItLog', "syncitserv/TabControl", 'syncit/Unsupported/SyncItStore', 'syncit/SyncItTestServ', 'syncit/ServerPersist/MemoryAsync', 'syncitserv/ServerSimulator',  'syncitserv/view/extra/Server', 'syncit/Unsupported/PathStorageAnalysis', "dojox/html/entities", 'dojo/dom-construct', "dojo/dom-class", 'dojo/query', 'dojo/dom-attr', "dgrid/Grid", 'dojo/store/Memory', "dojo/store/Observable", "dgrid/OnDemandGrid", 'dojo/Deferred', "dojo/promise/all", 'dojo/dom', 'dojo/on', "dojo/dom-form", "dijit/Dialog", "dojo/NodeList-traverse", "dojo/NodeList-manipulate","dojo/domReady!"
 ],
-function(xhr, SyncIt, Store, SyncIt_FakeLocalStorage, SyncIt_Queue_LocalStorage, SyncIt_Constant, Queue, SyncIt_Persist_Memory, ConsLog, TabControl, SyncItStore, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync, ServerSimulator, viewExtraQueue, viewExtraStore, viewExtraServer, syncItLog, htmlEntities, domConstruct, domClass, domQuery, domAttr, Grid, Memory, Observable, OnDemandGrid, Deferred, promiseAll, dom, on, domForm, dijitDialog) {
+function(xhr, SyncIt, SyncIt_AsyncLocalStorage, SyncIt_getTLIdEncoderDecoder, SyncIt_Path_AsyncLocalStorage, SyncIt_FakeLocalStorage, SyncIt_Constant, SyncIt_Unsupported_PathStorageAnalysis, ConsLog, syncItLog, TabControl, SyncItStore, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync, ServerSimulator, viewExtraServer, PathStorageAnalysis, htmlEntities, domConstruct, domClass, domQuery, domAttr, Grid, Memory, Observable, OnDemandGrid, Deferred, promiseAll, dom, on, domForm, dijitDialog) {
 
 dojo.byId('clienttwo-holder').innerHTML = dojo.byId('clientone-holder').innerHTML.replace(/lhs/g,'rhs');
 
@@ -82,7 +82,6 @@ dialogShowText(
 	})(),
 	'900px'
 );
-*
 */
 
 var conflictResolutionFunc = function(dataset ,datakey ,jrec ,localQueueItems, serverQueueItems ,resolved) {
@@ -137,9 +136,9 @@ var conflictResolutionFunc = function(dataset ,datakey ,jrec ,localQueueItems, s
 			domQuery('div.dijitDialog form.syncit-update-conflicts div.syncit-base-version div')[0]
 		);
 		
-		domQuery('.syncit-apply-updates-after input[name="dataset"]').val(dataset);
+		domQuery('.syncit-advance-updates-after input[name="dataset"]').val(dataset);
 		
-		domQuery('.syncit-apply-updates-after input[name="datakey"]').val(datakey);
+		domQuery('.syncit-advance-updates-after input[name="datakey"]').val(datakey);
 		
 		var placeQueueIn = function(queue,domNode) {
 			for(i=0,l=queue.length; i<l; i++) {
@@ -210,12 +209,31 @@ var syncIts = (function() {
 		l = 0,
 		r = {};
 	for (var i=0; i<sides.length; i++) {
+
 		r[sides[i]] = {};
-		r[sides[i]]['queue'] = new Queue(new SyncIt_Persist_Memory());
-		r[sides[i]]['store'] = new Store(new SyncIt_Persist_Memory());
+		r[sides[i]]['localStorage'] = new SyncIt_FakeLocalStorage();
+		r[sides[i]]['asyncLocalStorage'] = new SyncIt_AsyncLocalStorage(
+				r[sides[i]]['localStorage'],
+				sides[i],
+				JSON.stringify,
+				JSON.parse,
+				10
+			);
+
+		r[sides[i]]['pathAsyncLocalStorage'] = new SyncIt_Path_AsyncLocalStorage(
+			r[sides[i]]['asyncLocalStorage'],
+			new SyncIt_getTLIdEncoderDecoder(new Date(2010,1,1).getTime())
+		);
+
+		r[sides[i]]['pathStorageAnalysis'] = PathStorageAnalysis.visualizeData(
+			sides[i]+'-graph',
+			r[sides[i]]['pathAsyncLocalStorage'],
+			r[sides[i]]['localStorage'],
+			sides[i]
+		);
+
 		r[sides[i]]['syncIt'] = new SyncIt(
-			r[sides[i]]['store'],
-			r[sides[i]]['queue'],
+			r[sides[i]]['pathAsyncLocalStorage'],
 			sides[i]
 		);
 	}
@@ -224,6 +242,8 @@ var syncIts = (function() {
 
 (function() { // Setup Interface Bindings
 	
+	var uploadAdvanceOffset = 0;
+
 	var getNodeOnEvtSide = function(selector,evt) {
 		var nodes = domQuery(
 			selector,
@@ -281,9 +301,19 @@ var syncIts = (function() {
 		return false;
 	});
 
-	on(domQuery('.form-apply'),'submit',function(evt) {
+	on(domQuery('.form-advance'),'submit',function(evt) {
 		evt.preventDefault();
-		syncIts[getHandSide(evt)]['syncIt'].apply(getErrorDisplayer('syncIt.apply()'));
+		syncIts[getHandSide(evt)]['syncIt'].advance(function(err) {
+			(getErrorDisplayer('syncIt.advance()'))(err);
+			if (--uploadAdvanceOffset < 1) {
+				var advButton = getNodeOnEvtSide('.form-advance input',evt);
+				domAttr.set(advButton,'disabled','disabled');
+				domAttr.remove(
+					getNodeOnEvtSide('form.upload-dataset-datakey input',evt),
+					'disabled'
+				);
+			}
+		});
 		return false;
 	});
 	
@@ -343,7 +373,7 @@ var syncIts = (function() {
 						);
 						return;
 					}
-					errorDisplayer.apply(this,Array.prototype.slice.call(arguments));
+					errorDisplayer.advance(this,Array.prototype.slice.call(arguments));
 				}
 				
 			);
@@ -358,7 +388,7 @@ var syncIts = (function() {
 			domQuery.NodeList(evt.target).parents('form')[0]
 		);
 		
-		syncIts[getHandSide(evt)]['queue'].getFirst(function(err,first) {
+		syncIts[getHandSide(evt)]['syncIt'].getFirst(function(err,first) {
 			if (err !== SyncIt_Constant.Error.OK) {
 				return (getErrorDisplayer('syncIt.getFirst()'))(err);
 			}
@@ -376,6 +406,14 @@ var syncIts = (function() {
 				timeout: 2000,
 				headers: { 'Content-Type': 'application/json' }
 			}).then(function(responseDoc) {
+				if (++uploadAdvanceOffset > 0) {
+					domAttr.remove(getNodeOnEvtSide('.form-advance input',evt),'disabled');
+					domAttr.set(
+						getNodeOnEvtSide('form.upload-dataset-datakey input',evt),
+						'disabled',
+						'disabled'
+					);
+				}
 			},function(err) {
 				showHttpError(err.response);
 			});
@@ -390,7 +428,7 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 	var syncItStore = new Observable(
 		new SyncItStore(
 			syncIt,
-			'household',
+			null,
 			['modifier','modificationtime'],
 			{hideDeleted: false}
 		)
@@ -460,26 +498,12 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 	for (var i=0; i<sides.length; i++) {
 		
 		var vgrid = showDisplayGridForSyncIt(syncIts[sides[i]]['syncIt'],sides[i]+'-jrec');
-		
-		var qgrid = viewExtraQueue(
-			sides[i]+'-queue',
-			syncIts[sides[i]]['syncIt'],
-			syncIts[sides[i]]['queue']
-		);
-		
-		var sgrid = viewExtraStore(
-			sides[i]+'-store',
-			syncIts[sides[i]]['syncIt'],
-			syncIts[sides[i]]['store']
-		);
 
 		(function(vgrid,sgrid,qgrid) {
 			on(clientTabControl,'tab-change',function() {
 				vgrid.resize();
-				qgrid.resize();
-				sgrid.resize();
 			});
-		})(vgrid,sgrid,qgrid)
+		})(vgrid)
 		
 		syncItLog(sides[i]+'-log',syncIts[sides[i]]['syncIt']);
 	}

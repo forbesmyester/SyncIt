@@ -1,5 +1,8 @@
 /*jshint smarttabs:true */
 (function (root, factory) {
+	
+	"use strict";
+
 	if (typeof exports === 'object') {
 		// Node. Does not work with strict CommonJS, but
 		// only CommonJS-like enviroments that support module.exports,
@@ -10,7 +13,8 @@
 			require('../../js/FakeLocalStorage.js'),
 			require('../../js/AsyncLocalStorage.js'),
 			require('../../js/getTLIdEncoderDecoder.js'),
-			require('../../js/Path/AsyncLocalStorage.js')
+			require('../../js/Path/AsyncLocalStorage.js'),
+			require('../../js/Unsupported/PathStorageAnalysis.js')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		// AMD. Register as an anonymous module.
@@ -21,7 +25,8 @@
 				'syncit/FakeLocalStorage.js',
 				'syncit/AsyncLocalStorage.js',
 				'syncit/getTLIdEncoderDecoder',
-				'syncit/AsyncLocalStorage.js',
+				'syncit/Path/AsyncLocalStorage.js',
+				'syncit/Unsupported/PathStorageAnalysis.js'
 			],
 			factory
 		);
@@ -33,7 +38,8 @@
 			root.SyncIt_FakeLocalStorage,
 			root.SyncIt_AsyncLocalStorage,
 			root.SyncIt_getTLIdEncoderDecoder,
-			root.SyncIt_Path_AsyncLocalStorage
+			root.SyncIt_Path_AsyncLocalStorage,
+			root.SyncIt_Unsupported_PathStorageAnalysis
 		);
 	}
 })(this, function (
@@ -42,58 +48,21 @@
 	SyncIt_FakeLocalStorage,
 	AsyncLocalStorage,
 	SyncIt_getTLIdEncoderDecoder,
-	SyncIt_Path_AsyncLocalStorage
+	SyncIt_Path_AsyncLocalStorage,
+	SyncIt_Unsupported_PathStorageAnalysis
 ) {
+
+"use strict";
+
 // =============================================================================
 
-var ASYNCHRONOUS_DELAY=20;
 var USE_REAL_ENCODER_DECODER=false;
 
-var draw = function(paths) {
+var FOLLOW_INFORMATION_TYPE = SyncIt_Constant.FollowInformationType;
+var ERROR = SyncIt_Constant.Error;
 
-	if (typeof Viz == 'undefined') {
-		return;
-	}
-
-	var pathGraph = [],
-		nodeGraph = [],
-		i = 0,
-		l = 0;
-	
-	var toIdentifier = function(src) {
-		return src.replace(/[^0-9a-zA-Z]/g,'_');
-	};
-
-	var toNode = function(src) {
-		return toIdentifier(src) + '[label="'+src+'"]' + ';';
-	};
-	
-	for (i=0, l=paths.length; i<l; i++) {
-		nodeGraph = nodeGraph + toNode(paths[i].from);
-		if (paths[i].to) {
-			nodeGraph = nodeGraph + toNode(paths[i].to);
-			pathGraph = pathGraph + 
-				toIdentifier(paths[i].from) + 
-				' -> ' +
-				toIdentifier(paths[i].to) +
-				(paths[i].hasOwnProperty('via') ? '[label="'+paths[i].via+'"]' : '') +
-				';';
-		}
-	}
-
-	var str = 'digraph { rankdir="LR"; node [shape=record]; a [label="'+
-		'{ a | { aa| bb | cc | dd} | {{a|b} | aaa2 } }| b }'+
-		'"]; a -> b; }';
-	
-	str = 'digraph { rankdir="LR"; % }';
-	str = str.replace('%',nodeGraph+' %');
-	str = str.replace('%',pathGraph+' ');
-
-	var svg = Viz(str, "svg");
-	
-	$('#graph').html($(svg));
-};
-
+var visualizeData = SyncIt_Unsupported_PathStorageAnalysis.visualizeData;
+var getPaths = SyncIt_Unsupported_PathStorageAnalysis.getPaths;
 
 var EncoderDecoder = function() {
 	this.index = 0;
@@ -103,114 +72,147 @@ EncoderDecoder.prototype.encode = function() {
 	return '_'+(this.index++);
 };
 
+EncoderDecoder.prototype.sort = function(a,b) {
+	a = a.replace(/.*\._/,'');
+	b = b.replace(/.*\._/,'');
+	return parseInt(a,10) - parseInt(b,10);
+};
+
 if (USE_REAL_ENCODER_DECODER) {
 	EncoderDecoder = SyncIt_getTLIdEncoderDecoder;
 }
 
-var getPaths = function(localStorage,namespace) {
-	var r = [],
-		path = null;
-	
-	var extract = function(key,item,via) {
-		var ob = {
-			from: key,
-			to: item.hasOwnProperty('_n') ? item._n : null
-		};
-		if ((via !== null) && ob.to) {
-			ob.via = via;
-		}
-		return ob;
-	};
-
-	for (var i=0;i<localStorage.length;i++) {
-		if (
-			(localStorage.key(i).length > namespace.length) &&
-			(localStorage.key(i).substr(0,namespace.length+1) == namespace+'.')
-		){
-			var ik = '';
-			var k = localStorage.key(i);
-			var item = JSON.parse(localStorage.getItem(k));
-			path = null;
-			var ref = localStorage.key(i).substr(namespace.length+1);
-			if (k.split('.').length == 3) {
-				for (ik in item) {
-					if (item.hasOwnProperty(ik) && ik.match(/^[a-z]$/)) {
-						r.push(extract(ref+'.'+ik,item[ik],ik));
-					}
-				}
-			} else {
-				r.push(extract(ref,item,null));
-			}
-		}
-	}
-	return r.sort(function(a,b) {
-		return a.to - b.to;
-	});
-};
-
-var visualizeData = function(pathStore,localStorage) {
-	var redraw = function() {
-		draw(getPaths(localStorage,'aa','p'));
-	};
-	var events = ['set-item','remove-item','advance','push','change-path'];
-	for (var i=0;i<events.length;i++) {
-		pathStore.on(events[i],redraw);
-	}
-};
-
 describe('SyncIt_Path_AsyncLocalStorage',function() {
 	
-	it('can add roots, push and advance',function(done) {
+	it('can stop pushing when paths',function(done) {
+		this.timeout(60000);
 		var localStorage = new SyncIt_FakeLocalStorage();
 		var asyncLocalStorage = new AsyncLocalStorage(
 			localStorage,
+			'aa',
 			JSON.stringify,
-			JSON.parse,
-			ASYNCHRONOUS_DELAY
+			JSON.parse
 		);
 		var pathStore = new SyncIt_Path_AsyncLocalStorage(
 			asyncLocalStorage,
 			new EncoderDecoder(new Date(1980,1,1).getTime()),
 			'aa'
 		);
-		visualizeData(pathStore,localStorage);
-		pathStore.push('cars','subaru','p',{a:'b'},function(err) {
-			expect(getPaths(localStorage,'aa','p')).to.eql([{from:'cars.subaru.p',to:null}]);
-			pathStore.push('cars','subaru','p',{c:'d'},function(err) {
+		visualizeData('graph',pathStore,localStorage,'aa');
+		pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+			expect(err).to.equal(0);
+			expect(
+				getPaths(localStorage,'aa','p')
+			).to.eql([
+				{from:'cars.subaru._0',to:null},
+				{from:'cars.subaru:p',to:'_0'}
+			]);
+			pathStore.push('cars','subaru','c',{c:'d'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(0);
 				expect(
 					getPaths(localStorage,'aa','p')
 				).to.eql([
-					{from:'cars.subaru.p',to:'_0',via:'p'},
-					{from:'_0',to:null},
+					{from:'cars.subaru._0',to:null},
+					{from:'cars.subaru._1',to:null},
+					{from:'cars.subaru:c',to:'_1'},
+					{from:'cars.subaru:p',to:'_0'}
 				]);
-				pathStore.push('cars','subaru','p',{c:'d'},function(err) {
+				pathStore.push('cars','subaru','p',{c:'d'},true,function() { return ERROR.OK; },function(err) {
+					expect(err).to.equal(SyncIt_Constant.Error.MULTIPLE_PATHS_FOUND);
+					done();
+				});
+			});
+		});
+	});
+
+	it('can add roots, push and advance',function(done) {
+		this.timeout(60000);
+		var localStorage = new SyncIt_FakeLocalStorage();
+		var asyncLocalStorage = new AsyncLocalStorage(
+			localStorage,
+			'aa',
+			JSON.stringify,
+			JSON.parse
+		);
+		var pathStore = new SyncIt_Path_AsyncLocalStorage(
+			asyncLocalStorage,
+			new EncoderDecoder(new Date(1980,1,1).getTime()),
+			'aa'
+		);
+		visualizeData('graph',pathStore,localStorage,'aa');
+		pathStore.setInfo('cars','subaru',{some:'info'},function(err) {
+			expect(err).to.equal(0);
+			pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(0);
+				expect(
+					getPaths(localStorage,'aa','p')
+				).to.eql([
+					{from:'cars.subaru._0',to:null},
+					{from:'cars.subaru:p',to:'_0'}
+				]);
+				pathStore.push('cars','subaru','p',{$set:{c:'d'}},false,function() { return ERROR.OK; },function(err) {
+					expect(err).to.equal(0);
 					expect(
 						getPaths(localStorage,'aa','p')
 					).to.eql([
-						{from:'cars.subaru.p',to:'_0',via:'p'},
-						{from:'_0',to:'_1'},
-						{from:'_1',to:null},
+						{from:'cars.subaru._0',to:'_1'},
+						{from:'cars.subaru._1',to:null},
+						{from:'cars.subaru:p',to:'_0'}
 					]);
-					pathStore.advance('cars','subaru','p',true,function(err) {
-						draw(getPaths(localStorage,'aa','p'));
-						expect(err).to.eql(SyncIt_Constant.Error.OK);
+					pathStore.push('cars','subaru','p',{e:'f'},false,function() { return ERROR.OK; },function(err) {
+						expect(err).to.equal(0);
 						expect(
 							getPaths(localStorage,'aa','p')
 						).to.eql([
-							{from:'cars.subaru.p',to:'_1',via:'p'},
-							{from:'_0',to:'_1'},
-							{from:'_1',to:null},
+							{from:'cars.subaru._0',to:'_1'},
+							{from:'cars.subaru._1',to:'_2'},
+							{from:'cars.subaru._2',to:null},
+							{from:'cars.subaru:p',to:'_0'}
 						]);
-						pathStore.on('remove-item',function() {
-							draw(getPaths(localStorage,'aa','p'));
+						pathStore.advance('cars','subaru',true,function(key,rootOfPath,firstPathitem,next) {
+							return next({a:'b', z:"x"});
+						},function(err,queueitem,storerecord) {
 							expect(err).to.eql(SyncIt_Constant.Error.OK);
+							expect(queueitem).to.eql({a:'b'});
+							expect(storerecord).to.eql({a:'b',z:'x'});
 							expect(
 								getPaths(localStorage,'aa','p')
 							).to.eql([
-								{from:'cars.subaru.p',to:'_1',via:'p'},
-								{from:'_1',to:null},
+								{from:'cars.subaru._0',to:'_1'},
+								{from:'cars.subaru._1',to:'_2'},
+								{from:'cars.subaru._2',to:null},
+								{from:'cars.subaru:p',to:'_1'}
 							]);
-							done();
+							pathStore.on('remove-item',function() {
+								expect(err).to.eql(SyncIt_Constant.Error.OK);
+								expect(
+									getPaths(localStorage,'aa','p')
+								).to.eql([
+									{from:'cars.subaru._1',to:'_2'},
+									{from:'cars.subaru._2',to:null},
+									{from:'cars.subaru:p',to:'_1'}
+								]);
+								var pathInfo = [null,null,[]];
+								pathStore.followPath('cars','subaru','p',
+									function(key,item,itemtype) {
+										if (itemtype != FOLLOW_INFORMATION_TYPE.PATHITEM) {
+											pathInfo[itemtype-1] = item;
+											return;
+										}
+										return pathInfo[itemtype-1].push(item);
+									},
+									function(err) {
+										expect(pathInfo[1]).to.eql({a:'b',z:'x'});
+										expect(pathInfo[0]).to.eql({some:'info'});
+										expect(pathInfo[2].length).to.eql(2);
+										expect(pathInfo[2][0]).to.eql({$set:{c:'d'}});
+										expect(pathInfo[2][1]).to.eql({e:'f'});
+										expect(pathInfo[3].length).to.eql(0);
+										expect(err).to.equal(0);
+										done();
+									}
+								);
+							});
 						});
 					});
 				});
@@ -219,64 +221,104 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 	});
 	
 	it('can switch path',function(done) {
+		this.timeout(60000);
 		var localStorage = new SyncIt_FakeLocalStorage();
 		var asyncLocalStorage = new AsyncLocalStorage(
 			localStorage,
+			'aa',
 			JSON.stringify,
-			JSON.parse,
-			ASYNCHRONOUS_DELAY
+			JSON.parse
 		);
 		var pathStore = new SyncIt_Path_AsyncLocalStorage(
 			asyncLocalStorage,
 			new EncoderDecoder(new Date(1980,1,1).getTime()),
 			'aa'
 		);
-		visualizeData(pathStore,localStorage);
-		pathStore.push('cars','subaru','p',{a:'b'},function(err) {
-			expect(getPaths(localStorage,'aa','p')).to.eql([{from:'cars.subaru.p',to:null}]);
-			pathStore.push('cars','subaru','p',{c:'d'},function(err) {
+		visualizeData('graph',pathStore,localStorage,'aa');
+		pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+			expect(err).to.equal(ERROR.OK);
+			expect(
+				getPaths(localStorage,'aa','p')
+			).to.eql([
+				{from:'cars.subaru._0',to:null},
+				{from:'cars.subaru:p',to:'_0'}
+			]);
+			pathStore.push('cars','subaru','p',{c:'d'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(ERROR.OK);
 				expect(
 					getPaths(localStorage,'aa','p')
 				).to.eql([
-					{from:'cars.subaru.p',to:'_0',via:'p'},
-					{from:'_0',to:null},
+					{from:'cars.subaru._0',to:'_1'},
+					{from:'cars.subaru._1',to:null},
+					{from:'cars.subaru:p',to:'_0'}
 				]);
-				pathStore.push('cars','subaru','c',{e:'f'},function(err) {
+				pathStore.push('cars','subaru','c',{e:'f'},false,function() { return ERROR.OK; },function(err) {
+					expect(err).to.equal(ERROR.OK);
 					expect(
 						getPaths(localStorage,'aa','p')
 					).to.eql([
-						{from:'cars.subaru.p',to:'_0',via:'p'},
-						{from:'cars.subaru.c',to:null},
-						{from:'_0',to:null}
+						{from:'cars.subaru._0',to:'_1'},
+						{from:'cars.subaru._1',to:null},
+						{from:'cars.subaru._2',to:null},
+						{from:'cars.subaru:c',to:'_2'},
+						{from:'cars.subaru:p',to:'_0'}
 					]);
-					pathStore.push('cars','subaru','c',{e:'f'},function(err) {
+					var pathItems = [null,null,[]];
+					pathStore.push('cars','subaru','c',{e:'f2'},false,function(key,item,itemtype) {
+						if (itemtype != FOLLOW_INFORMATION_TYPE.PATHITEM) {
+							pathItems[itemtype-1] = item;
+							return ERROR.OK;
+						}
+						pathItems[itemtype-1].push(item);
+						return ERROR.OK;
+					},function(err) {
+						expect(err).to.equal(ERROR.OK);
+						expect(pathItems[3]).to.eql(['p']);
+						expect(pathItems[2].length).to.equal(2);
+						expect(pathItems[2].map(
+							function(pi) { return pi.e; }
+						)).to.eql(['f','f2']);
 						expect(
 							getPaths(localStorage,'aa','p')
 						).to.eql([
-							{from:'cars.subaru.p',to:'_0',via:'p'},
-							{from:'cars.subaru.c',to:'_1',via:'c'},
-							{from:'_0',to:null},
-							{from:'_1',to:null}
+							{from:'cars.subaru._0',to:'_1'},
+							{from:'cars.subaru._1',to:null},
+							{from:'cars.subaru._2',to:'_3'},
+							{from:'cars.subaru._3',to:null},
+							{from:'cars.subaru:c',to:'_2'},
+							{from:'cars.subaru:p',to:'_0'}
 						]);
 						pathStore.changePath('cars','subaru','c','p',true,function(err) {
 							expect(err).to.equal(SyncIt_Constant.Error.OK);
 							expect(
 								getPaths(localStorage,'aa','p')
 							).to.eql([
-								{from:'cars.subaru.p',to:'_1',via:'p'},
-								{from:'_0',to:null},
-								{from:'_1',to:null}
+								{from:'cars.subaru._0',to:'_1'},
+								{from:'cars.subaru._1',to:null},
+								{from:'cars.subaru._2',to:'_3'},
+								{from:'cars.subaru._3',to:null},
+								{from:'cars.subaru:p',to:'_2'}
 							]);
+							var callCount = 0;
 							pathStore.on('remove-item',function() {
-								draw(getPaths(localStorage,'aa','p'));
 								expect(err).to.eql(SyncIt_Constant.Error.OK);
+								var expected = [
+									{from:'cars.subaru._1',to:null},
+									{from:'cars.subaru._2',to:'_3'},
+									{from:'cars.subaru._3',to:null},
+									{from:'cars.subaru:p',to:'_2'}
+								];
+								if (++callCount == 2) {
+									expected = [
+										{from:'cars.subaru._2',to:'_3'},
+										{from:'cars.subaru._3',to:null},
+										{from:'cars.subaru:p',to:'_2'}
+									];
+								}
 								expect(
 									getPaths(localStorage,'aa','p')
-								).to.eql([
-									{from:'cars.subaru.p',to:'_1',via:'p'},
-									{from:'_1',to:null},
-								]);
-								done();
+								).to.eql(expected);
+								if (callCount == 2) { done(); }
 							});
 						});
 					});
@@ -286,91 +328,204 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 	});
 	
 
-	it('can clean',function(done) {
+	it('can list dataset and datakey',function(done) {
+		this.timeout(60000);
 		var localStorage = new SyncIt_FakeLocalStorage();
 		var asyncLocalStorage = new AsyncLocalStorage(
 			localStorage,
+			'aa',
 			JSON.stringify,
-			JSON.parse,
-			ASYNCHRONOUS_DELAY
+			JSON.parse
 		);
 		var pathStore = new SyncIt_Path_AsyncLocalStorage(
 			asyncLocalStorage,
 			new EncoderDecoder(new Date(1980,1,1).getTime()),
 			'aa'
 		);
-		visualizeData(pathStore,localStorage);
-		pathStore.push('cars','subaru','p',{a:'b'},function(err) {
-			expect(getPaths(localStorage,'aa','p')).to.eql([{from:'cars.subaru.p',to:null}]);
-			pathStore.push('cars','subaru','p',{c:'d'},function(err) {
+		visualizeData('graph',pathStore,localStorage,'aa');
+		pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+			expect(err).to.equal(ERROR.OK);
+			expect(
+				getPaths(localStorage,'aa','p')
+			).to.eql([
+				{from:'cars.subaru._0',to:null},
+				{from:'cars.subaru:p',to:'_0'}
+			]);
+			pathStore.push('cars','subaru','p',{c:'d'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(ERROR.OK);
 				expect(
 					getPaths(localStorage,'aa','p')
 				).to.eql([
-					{from:'cars.subaru.p',to:'_0',via:'p'},
-					{from:'_0',to:null},
+					{from:'cars.subaru._0',to:'_1'},
+					{from:'cars.subaru._1',to:null},
+					{from:'cars.subaru:p',to:'_0'}
 				]);
-				pathStore.push('cars','subaru','c',{e:'f'},function(err) {
-					expect(
-						getPaths(localStorage,'aa','p')
-					).to.eql([
-						{from:'cars.subaru.p',to:'_0',via:'p'},
-						{from:'cars.subaru.c',to:null},
-						{from:'_0',to:null}
-					]);
-					pathStore.push('cars','subaru','c',{e:'f'},function(err) {
+				pathStore.push('bikes','harley','p',{t:1},false,function() { return ERROR.OK; },function(err) {
+					expect(err).to.equal(SyncIt_Constant.Error.OK);
+					pathStore.push('bikes','harley','p',{t:1},false,function() { return ERROR.OK; },function(err) {
+						expect(err).to.equal(SyncIt_Constant.Error.OK);
 						expect(
 							getPaths(localStorage,'aa','p')
 						).to.eql([
-							{from:'cars.subaru.p',to:'_0',via:'p'},
-							{from:'cars.subaru.c',to:'_1',via:'c'},
-							{from:'_0',to:null},
-							{from:'_1',to:null}
+							{from:'cars.subaru._0',to:'_1'},
+							{from:'cars.subaru._1',to:null},
+							{from:'bikes.harley._2',to:'_3'},
+							{from:'bikes.harley._3',to:null},
+							{from:'cars.subaru:p',to:'_0'},
+							{from:'bikes.harley:p',to:'_2'}
+						]);
+						pathStore.push('bikes','kawasaki','p',{s:1},false,function() { return ERROR.OK; },function(err) {
+							expect(err).to.equal(ERROR.OK);
+							expect(
+								getPaths(localStorage,'aa','p')
+							).to.eql([
+								{from:'cars.subaru._0',to:'_1'},
+								{from:'cars.subaru._1',to:null},
+								{from:'bikes.harley._2',to:'_3'},
+								{from:'bikes.harley._3',to:null},
+								{from:'bikes.kawasaki._4',to:null},
+								{from:'cars.subaru:p',to:'_0'},
+								{from:'bikes.harley:p',to:'_2'},
+								{from:'bikes.kawasaki:p',to:'_4'}
+							]);
+							pathStore.getDatasetNames(function(err,datasets) {
+								expect(err).to.equal(0);
+								datasets = datasets.sort();
+								expect(datasets).to.eql(['bikes','cars']);
+								pathStore.getDatakeysInDataset('bikes',function(err,datakeys) {
+									expect(err).to.equal(0);
+									datakeys = datakeys.sort();
+									expect(datakeys).to.eql(['harley','kawasaki']);
+									done();
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+	});
+
+
+
+
+	it('can clean and get first queueitem',function(done) {
+		this.timeout(60000);
+		var localStorage = new SyncIt_FakeLocalStorage();
+		var asyncLocalStorage = new AsyncLocalStorage(
+			localStorage,
+			'aa',
+			JSON.stringify,
+			JSON.parse
+		);
+		var pathStore = new SyncIt_Path_AsyncLocalStorage(
+			asyncLocalStorage,
+			new EncoderDecoder(new Date(1980,1,1).getTime()),
+			'aa'
+		);
+		visualizeData('graph',pathStore,localStorage,'aa');
+		pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+			expect(err).to.equal(ERROR.OK);
+			expect(
+				getPaths(localStorage,'aa','p')
+			).to.eql([
+				{from:'cars.subaru._0',to:null},
+				{from:'cars.subaru:p',to:'_0'}
+			]);
+			pathStore.push('cars','subaru','p',{c:'d'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(ERROR.OK);
+				expect(
+					getPaths(localStorage,'aa','p')
+				).to.eql([
+					{from:'cars.subaru._0',to:'_1'},
+					{from:'cars.subaru._1',to:null},
+					{from:'cars.subaru:p',to:'_0'}
+				]);
+				pathStore.push('cars','subaru','c',{e:'f'},false,function() { return ERROR.OK; },function(err) {
+					expect(err).to.equal(ERROR.OK);
+					expect(
+						getPaths(localStorage,'aa','p')
+					).to.eql([
+						{from:'cars.subaru._0',to:'_1'},
+						{from:'cars.subaru._1',to:null},
+						{from:'cars.subaru._2',to:null},
+						{from:'cars.subaru:c',to:'_2'},
+						{from:'cars.subaru:p',to:'_0'}
+					]);
+					pathStore.push('cars','subaru','c',{e:'f'},false,function() { return ERROR.OK; },function(err) {
+						expect(err).to.equal(ERROR.OK);
+						expect(
+							getPaths(localStorage,'aa','p')
+						).to.eql([
+							{from:'cars.subaru._0',to:'_1'},
+							{from:'cars.subaru._1',to:null},
+							{from:'cars.subaru._2',to:'_3'},
+							{from:'cars.subaru._3',to:null},
+							{from:'cars.subaru:c',to:'_2'},
+							{from:'cars.subaru:p',to:'_0'}
 						]);
 						pathStore.changePath('cars','subaru','c','p',false,function(err) {
 							expect(err).to.equal(SyncIt_Constant.Error.OK);
 							expect(
 								getPaths(localStorage,'aa','p')
 							).to.eql([
-								{from:'cars.subaru.p',to:'_1',via:'p'},
-								{from:'_0',to:null},
-								{from:'_1',to:null}
+								{from:'cars.subaru._0',to:'_1'},
+								{from:'cars.subaru._1',to:null},
+								{from:'cars.subaru._2',to:'_3'},
+								{from:'cars.subaru._3',to:null},
+								{from:'cars.subaru:p',to:'_2'}
 							]);
-							pathStore.push('bikes','harley','p',{t:1},function(err) {
+							pathStore.push('bikes','harley','p',{t:1},false,function() { return ERROR.OK; },function(err) {
 								expect(err).to.equal(SyncIt_Constant.Error.OK);
-								pathStore.push('bikes','harley','p',{t:1},function(err) {
+								pathStore.push('bikes','harley','p',{t:1},false,function() { return ERROR.OK; },function(err) {
 									expect(err).to.equal(SyncIt_Constant.Error.OK);
 									expect(
 										getPaths(localStorage,'aa','p')
 									).to.eql([
-										{from:'cars.subaru.p',to:'_1',via:'p'},
-										{from:'_0',to:null},
-										{from:'_1',to:null},
-										{from:'bikes.harley.p',to:'_2',via:'p'},
-										{from:'_2',to:null}
+										{from:'cars.subaru._0',to:'_1'},
+										{from:'cars.subaru._1',to:null},
+										{from:'cars.subaru._2',to:'_3'},
+										{from:'cars.subaru._3',to:null},
+										{from:'bikes.harley._4',to:'_5'},
+										{from:'bikes.harley._5',to:null},
+										{from:'cars.subaru:p',to:'_2'},
+										{from:'bikes.harley:p',to:'_4'}
 									]);
-									pathStore.push('bikes','kawasaki','p',{s:1},function(err) {
+									pathStore.push('bikes','kawasaki','p',{s:1},false,function() { return ERROR.OK; },function(err) {
+										expect(err).to.equal(ERROR.OK);
 										expect(
 											getPaths(localStorage,'aa','p')
 										).to.eql([
-											{from:'cars.subaru.p',to:'_1',via:'p'},
-											{from:'_0',to:null},
-											{from:'_1',to:null},
-											{from:'bikes.harley.p',to:'_2',via:'p'},
-											{from:'_2',to:null},
-											{from:'bikes.kawasaki.p',to:null}
+											{from:'cars.subaru._0',to:'_1'},
+											{from:'cars.subaru._1',to:null},
+											{from:'cars.subaru._2',to:'_3'},
+											{from:'cars.subaru._3',to:null},
+											{from:'bikes.harley._4',to:'_5'},
+											{from:'bikes.harley._5',to:null},
+											{from:'bikes.kawasaki._6',to:null},
+											{from:'cars.subaru:p',to:'_2'},
+											{from:'bikes.harley:p',to:'_4'},
+											{from:'bikes.kawasaki:p',to:'_6'}
 										]);
-										pathStore.clean(function(err) {
-											expect(err).to.equal(SyncIt_Constant.Error.OK);
-											expect(
-												getPaths(localStorage,'aa','p')
-											).to.eql([
-												{from:'cars.subaru.p',to:'_1',via:'p'},
-												{from:'_1',to:null},
-												{from:'bikes.harley.p',to:'_2',via:'p'},
-												{from:'_2',to:null},
-												{from:'bikes.kawasaki.p',to:null}
-											]);
-											done();
+										pathStore.findFirstDatasetDatakey('p',function(err,dataset,datakey) {
+											expect(err).to.equal(ERROR.OK);
+											expect([dataset,datakey]).to.eql(['cars','subaru']);
+											pathStore.clean(function(err) {
+												expect(err).to.equal(SyncIt_Constant.Error.OK);
+												expect(
+													getPaths(localStorage,'aa','p')
+												).to.eql([
+													{from:'cars.subaru._2',to:'_3'},
+													{from:'cars.subaru._3',to:null},
+													{from:'bikes.harley._4',to:'_5'},
+													{from:'bikes.harley._5',to:null},
+													{from:'bikes.kawasaki._6',to:null},
+													{from:'cars.subaru:p',to:'_2'},
+													{from:'bikes.harley:p',to:'_4'},
+													{from:'bikes.kawasaki:p',to:'_6'}
+												]);
+												done();
+											});
 										});
 									});
 								});

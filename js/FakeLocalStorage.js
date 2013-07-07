@@ -1,4 +1,7 @@
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
+
+	"use strict";
+
 	if (typeof exports === 'object') {
 		module.exports = factory();
 	} else if (typeof define === 'function' && define.amd) {
@@ -8,11 +11,15 @@
 	}
 }(this, function () {
 	
+"use strict";
+
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
 // Copyright: Matthew Forrester
 // License: MIT/BSD-style
 
-"use strict";
+/**
+ * LocalStorage Mock
+ */
 
 var FakeLocalStorage = function() {
     this.data = {};
@@ -32,6 +39,7 @@ FakeLocalStorage.prototype._regen = function() {
 			this.keys.push(k);
 		}
 	}
+	this.keys = this.keys.sort();
 	this.length = this.keys.length;
 };
 
@@ -41,7 +49,10 @@ FakeLocalStorage.prototype.clear = function() {
 };
 
 FakeLocalStorage.prototype.key = function(i) {
-	return this.keys[i];
+	if (i < this.length) {
+		return this.keys[i];
+	}
+	return null;
 };
 
 FakeLocalStorage.prototype.getItem = function(k) {

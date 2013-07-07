@@ -1,9 +1,8 @@
 /*jshint smarttabs:true */
-require(['syncit/SyncIt','syncit/Constant','syncit/Queue/Persist','syncit/Store/Persist','syncit/Persist/MemoryAsync','syncit/Unsupported/SyncItStore','dojo/node!expect.js',
-"dojo/_base/array","dojo/promise/all","dojo/store/Observable"],
-function(SyncIt,SyncIt_Constant,Queue,Store,Persist,SyncItStore,expect,dojoBaseArray,dojoPromiseAll,Observable) {
+require(['syncit/SyncIt','syncit/Constant','syncit/AsyncLocalStorage', 'syncit/getTLIdEncoderDecoder', 'syncit/Path/AsyncLocalStorage', 'syncit/FakeLocalStorage','syncit/Unsupported/SyncItStore','dojo/node!expect.js',"dojo/_base/array","dojo/promise/all"],
+function(SyncIt,SyncIt_Constant,SyncIt_AsyncLocalStorage, SyncIt_getTLIdEncoderDecoder, SyncIt_Path_AsyncLocalStorage, SyncIt_FakeLocalStorage,SyncItStore,expect,dojoBaseArray,dojoPromiseAll) {
 
-var SyncItError = SyncIt_Constant.Error
+"use strict";
 
 var dataToLoad = [
 	{
@@ -77,9 +76,7 @@ var syncItFeeder = function(syncIt,allData,next) {
 	
 	return syncIt.feed(
 		allData,
-		function(err,queueitems) {
-			if (err) {
-			}
+		function(err) {
 			expect(err).to.equal(0);
 		},
 		function(err) {
@@ -92,7 +89,19 @@ var syncItFeeder = function(syncIt,allData,next) {
 
 describe('SyncItStore.js',function() {
 	it('get should return a promise that resolves to a value',function(done) {
-		var syncIt = new SyncIt(new Store(new Persist()),new Queue(new Persist()),'aa');
+		var syncIt = new SyncIt(
+			new SyncIt_Path_AsyncLocalStorage(
+				new SyncIt_AsyncLocalStorage(
+					new SyncIt_FakeLocalStorage(),
+					'test',
+					JSON.stringify,
+					JSON.parse,
+					10
+				),
+				new SyncIt_getTLIdEncoderDecoder(new Date(2010,1,1).getTime())
+			)
+		);
+
 		syncItFeeder(syncIt,dataToLoad,function() {
 			var syncItStore = new SyncItStore(syncIt,'household',[]);
 			syncItStore.startup(function() {
@@ -102,14 +111,25 @@ describe('SyncItStore.js',function() {
 						expect(r.id).to.eql('household.b-look');
 						done();
 					},
-					function(err) { }
+					function() { }
 				);
 			});
 		});
 	});
 	
 	it('should be able to navigate to a path',function(done) {
-		var syncIt = new SyncIt(new Store(new Persist()),new Queue(new Persist()),'aa');
+		var syncIt = new SyncIt(
+			new SyncIt_Path_AsyncLocalStorage(
+				new SyncIt_AsyncLocalStorage(
+					new SyncIt_FakeLocalStorage(),
+					'test',
+					JSON.stringify,
+					JSON.parse,
+					10
+				),
+				new SyncIt_getTLIdEncoderDecoder(new Date(2010,1,1).getTime())
+			)
+		);
 		var syncItStore = new SyncItStore(syncIt,'household',[]);
 		syncItStore.startup(function() {
 			expect(
@@ -126,7 +146,18 @@ describe('SyncItStore.js',function() {
 	});
 	
 	it('should return results from a query',function(done) {
-		var syncIt = new SyncIt(new Store(new Persist()),new Queue(new Persist()),'aa');
+		var syncIt = new SyncIt(
+			new SyncIt_Path_AsyncLocalStorage(
+				new SyncIt_AsyncLocalStorage(
+					new SyncIt_FakeLocalStorage(),
+					'test',
+					JSON.stringify,
+					JSON.parse,
+					10
+				),
+				new SyncIt_getTLIdEncoderDecoder(new Date(2010,1,1).getTime())
+			)
+		);
 		syncItFeeder(syncIt,dataToLoad,function() {
 			var syncItStore = new SyncItStore(
 				syncIt,
