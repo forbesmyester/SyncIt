@@ -58,6 +58,8 @@ License: MIT/BSD-style</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
+<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
 <span class="k">return</span> <span class="nx">declare</span><span class="p">(</span><span class="s1">&#39;syncit.Unsupported.SyncItStore&#39;</span><span class="p">,[],</span> <span class="p">{</span>
   
 
@@ -118,9 +120,12 @@ License: MIT/BSD-style</p>
   <span class="p">},</span>
   <span class="nx">startup</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">startupCompleteCallback</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">inQueueAndStore</span> <span class="o">=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Location</span><span class="p">.</span><span class="nx">IN_QUEUE</span> <span class="o">+</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Location</span><span class="p">.</span><span class="nx">IN_STORE</span><span class="p">;</span>
     
     <span class="kd">var</span> <span class="nx">indexItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="k">if</span> <span class="p">((</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_dataset</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_dataset</span> <span class="o">!=</span> <span class="nx">dataset</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">done</span><span class="p">();</span>
+      <span class="p">}</span>
       
       <span class="kd">var</span> <span class="nx">perform</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">jrec</span><span class="p">)</span> <span class="p">{</span>
         
@@ -152,11 +157,11 @@ License: MIT/BSD-style</p>
       
     <span class="p">};</span>
     
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForAddedToQueue</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForAddedToPath</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
     <span class="p">});</span>
     
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForApplied</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForAdvanced</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
     <span class="p">});</span>
     
@@ -165,7 +170,8 @@ License: MIT/BSD-style</p>
     <span class="p">});</span>
     
     <span class="kd">var</span> <span class="nx">indexDataset</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getDatakeysInDataset</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">inQueueAndStore</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getDatakeysInDataset</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
         
         <span class="kd">var</span> <span class="nx">indexesToCreate</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
         
@@ -203,11 +209,11 @@ License: MIT/BSD-style</p>
         
       <span class="p">});</span>
     <span class="p">};</span>
-    
+
     <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_dataset</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">indexDataset</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_dataset</span><span class="p">);</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getDatasetNames</span><span class="p">(</span><span class="nx">inQueueAndStore</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">datasets</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getDatasetNames</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">datasets</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
           <span class="nx">l</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
         <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="nx">l</span><span class="o">=</span><span class="nx">datasets</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>

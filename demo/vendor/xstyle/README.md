@@ -195,8 +195,9 @@ we can create our own big-header definition that inherits from an h1:
 
 ## Element Generation
 
-With xstyle, you can declare the creation of elements within rules, allowing for the creation
-of complex presentation components without abusing HTML for presentation. This not only 
+With xstyle, you can declare the creation of DOM elements within rules, allowing for the creation
+of complex presentation components. This can be thought of as templating functionality 
+(using CSS selector syntax, similar to jade), with reactive capabilities. This not only 
 simplifies the creation and composition of UI components, it helps to keep cleaner semantics in HTML, 
 and provides better encapsulation.
 
@@ -216,14 +217,31 @@ This will create a div with an id of "help" and a title of "Information":
 		=> div#help[title=Information];
 	}
 
-Element generation can also take advantage of a few CSS selector combinators as well.
-We can use spaces to create child elements and use commas to separate different
-elements to create. For example, we could create a two row table:
+Element generation can also generate multiple elements, and take advantage of indentation 
+to indicate the hierarchy of the elements. Deeper indentation indicates child elements,
+and shallower indentation can be used to generate parents. For example, we could 
+create a simple hierarchy:
+
+	.simple {
+		=>
+			div.parent1
+				div.child
+					div.grandchild
+			div.parent2
+				div.another-child
+	} 
+
+
+Or, we could create a two by two table:
 
 	table.two-row {
 		=>
-			tr td,
-			tr td;
+			tr 
+				td
+				td
+			tr 
+				td
+				td;
 	}  
 
 We could also generate text nodes inside elements with quoted strings. We could create
@@ -276,7 +294,7 @@ synchronize an element identifier or selector with another CSS rule.
 		=> 
 			h1 {
 				color: green;
-			},
+			}
 			p 'Blue Paragraph' {
 				color: blue;
 			};
@@ -470,7 +488,9 @@ items in the array, and the second column corresponds to the "age" property:
 	.content {
 		=> table(array-of-people) {
 			each: tr {
-				=> td(item/name), td(item/age);
+				=> 
+					td(item/name), 
+					td(item/age);
 			};
 		};
 	}

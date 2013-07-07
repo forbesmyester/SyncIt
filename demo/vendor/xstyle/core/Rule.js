@@ -83,6 +83,14 @@ define("xstyle/core/Rule", ["xstyle/core/expression", "put-selector/put", "xstyl
 			// TODO: need to add inheritance? or can this be removed
 			return this.values[key];
 		},
+		elements: function(callback){
+			var rule = this;
+			require(["xstyle/core/elemental"], function(elemental){
+				elemental.addRenderer(rule, function(element){
+					callback(element);
+				});
+			});
+		},
 		declareProperty: function(name, value, conditional){
 			// called by the parser when a variable assignment is encountered
 			if(this.disabled){
@@ -113,6 +121,11 @@ define("xstyle/core/Rule", ["xstyle/core/expression", "put-selector/put", "xstyl
 							for(var i = 0;i < parts.length; i++){
 								definition[i] = evaluateExpression(this, name, parts[i]);
 							}
+						}
+						if(value[0] && value[0].operator == '{'){ // see if it is a rule
+							definition = value[0];
+						}else if(value[1] && value[1].operator == '{'){
+							definition = value[1];
 						}
 						definitions[name] = definition || evaluateExpression(this, name, value);
 						if(propertyExists){
@@ -154,24 +167,20 @@ define("xstyle/core/Rule", ["xstyle/core/expression", "put-selector/put", "xstyl
 					var target = (scopeRule || this).getDefinition(name);
 					if(target){
 						var rule = this;
-						// call the handler to handle this rule
-						target = target.splice ? target : [target];
-						for(var i = 0; i < target.length; i++){
-							var segment = target[i];
-							var returned;
-							utils.when(segment, function(segment){
-								returned = segment.put && segment.put(value, rule, propertyName);
-							});
-							if(returned){
-								if(returned.then){
-									returned.then(function(){
-										// TODO: anything we want to do after loading?
-									});
+						return utils.when(target, function(target){
+							// call the handler to handle this rule
+							target = target.splice ? target : [target];
+							for(var i = 0; i < target.length; i++){
+								var segment = target[i];
+								var returned;
+								utils.when(segment, function(segment){
+									returned = segment.put && segment.put(value, rule, propertyName);
+								});
+								if(returned){
+									return returned;
 								}
-								break;
 							}
-						}
-						break;
+						});
 					}
 					// we progressively go through parent property names. For example if the 
 					// property name is foo-bar-baz, it first checks for foo-bar-baz, then 
@@ -266,7 +275,7 @@ define("xstyle/core/Rule", ["xstyle/core/expression", "put-selector/put", "xstyl
 			return target;
 		},
 		appendTo: function(target, beforeElement){
-			return put(beforeElement || target, (beforeElement ? '-' : '') + (this.tagName || 'span') + this.selector);
+			return put(beforeElement || target, (beforeElement ? '-' : '') + (this.tagName || 'span') + (this.selector || ''));
 		},
 		cssText: ""
 	};

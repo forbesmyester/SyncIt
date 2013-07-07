@@ -28,14 +28,14 @@ function(SyncIt,Grid,Observable,Memory,domConstruct) {
 				t: new Date().getTime()
 			});
 		};
-		syncIt.listenForApplied(function(dataset, datakey, queueitem, storerecord) {
+		syncIt.listenForAdvanced(function(dataset, datakey, queueitem, storerecord) {
 			appliedOrFed(queueitem,'applied');
 		});
 		syncIt.listenForFed(function(dataset, datakey, queueitem, storerecord) {
 			appliedOrFed(queueitem,'fed');
 		});
 		
-		syncIt.listenForAddedToQueue(function(dataset, datakey, queueitem, storerecord) {
+		syncIt.listenForAddedToPath(function(dataset, datakey, queueitem, storerecord) {
 			store.put({
 				id: genId(dataset,datakey),
 				operation: queueitem.o,

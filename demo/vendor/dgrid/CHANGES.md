@@ -1,14 +1,27 @@
 This document outlines changes since 0.3.0.  For older changelogs, see the
 [dgrid wiki](https://github.com/SitePen/dgrid/wiki).
 
-# master (0.3.8-dev)
+# master (0.3.9-dev)
+
+Coming soon!
+
+# 0.3.8
 
 ## Significant changes
 
 ### General/Core
 
+* The `dgrid-sort` event now emits off of the original target of the event which
+  triggered it, rather than always off of the header cell. (#539)
 * Fixed a regression (present since 0.3.5) in `OnDemandList` which prevented
   `noDataMessage` from being displayed for async stores. (#519)
+* `_StoreMixin` (used by `OnDemandList`, `OnDemandGrid`, and `Pagination`) now
+  supports calling the `set` method of Stateful objects during `save`.  (#563)
+
+### Column Plugins
+
+* Resolved an infinite-recursion regression in `selector`, observable when used
+  in conjunction with the `ColumnReorder` extension. (#525)
 
 ### Extensions
 
@@ -17,10 +30,40 @@ This document outlines changes since 0.3.0.  For older changelogs, see the
 
 ## Other changes and fixes
 
+### General/Core
+
+* Fixed issues in `OnDemandList` and the `Pagination` extension where
+  `noDataMessage` could potentially appear multiple times for successive
+  empty query results. (#542)
+
+### Mixins
+
+* Resolved an issue in the `ColumnSet` mixin which caused some browsers to block
+  clicks near the bottom of the grid when no ColumnSet scrollbars are shown.
+  (#571)
+
+### Column Plugins
+
+* Resolved an issue in `selector` where selectors would not work in cases where
+  the initial column structure did not contain a selector column, but the
+  structure was later changed to include one. (#533)
+* Resolved an issue in `selector` where rows that should be unselectable were
+  still selectable by clicking within the selector column. (#545)
+
 ### Extensions
 
-* The `DijitRegistry` extension now implements an `isLeftToRight` method, to
+* Revised the previous workaround for IE8 in the `ColumnHider` extension to
+  an alternative which involves less code and avoids an issue when all columns
+  are hidden. (#537)
+* The `DijitRegistry` extension now implements the `isLeftToRight` method, to
   accommodate needs of Dijit layout widgets in Dojo 1.9. (#536)
+* The `DijitRegistry` extension now implements the `getParent` method, to
+  accommodate e.g. `dijit/_KeyNavContainer`. (#538, thanks k2s)
+* The `Pagination` extension now properly only shows page 1 once if there is
+  only one page of results. (#520)
+* The `Pagination` extension now properly initializes the page size drop-down
+  based on the initial `rowsPerPage` value, if one matches.
+  (#577, thanks Gordon Smith)
 
 # 0.3.7
 

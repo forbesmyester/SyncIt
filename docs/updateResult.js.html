@@ -60,6 +60,9 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="cm">/*jshint smarttabs:true */</span>
 <span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// UMD from https://github.com/umdjs/umd/blob/master/returnExports.js</span>
+
+  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
   <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
       <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./manip.js&#39;</span><span class="p">)</span>
@@ -108,25 +111,25 @@ License: MIT/BSD-style</p>
 </div>
 
   </div>
-  <div class="body"><p>Runs a queueitem on an object, which would normally be either a <em>Jrec</em> or a <em>Jrec</em> with one or more <em>Queueitem</em> already ran on it.</p>
+  <div class="body"><p>Runs a <code>Pathitem</code> on a <code>PathRoot</code> or a <code>PathRoot</code> with one or more <code>Pathitem</code> already ran on it.</p>
 
 <p><strong>Parameters</strong></p>
 
 <ul>
-<li><strong>@param {Jrec|updateResult(Jrec,Queueitem)} <code>obToApplyTo</code></strong></li>
-<li><strong>@param {Queueitem} <code>queueitem</code></strong></li>
+<li><strong>@param {PathRoot|updateResult(PathRoot,Pathitem)} <code>obToApplyTo</code></strong></li>
+<li><strong>@param {Pathitem} <code>pathitem</code></strong></li>
 </ul>
   </div>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="kd">var</span> <span class="nx">updateResult</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obToApplyTo</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">updateResult</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_op_&#39;</span><span class="o">+</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">o</span><span class="p">))</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">updateResult</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obToApplyTo</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">updateResult</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_op_&#39;</span><span class="o">+</span><span class="nx">pathitem</span><span class="p">.</span><span class="nx">o</span><span class="p">))</span> <span class="p">{</span>
     <span class="k">throw</span> <span class="s1">&#39;SyncLib.updateResult No Operation: updateResult has no &#39;</span> <span class="o">+</span> 
-      <span class="s1">&#39;operation &#39;</span><span class="o">+</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">o</span><span class="p">;</span>
+      <span class="s1">&#39;operation &#39;</span><span class="o">+</span> <span class="nx">pathitem</span><span class="p">.</span><span class="nx">o</span><span class="p">;</span>
   <span class="p">}</span>
-  <span class="kd">var</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">updateResult</span><span class="p">[</span><span class="s1">&#39;_op_&#39;</span><span class="o">+</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">o</span><span class="p">];</span>
-  <span class="k">return</span> <span class="nx">f</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="nx">obToApplyTo</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">updateResult</span><span class="p">[</span><span class="s1">&#39;_op_&#39;</span><span class="o">+</span><span class="nx">pathitem</span><span class="p">.</span><span class="nx">o</span><span class="p">];</span>
+  <span class="k">return</span> <span class="nx">f</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="nx">obToApplyTo</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">);</span>
 <span class="p">};</span>
 
 
@@ -156,8 +159,8 @@ License: MIT/BSD-style</p>
 
 
 <ul>
-<li><strong>@param {Object} <code>ob</code></strong> <em>Jrec</em> like object to apply the <em>Queueitem</em> to.</li>
-<li><strong>@param {Object} <code>queueitem</code></strong> The <em>Queueitem</em> to apply</li>
+<li><strong>@param {Object} <code>ob</code></strong> The Object to update</li>
+<li><strong>@param {Object} <code>pathitem</code></strong> The <em>Pathitem</em> to apply</li>
 <li><strong>@param {Function} <code>cloningFunction</code></strong> The function to use to create a clone of <code>ob</code></li>
 <li><strong>@return {Object}</strong> The result.</li>
 </ul>
@@ -165,12 +168,14 @@ License: MIT/BSD-style</p>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">updateResult</span><span class="p">.</span><span class="nx">_op_update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">updateResult</span><span class="p">.</span><span class="nx">_op_update</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">cloningFunction</span><span class="p">(</span><span class="nx">ob</span><span class="p">);</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">i</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">u</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">);</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">m</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span><span class="p">;</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">t</span><span class="p">;</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">i</span> <span class="o">=</span> <span class="nx">manip</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">i</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">.</span><span class="nx">u</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">);</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">pathitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">m</span> <span class="o">=</span> <span class="nx">pathitem</span><span class="p">.</span><span class="nx">m</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="nx">pathitem</span><span class="p">.</span><span class="nx">t</span><span class="p">;</span>
   <span class="nx">r</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
   <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
 <span class="p">};</span>
@@ -204,7 +209,7 @@ License: MIT/BSD-style</p>
 
 <ul>
 <li><strong>@param {Object} <code>ob</code></strong> The Object to update</li>
-<li><strong>@param {Object} <code>queueitem</code></strong> The queueitem to be applied</li>
+<li><strong>@param {Object} <code>pathitem</code></strong> The Pathitem to be applied</li>
 <li><strong>@param {Function} <code>cloningFunction</code></strong> The function to use to create a clone of <code>ob</code></li>
 <li><strong>@return {Object}</strong> The result</li>
 </ul>
@@ -212,11 +217,13 @@ License: MIT/BSD-style</p>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">updateResult</span><span class="p">.</span><span class="nx">_op_remove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">updateResult</span><span class="p">.</span><span class="nx">_op_remove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">cloningFunction</span><span class="p">(</span><span class="nx">ob</span><span class="p">);</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">m</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span><span class="p">;</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">t</span><span class="p">;</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">pathitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">m</span> <span class="o">=</span> <span class="nx">pathitem</span><span class="p">.</span><span class="nx">m</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="nx">pathitem</span><span class="p">.</span><span class="nx">t</span><span class="p">;</span>
   <span class="nx">r</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
   <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
 <span class="p">};</span>
@@ -251,7 +258,7 @@ version will be incremented, <em>Modifier</em> set and the removed flag will be 
 
 <ul>
 <li><strong>@param {Object} <code>ob</code></strong> The Object to update</li>
-<li><strong>@param {Object} <code>queueitem</code></strong> The queueitem to be applied</li>
+<li><strong>@param {Object} <code>pathitem</code></strong> The Pathitem to be applied</li>
 <li><strong>@param {Function} <code>cloningFunction</code></strong> The function to use to create a clone of <code>ob</code></li>
 <li><strong>@return {Object}</strong> The result</li>
 </ul>
@@ -259,12 +266,14 @@ version will be incremented, <em>Modifier</em> set and the removed flag will be 
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">updateResult</span><span class="p">.</span><span class="nx">_op_set</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">updateResult</span><span class="p">.</span><span class="nx">_op_set</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">,</span><span class="nx">cloningFunction</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">cloningFunction</span><span class="p">(</span><span class="nx">ob</span><span class="p">);</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">i</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">u</span><span class="p">;</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">m</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">m</span><span class="p">;</span>
-  <span class="nx">r</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">.</span><span class="nx">t</span><span class="p">;</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">i</span> <span class="o">=</span> <span class="nx">pathitem</span><span class="p">.</span><span class="nx">u</span><span class="p">;</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">v</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">pathitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">m</span> <span class="o">=</span> <span class="nx">pathitem</span><span class="p">.</span><span class="nx">m</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">r</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="nx">pathitem</span><span class="p">.</span><span class="nx">t</span><span class="p">;</span>
   <span class="nx">r</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
   <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
 <span class="p">};</span>

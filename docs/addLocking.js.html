@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>addLocking.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "", thisFile = "home/fozz/Projects/syncit//addLocking.js", defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#addlocking()">addLocking()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#example">Example</a>
+      </div>
+      <div class="heading h2">
+        <a href="#parameters">Parameters</a>
+      </div>
+      <div class="heading h3">
+        <a href="#class._amilocked()">CLASS._amILocked()</a>
+      </div>
+      <div class="heading h4">
+        <a href="#parameters">Parameters</a>
+      </div>
+      <div class="heading h3">
+        <a href="#class._lockfor()">CLASS._lockFor()</a>
+      </div>
+      <div class="heading h3">
+        <a href="#class._unlockfor()">CLASS._unlockFor()</a>
+      </div>
+      <div class="heading h3">
+        <a href="#classfunc.islocked()">classFunc.isLocked()</a>
+      </div>
+      <div class="heading h4">
+        <a href="#returns">Returns</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>addLocking.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// UMD from https://github.com/umdjs/umd/blob/master/returnExports.js</span>
+  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">(</span><span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_addLocking</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  
+<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: Matthew Forrester
+License: MIT/BSD-style</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="addlocking()">
+  <h1>
+    <a href="#addlocking()" name="addlocking()" class="pilcrow">&#182;</a>
+    addLocking()
+  </h1>
+</div>
+
+  </div>
+  <div class="body"><p>Adds internal locking to an existing pseudo-classical Javascript class</p>
+
+
+<div class="pilwrap" id="example">
+  <h2>
+    <a href="#example" name="example" class="pilcrow">&#182;</a>
+    Example
+  </h2>
+</div>
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">MyClass</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">};</span>
+
+<span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">doSomething</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+ <span class="k">this</span><span class="p">.</span><span class="nx">_lockFor</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// Lock with bitpattern &#39;10&#39;</span>
+ <span class="k">this</span><span class="p">.</span><span class="nx">_startSensitiveJob</span><span class="p">();</span>
+ <span class="k">this</span><span class="p">.</span><span class="nx">_lockFor</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span> <span class="c1">// Lock with bitpattern &#39;01&#39;, Locks &#39;11&#39; now present.</span>
+ <span class="k">this</span><span class="p">.</span><span class="nx">_startSomethingElse</span><span class="p">();</span>
+ <span class="k">this</span><span class="p">.</span><span class="nx">_unlockFor</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c1">// Lock is now back at &#39;00&#39;</span>
+<span class="p">};</span>
+
+<span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">doSomethingElse</span><span class="p">()</span> <span class="p">{</span>
+ <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">amILocked</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="p">{</span>
+   <span class="c1">// It safe to do something as lock &#39;10&#39; is not present.</span>
+ <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">addLocking</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span> <span class="nx">Supports</span> <span class="nx">locks</span> <span class="mi">1</span> <span class="nx">and</span> <span class="mi">2</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="parameters">
+  <h2>
+    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
+    Parameters
+  </h2>
+</div>
+
+
+<ul>
+<li><strong>@param {Function} <code>classFunc</code></strong> The class to add internal locking to.</li>
+<li><strong>@param {Array} <code>maxLockingValue</code></strong> maximum bit pattern suported for locking.</li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">classFunc</span><span class="p">,</span><span class="nx">maxLockingValue</span><span class="p">)</span> <span class="p">{</span> 
+  
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_ensureLockingData</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_locked&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="class._amilocked()">
+  <h3>
+    <a href="#class._amilocked()" name="class._amilocked()" class="pilcrow">&#182;</a>
+    CLASS._amILocked()
+  </h3>
+</div>
+
+  </div>
+  <div class="body"><p>Checks if SyncIt is locked.</p>
+
+
+<div class="pilwrap" id="parameters">
+  <h4>
+    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
+    Parameters
+  </h4>
+</div>
+
+
+<p><strong>@param {Number} <code>disregardTheseLocks</code></strong> Allowed locks to skip over.
+<strong>@return {Boolean}</strong> True if locks other than <code>disregardTheseLocks</code> are present.</p>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_amILocked</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">disregardTheseLocks</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_ensureLockingData</span><span class="p">();</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nx">maxLockingValue</span> <span class="o">^</span> <span class="nx">disregardTheseLocks</span><span class="p">)</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">};</span>
+  
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="class._lockfor()">
+  <h3>
+    <a href="#class._lockfor()" name="class._lockfor()" class="pilcrow">&#182;</a>
+    CLASS._lockFor()
+  </h3>
+</div>
+
+  </div>
+  <div class="body"><p>Adds the lock <code>lockType</code></p>
+
+<p><strong>@param {Number} <code>lockType</code></strong> The lock to add.
+<strong>@return {Boolean}</strong> False if the lock was already present, True otherwise.</p>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_lockFor</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lockType</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_ensureLockingData</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="nx">lockType</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">r</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">|</span> <span class="nx">lockType</span><span class="p">;</span>
+    <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="class._unlockfor()">
+  <h3>
+    <a href="#class._unlockfor()" name="class._unlockfor()" class="pilcrow">&#182;</a>
+    CLASS._unlockFor()
+  </h3>
+</div>
+
+  </div>
+  <div class="body"><p>Removes the lock <code>lockType</code></p>
+
+<p><strong>@param {Number} <code>lockType</code></strong> The lock to remove.
+<strong>@return {Boolean}</strong> False if the lock was not present, True otherwise.</p>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_unlockFor</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lockType</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_ensureLockingData</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&amp;</span> <span class="nx">lockType</span><span class="p">))</span> <span class="p">{</span> 
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">^</span> <span class="p">(</span><span class="nx">maxLockingValue</span> <span class="o">&amp;</span> <span class="nx">lockType</span><span class="p">);</span>
+  <span class="p">};</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="classfunc.islocked()">
+  <h3>
+    <a href="#classfunc.islocked()" name="classfunc.islocked()" class="pilcrow">&#182;</a>
+    classFunc.isLocked()
+  </h3>
+</div>
+
+  </div>
+  <div class="body">
+<div class="pilwrap" id="returns">
+  <h4>
+    <a href="#returns" name="returns" class="pilcrow">&#182;</a>
+    Returns
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@return {Boolean}</strong> True if there are any locks</li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">isLocked</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_ensureLockingData</span><span class="p">();</span>
+    <span class="k">return</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_locked</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">};</span>
+
+<span class="p">}));</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

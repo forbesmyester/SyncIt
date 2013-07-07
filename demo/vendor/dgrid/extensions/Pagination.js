@@ -93,7 +93,10 @@ function(_StoreMixin, declare, lang, Deferred, on, query, string, has, put, i18n
 				var sizeSelect = put(paginationNode, 'select.dgrid-page-size'),
 					i;
 				for(i = 0; i < pageSizeOptions.length; i++){
-					put(sizeSelect, 'option', pageSizeOptions[i], {value: pageSizeOptions[i]});
+					put(sizeSelect, 'option', pageSizeOptions[i], {
+						value: pageSizeOptions[i],
+						selected: this.rowsPerPage === pageSizeOptions[i]
+					});
 				}
 				this._listeners.push(on(sizeSelect, "change", function(){
 					grid.rowsPerPage = +sizeSelect.value;
@@ -193,7 +196,7 @@ function(_StoreMixin, declare, lang, Deferred, on, query, string, has, put, i18n
 			
 			function pageLink(page){
 				var link;
-				if(grid.pagingTextBox && page == currentPage){
+				if(grid.pagingTextBox && page == currentPage && end > 1){
 					// use a paging text box if enabled instead of just a number
 					link = put(linksNode, 'input.dgrid-page-input[type=text][value=$]', currentPage);
 					link.setAttribute("aria-label", i18n.jumpPage);
@@ -244,7 +247,9 @@ function(_StoreMixin, declare, lang, Deferred, on, query, string, has, put, i18n
 					put(linksNode, "span.dgrid-page-skip", "...");
 				}
 				// last link
-				pageLink(end);
+				if(end > 1){
+					pageLink(end);
+				}
 			}else if(grid.pagingTextBox){
 				// The pageLink function is also used to create the paging textbox.
 				pageLink(currentPage);
@@ -357,6 +362,10 @@ function(_StoreMixin, declare, lang, Deferred, on, query, string, has, put, i18n
 					
 					Deferred.when(results.total, function(total){
 						if(!total){
+							if(grid.noDataNode){
+								put(grid.noDataNode, "!");
+								delete grid.noDataNode;
+							}
 							// If there are no results, display the no data message.
 							grid.noDataNode = put(grid.contentNode, "div.dgrid-no-data");
 							grid.noDataNode.innerHTML = grid.noDataMessage;

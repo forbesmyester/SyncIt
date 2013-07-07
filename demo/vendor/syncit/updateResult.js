@@ -1,5 +1,8 @@
 /*jshint smarttabs:true */
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
+
+	"use strict";
+
 	if (typeof exports === 'object') {
 		module.exports = factory(
 			require('./manip.js')
@@ -25,20 +28,20 @@
 /**
  * ### updateResult()
  *
- * Runs a queueitem on an object, which would normally be either a *Jrec* or a *Jrec* with one or more *Queueitem* already ran on it.
+ * Runs a `Pathitem` on a `PathRoot` or a `PathRoot` with one or more `Pathitem` already ran on it.
  *
  ***Parameters**
  *
- * * **@param {Jrec|updateResult(Jrec,Queueitem)} `obToApplyTo`**
- * * **@param {Queueitem} `queueitem`**
+ * * **@param {PathRoot|updateResult(PathRoot,Pathitem)} `obToApplyTo`**
+ * * **@param {Pathitem} `pathitem`**
  */
-var updateResult = function(obToApplyTo,queueitem,cloningFunction) {
-	if (!updateResult.hasOwnProperty('_op_'+queueitem.o)) {
+var updateResult = function(obToApplyTo,pathitem,cloningFunction) {
+	if (!updateResult.hasOwnProperty('_op_'+pathitem.o)) {
 		throw 'SyncLib.updateResult No Operation: updateResult has no ' + 
-			'operation '+ queueitem.o;
+			'operation '+ pathitem.o;
 	}
-	var f = updateResult['_op_'+queueitem.o];
-	return f.call(this,obToApplyTo,queueitem,cloningFunction);
+	var f = updateResult['_op_'+pathitem.o];
+	return f.call(this,obToApplyTo,pathitem,cloningFunction);
 };
 
 /**
@@ -48,17 +51,19 @@ var updateResult = function(obToApplyTo,queueitem,cloningFunction) {
  * 
  * #### Parameters
  * 
- * * **@param {Object} `ob`** *Jrec* like object to apply the *Queueitem* to.
- * * **@param {Object} `queueitem`** The *Queueitem* to apply
+ * * **@param {Object} `ob`** The Object to update
+ * * **@param {Object} `pathitem`** The *Pathitem* to apply
  * * **@param {Function} `cloningFunction`** The function to use to create a clone of `ob`
  * * **@return {Object}** The result.
  */
-updateResult._op_update = function(ob,queueitem,cloningFunction) {
+updateResult._op_update = function(ob,pathitem,cloningFunction) {
 	var r = cloningFunction(ob);
-	r.i = manip(r.i,queueitem.u,cloningFunction);
-	r.v = queueitem.b + 1;
-	r.m = queueitem.m;
-	r.t = queueitem.t;
+	r.i = manip(r.i,pathitem.u,cloningFunction);
+	r.v = r.v + 1;
+	if (pathitem.hasOwnProperty('m')) {
+		r.m = pathitem.m;
+	}
+	r.t = pathitem.t;
 	r.r = false;
 	return r;
 };
@@ -72,15 +77,17 @@ updateResult._op_update = function(ob,queueitem,cloningFunction) {
  * #### Parameters
  * 
  * * **@param {Object} `ob`** The Object to update
- * * **@param {Object} `queueitem`** The queueitem to be applied
+ * * **@param {Object} `pathitem`** The Pathitem to be applied
  * * **@param {Function} `cloningFunction`** The function to use to create a clone of `ob`
  * * **@return {Object}** The result
  */
-updateResult._op_remove = function(ob,queueitem,cloningFunction) {
+updateResult._op_remove = function(ob,pathitem,cloningFunction) {
 	var r = cloningFunction(ob);
-	r.v = queueitem.b + 1;
-	r.m = queueitem.m;
-	r.t = queueitem.t;
+	r.v = r.v + 1;
+	if (pathitem.hasOwnProperty('m')) {
+		r.m = pathitem.m;
+	}
+	r.t = pathitem.t;
 	r.r = true;
 	return r;
 };
@@ -95,16 +102,18 @@ updateResult._op_remove = function(ob,queueitem,cloningFunction) {
  * #### Parameters
  * 
  * * **@param {Object} `ob`** The Object to update
- * * **@param {Object} `queueitem`** The queueitem to be applied
+ * * **@param {Object} `pathitem`** The Pathitem to be applied
  * * **@param {Function} `cloningFunction`** The function to use to create a clone of `ob`
  * * **@return {Object}** The result
  */
-updateResult._op_set = function(ob,queueitem,cloningFunction) {
+updateResult._op_set = function(ob,pathitem,cloningFunction) {
 	var r = cloningFunction(ob);
-	r.i = queueitem.u;
-	r.v = queueitem.b + 1;
-	r.m = queueitem.m;
-	r.t = queueitem.t;
+	r.i = pathitem.u;
+	r.v = r.v + 1;
+	if (pathitem.hasOwnProperty('m')) {
+		r.m = pathitem.m;
+	}
+	r.t = pathitem.t;
 	r.r = false;
 	return r;
 };

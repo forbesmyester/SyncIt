@@ -53,7 +53,7 @@ define("xstyle/core/expression", ["xstyle/core/utils"], function(utils){
 				}
 				// for each reference, we break apart into variable reference and property references after each dot				
 				attributeParts = variable.split('/');
-				var parameterName = attributeParts.join('_');
+				var parameterName = attributeParts.join('_').replace(/-/g,'_');
 				parameters.push(parameterName);
 				variables.push(attributeParts);
 				// first find the rule that is being referenced

@@ -8,6 +8,8 @@ function(SyncIt,SyncIt_Constant,declare,Deferred,promiseAll,dojoBaseArray,QueryR
 // Copyright: 2013 Matthew Forrester
 // License: MIT/BSD-style
 
+"use strict";
+
 return declare('syncit.Unsupported.SyncItStore',[], {
 	
 	/**
@@ -43,9 +45,12 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 	},
 	startup: function(startupCompleteCallback) {
 		var inst = this;
-		var inQueueAndStore = SyncIt_Constant.Location.IN_QUEUE + SyncIt_Constant.Location.IN_STORE;
 		
 		var indexItem = function(dataset,datakey,done) {
+
+			if ((inst._dataset !== null) && (inst._dataset != dataset)) {
+				return done();
+			}
 			
 			var perform = function(jrec) {
 				
@@ -77,11 +82,11 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 			
 		};
 		
-		inst._syncIt.listenForAddedToQueue(function(dataset, datakey) {
+		inst._syncIt.listenForAddedToPath(function(dataset, datakey) {
 			indexItem(dataset, datakey, function() {} );
 		});
 		
-		inst._syncIt.listenForApplied(function(dataset, datakey, queueitem) {
+		inst._syncIt.listenForAdvanced(function(dataset, datakey, queueitem) {
 			indexItem(dataset, datakey, function() {} );
 		});
 		
@@ -90,7 +95,8 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 		});
 		
 		var indexDataset = function(dataset) {
-			inst._syncIt.getDatakeysInDataset(dataset,inQueueAndStore,function(err,keys) {
+
+			inst._syncIt.getDatakeysInDataset(dataset,function(err,keys) {
 				
 				var indexesToCreate = keys.length;
 				
@@ -117,11 +123,11 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 				
 			});
 		};
-		
+
 		if (this._dataset !== null) {
 			indexDataset(this._dataset);
 		} else {
-			inst._syncIt.getDatasetNames(inQueueAndStore,function(err,datasets) {
+			inst._syncIt.getDatasetNames(function(err,datasets) {
 				var i=0,
 					l=0;
 				for (i=0,l=datasets.length; i<l; i++) {

@@ -91,8 +91,7 @@
 									},
 									set: function(item){
 										// convert to boolean for save
-										item.editor = !!item.editor;
-										return item;
+										return !!item.editor;
 									}
 								}
 							},
@@ -125,17 +124,6 @@
 									// need to set width directly for Select to size correctly
 									style: { width: "99%" }
 								} }
-							},
-							{
-								label: "dijit/Editor",
-								generate: generateText,
-								column: {
-									renderCell: function(object, data){
-										// this editor supports rich text; don't escape HTML in view
-										return domConstruct.create("div", { innerHTML: data });
-									},
-									editorArgs: { style: "height: 100px;" }
-								}
 							},
 							{
 								label: "text input combining first/last name",
@@ -255,10 +243,11 @@
 								}, "grid");
 							}else{
 								// instead of destroying/recreating, just reset store + columns
-								grid.set("store", Observable(new TestStore({ data: data })));
+								grid.set("store", null);
 								grid.set("columns", {
 									"editor": editor(lang.mixin({}, options.column, columnArgs))
 								});
+								grid.set("store", Observable(new TestStore({ data: data })));
 							}
 						});
 						

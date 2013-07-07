@@ -25,7 +25,7 @@ define("xstyle/core/generate", ["xstyle/core/elemental", "put-selector/put", "xs
 		}
 	}
 	var doc = document;	
-	return function(generatingSelector, rule){
+	function generate(generatingSelector, rule){
 		// this is responsible for generation of DOM elements for elements matching generative rules
 		var id = nextId++;
 		// normalize to array
@@ -162,55 +162,67 @@ define("xstyle/core/generate", ["xstyle/core/elemental", "put-selector/put", "xs
 						var nextElement = lastElement;
 						var nextPart = generatingSelector[i + 1];
 						// parse for the sections of the selector
-						part.replace(/([,\n]+)?([\t ]+)?(\.|#)?([-\w%$|\.\#]+)(?:\[([^\]=]+)=?['"]?([^\]'"]*)['"]?\])?/g, function(t, nextLine, indentation, prefix, value, attrName, attrValue){
-							if(indentation){
-								if(nextLine){
-									var newIndentationLevel = indentation.length;
-									console.log(newIndentationLevel, value);
-									if(newIndentationLevel > indentationLevel){
-										// a new child
-										indentationLevels[newIndentationLevel] = nextElement;
-									}else{
-										// returning to an existing parent
-										nextElement = indentationLevels[newIndentationLevel] || nextElement;
-									}
-									indentationLevel = newIndentationLevel;
-								}
-//								nextElement = element;
-							}
-							var selector;
-							if(prefix){// we don't want to modify the current element, we need to create a new one
-									selector = (lastPart && lastPart.args ?
-										'' : // if the last part was brackets or a call, we can continue modifying the same element
-										'span') + prefix + value;
-							}else{
-								var target = rule.getDefinition(value);
-								// see if we have a definition for the element
-								if(target && target.appendTo){
-									nextElement = target.appendTo(nextElement, beforeElement);
-								}else{
-									selector = value;
-								}
-							}
-							if(selector){
-								nextElement = put(beforeElement || nextElement, (beforeElement ? '-' : '') + selector);
-							}
-							beforeElement = null;
-							if(attrName){
-								attrValue = attrValue === '' ? attrName : attrValue;
-								nextElement.setAttribute(attrName, attrValue);
-							}
-							if(item){
-								// set the item property, so the item reference will work
-								nextElement.item = item;
-							}
-							if(nextElement != lastElement && nextElement != element &&// avoid infinite loop if it is a nop selector
-								(!nextPart || !nextPart.base) // if the next part is a rule, than it should be extending it already, so we don't want to double apply
-								){
-								elemental.update(nextElement);
-							}
-							lastElement = nextElement;
+						var parts = [];
+						part.replace(/([,\n]+)?([\t ]+)?(\.|#)?([-\w%$|\.\#]+)(?:\[([^\]=]+)=?['"]?([^\]'"]*)['"]?\])?/g, function(){
+							parts.push(arguments);
 						});
+						// now iterate over these
+						for(var j = 0;j < parts.length; j++){
+							(function(t, nextLine, indentation, prefix, value, attrName, attrValue){
+								if(indentation){
+									if(nextLine){
+										var newIndentationLevel = indentation.length;
+										if(newIndentationLevel > indentationLevel){
+											// a new child
+											indentationLevels[newIndentationLevel] = nextElement;
+										}else{
+											// returning to an existing parent
+											nextElement = indentationLevels[newIndentationLevel] || nextElement;
+										}
+										indentationLevel = newIndentationLevel;
+									}
+	//								nextElement = element;
+								}
+								var selector;
+								if(prefix){// we don't want to modify the current element, we need to create a new one
+										selector = (lastPart && lastPart.args ?
+											'' : // if the last part was brackets or a call, we can continue modifying the same element
+											'span') + prefix + value;
+								}else{
+									var tagName = value.match(/^[-\w]+/)[0];
+									var target = rule.getDefinition(tagName);
+									// see if we have a definition for the element
+									if(target && target.appendTo){
+										nextElement = target.appendTo(nextElement, beforeElement);
+										// apply the rest of the selector
+										value = value.slice(tagName.length);
+										if(value){
+											put(nextElement, value);
+										}
+									}else{
+										selector = value;
+									}
+								}
+								if(selector){
+									nextElement = put(beforeElement || nextElement, (beforeElement ? '-' : '') + selector);
+								}
+								beforeElement = null;
+								if(attrName){
+									attrValue = attrValue === '' ? attrName : attrValue;
+									nextElement.setAttribute(attrName, attrValue);
+								}
+								if(item){
+									// set the item property, so the item reference will work
+									nextElement.item = item;
+								}
+								if(j < parts.length - 1 || (nextElement != lastElement && nextElement != element &&// avoid infinite loop if it is a nop selector
+									(!nextPart || !nextPart.base) // if the next part is a rule, than it should be extending it already, so we don't want to double apply
+									)){
+									elemental.update(nextElement);
+								}
+								lastElement = nextElement;
+							}).apply(this, parts[j]);
+						}
 					}else{
 						// a string literal
 						lastElement.appendChild(doc.createTextNode(part.value));
@@ -223,5 +235,5 @@ define("xstyle/core/generate", ["xstyle/core/elemental", "put-selector/put", "xs
 			return lastElement;
 		}
 	}
-	
+	return generate;
 });

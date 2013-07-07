@@ -38,6 +38,9 @@
 <p>if the module has no dependencies, the above pattern can be simplified to</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
   <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
 
 </pre></div>
@@ -84,6 +87,8 @@ like Node.</p>
     <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Constant</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">();</span>
   <span class="p">}</span>
 <span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
 
 
 </pre></div>
@@ -169,6 +174,27 @@ License: MIT/BSD-style</p>
   <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <div class="dox">
+  <div class="summary"><p>Data wrote from journal into store, but we could not clear the journal record.</p>
+  </div>
+  <div class="body">
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">NOTHING_TO_ADVANCE_TO</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_ADD_NON_DEFAULT_ROOT</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">PATH_DOES_NOT_EXISTS</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">MULTIPLE_PATHS_FOUND</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<div class="dox">
   <div class="summary"><p>The data is currently locked, please try again.</p>
   </div>
   <div class="body">
@@ -185,7 +211,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>The data is currently locked for feeding, please try again.</p>
@@ -196,25 +222,7 @@ License: MIT/BSD-style</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nb">Error</span><span class="p">.</span><span class="nx">UNABLE_TO_PROCESS_BECAUSE_FEED_LOCKED</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
-</div>
-<div class="dox">
-  <div class="summary"><p>Trying to apply an update based on a version number higher than the current.</p>
-  </div>
-  <div class="body">
-  </div>
-</div>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_APPLY_TO_FUTURE_VERSION</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">FEED_VERSION_ERROR</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
 
 
 </pre></div>
@@ -224,6 +232,25 @@ License: MIT/BSD-style</p>
         <td class="docs">
 <div class="pilwrap">
   <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Trying to apply an update based on a version number higher than the current.</p>
+  </div>
+  <div class="body">
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">TRYING_TO_ADVANCE_TO_FUTURE_VERSION</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to apply an update based on a version which is no longer current.</p>
@@ -242,7 +269,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>We are trying to apply an update that has already been.</p>
@@ -261,7 +288,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to change data post delete</p>
@@ -280,7 +307,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to change data post delete</p>
@@ -299,7 +326,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Failure writing update.</p>
@@ -318,7 +345,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to Feed data into SyncIt, but without a version</p>
@@ -337,7 +364,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>A request was made to add a Queueitem, but it is based on an outdated version.</p>
@@ -356,7 +383,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>A request was made to add a Queueitem, but we already have it (note this may only happen for the latest!)</p>
@@ -375,7 +402,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>For some reason, we are trying to add an item based on something that does not yet exist!</p>
@@ -394,7 +421,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>It is only possible to use <code>SyncIt.feed()</code> for Queueitem coming from elsewhere.</p>
@@ -413,7 +440,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>If you have local Queueitem that have been put into the Repository and not
@@ -433,7 +460,7 @@ applied locally, but are feeding Queueitem with a higher version.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>It might be that SyncIt had an item in the Queue that was applied but could not
@@ -453,7 +480,7 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
+  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Validation Error</p>
@@ -472,7 +499,7 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
+  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Validation Error</p>
@@ -491,7 +518,7 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
+  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Validation Error</p>
@@ -510,7 +537,7 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
+  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Validation Error</p>
@@ -529,7 +556,7 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
+  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to apply an update, but the queue is empty.</p>
@@ -539,7 +566,7 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nb">Error</span><span class="p">.</span><span class="nx">QUEUE_EMPTY</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span><span class="p">;</span>
+<span class="nb">Error</span><span class="p">.</span><span class="nx">PATH_EMPTY</span> <span class="o">=</span> <span class="o">-</span><span class="mi">3</span><span class="p">;</span>
 
 
 </pre></div>
@@ -548,7 +575,7 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
+  <a class="pilcrow" href="#section-30" id="section-30">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>When resolving conflict, we were told not to continue</p>
@@ -567,7 +594,7 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-30" id="section-30">&#182;</a>
+  <a class="pilcrow" href="#section-31" id="section-31">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Trying to apply an update based on a version number higher than the current.</p>
@@ -587,11 +614,15 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
 
 <span class="kd">var</span> <span class="nx">Locking</span> <span class="o">=</span> <span class="p">{};</span>
 
-<span class="nx">Locking</span><span class="p">.</span><span class="nx">PROCESSING</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nx">Locking</span><span class="p">.</span><span class="nx">ADDING_TO_QUEUE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
-<span class="nx">Locking</span><span class="p">.</span><span class="nx">FEEDING</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nx">Locking</span><span class="p">.</span><span class="nx">ADVANCING</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 
-<span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="nx">Locking</span><span class="p">.</span><span class="nx">FEEDING</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+<span class="nx">Locking</span><span class="p">.</span><span class="nx">CLEANING</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+<span class="nx">Locking</span><span class="p">.</span><span class="nx">MAXIMUM_BIT_PATTERN</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
 
 <span class="kd">var</span> <span class="nx">Validation</span> <span class="o">=</span> <span class="p">{};</span>
 
@@ -603,11 +634,18 @@ be cleared. At this point you should call SyncIt.removeStaleFromQueue.</p>
 
 <span class="nx">Validation</span><span class="p">.</span><span class="nx">OPERATION_REGEXP</span> <span class="o">=</span> <span class="sr">/^(set)|(update)|(remove)$/</span><span class="p">;</span>
 
+<span class="kd">var</span> <span class="nx">FollowInformationType</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="nx">FollowInformationType</span><span class="p">.</span><span class="nx">INFO</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nx">FollowInformationType</span><span class="p">.</span><span class="nx">ROOTITEM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="nx">FollowInformationType</span><span class="p">.</span><span class="nx">PATHITEM</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="nx">FollowInformationType</span><span class="p">.</span><span class="nx">OTHER_PATHS</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
 <span class="k">return</span> <span class="p">{</span>
   <span class="nb">Error</span><span class="o">:</span> <span class="nb">Error</span><span class="p">,</span>
   <span class="nx">Location</span><span class="o">:</span> <span class="nx">Location</span><span class="p">,</span>
   <span class="nx">Locking</span><span class="o">:</span> <span class="nx">Locking</span><span class="p">,</span>
-  <span class="nx">Validation</span><span class="o">:</span> <span class="nx">Validation</span>
+  <span class="nx">Validation</span><span class="o">:</span> <span class="nx">Validation</span><span class="p">,</span>
+  <span class="nx">FollowInformationType</span><span class="o">:</span> <span class="nx">FollowInformationType</span>
 <span class="p">};</span>
 
 <span class="p">}));</span>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>addEvents.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "", thisFile = "home/fozz/Projects/syncit//addEvents.js", defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#addevents()">addEvents()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#example">Example</a>
+      </div>
+      <div class="heading h2">
+        <a href="#parameters">Parameters</a>
+      </div>
+      <div class="heading h3">
+        <a href="#class.on()">CLASS.on()</a>
+      </div>
+      <div class="heading h4">
+        <a href="#parameters">Parameters</a>
+      </div>
+      <div class="heading h4">
+        <a href="#returns">Returns</a>
+      </div>
+      <div class="heading h3">
+        <a href="#class.removealllisteners()">CLASS.removeAllListeners()</a>
+      </div>
+      <div class="heading h4">
+        <a href="#parameters">Parameters</a>
+      </div>
+      <div class="heading h4">
+        <a href="#returns">Returns</a>
+      </div>
+      <div class="heading h3">
+        <a href="#class.removelistener()">CLASS.removeListener()</a>
+      </div>
+      <div class="heading h4">
+        <a href="#parameters">Parameters</a>
+      </div>
+      <div class="heading h4">
+        <a href="#returns">Returns</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>addEvents.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// UMD from https://github.com/umdjs/umd/blob/master/returnExports.js</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">(</span><span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_addEvents</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: Matthew Forrester
+License: MIT/BSD-style</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="addevents()">
+  <h1>
+    <a href="#addevents()" name="addevents()" class="pilcrow">&#182;</a>
+    addEvents()
+  </h1>
+</div>
+
+  </div>
+  <div class="body"><p>Adds events to an existing pseudo-classical Javascript class</p>
+
+
+<div class="pilwrap" id="example">
+  <h2>
+    <a href="#example" name="example" class="pilcrow">&#182;</a>
+    Example
+  </h2>
+</div>
+
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">MyClass</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">};</span>
+
+<span class="nx">MyClass</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">doSomething</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+ <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;doneit&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">addEvents</span><span class="p">(</span><span class="nx">MyClass</span><span class="p">,[</span><span class="s1">&#39;doneit&#39;</span><span class="p">]);</span>
+
+<span class="kd">var</span> <span class="nx">myClass</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyClass</span><span class="p">();</span>
+<span class="nx">myClass</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;doneit&#39;</span><span class="p">,</span><span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+ <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;a = &#39;</span> <span class="o">+</span> <span class="nx">a</span> <span class="o">+</span> <span class="s1">&#39;, b = &#39;</span> <span class="o">+</span> <span class="nx">b</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">myClass</span><span class="p">.</span><span class="nx">doSomething</span><span class="p">();</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="parameters">
+  <h2>
+    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
+    Parameters
+  </h2>
+</div>
+
+
+<ul>
+<li><strong>@param {Function} <code>classFunc</code></strong> The class to add events to.</li>
+<li><strong>@param {Array} <code>events</code></strong> The events you want the class to support.</li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="kd">var</span> <span class="nx">addEvents</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">classFunc</span><span class="p">,</span><span class="nx">events</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_eventTypes</span> <span class="o">=</span> <span class="nx">events</span><span class="p">;</span>
+  
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_emit</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span> <span class="cm">/*, other arguments */</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">args</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_eventTypes</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="s2">&quot;SyncIt._emit(): Attempting to fire unknown event &#39;&quot;</span><span class="o">+</span><span class="nx">event</span><span class="o">+</span><span class="s2">&quot;&#39;&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span>
+      <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_listeners&#39;</span><span class="p">)</span> <span class="o">||</span>
+      <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span>
+    <span class="p">)</span> <span class="p">{</span> <span class="k">return</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">][</span><span class="nx">i</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="class.on()">
+  <h3>
+    <a href="#class.on()" name="class.on()" class="pilcrow">&#182;</a>
+    CLASS.on()
+  </h3>
+</div>
+
+  </div>
+  <div class="body"><p>Adds an event listeners to an event</p>
+
+
+<div class="pilwrap" id="parameters">
+  <h4>
+    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
+    Parameters
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@param {String} <code>event</code></strong> The name of the event to listen for</li>
+<li><strong>@param {Function} <code>listener</code></strong> The listener to fire when event occurs.</li>
+</ul>
+
+
+<div class="pilwrap" id="returns">
+  <h4>
+    <a href="#returns" name="returns" class="pilcrow">&#182;</a>
+    Returns
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@return {Boolean}</strong> True if that event is available to listen to.</li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">on</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_eventTypes</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="s2">&quot;SyncIt._emit(): Attempting to listen for unknown event &#39;&quot;</span><span class="o">+</span><span class="nx">event</span><span class="o">+</span><span class="s2">&quot;&#39;&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_listeners&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">event</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="p">}</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">func</span><span class="p">);</span>
+    
+  <span class="p">};</span>
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">listen</span> <span class="o">=</span> <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">on</span><span class="p">;</span>
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="class.removealllisteners()">
+  <h3>
+    <a href="#class.removealllisteners()" name="class.removealllisteners()" class="pilcrow">&#182;</a>
+    CLASS.removeAllListeners()
+  </h3>
+</div>
+
+  </div>
+  <div class="body">
+<div class="pilwrap" id="parameters">
+  <h4>
+    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
+    Parameters
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@param {String} <code>event</code></strong> The name of the event you want to remove all listeners for.</li>
+</ul>
+
+
+<div class="pilwrap" id="returns">
+  <h4>
+    <a href="#returns" name="returns" class="pilcrow">&#182;</a>
+    Returns
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@return {Array}</strong> The listeners that have just been removed.</li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">removeAllListeners</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="kd">var</span> <span class="nx">propertyNames</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">ob</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">ob</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">k</span><span class="p">);</span>
+      <span class="p">}</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+    <span class="p">})(</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">propertyNames</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="p">[];</span>
+    <span class="p">}</span>
+    
+    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+  <span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="class.removelistener()">
+  <h3>
+    <a href="#class.removelistener()" name="class.removelistener()" class="pilcrow">&#182;</a>
+    CLASS.removeListener()
+  </h3>
+</div>
+
+  </div>
+  <div class="body"><p>Removes a specific listener from an event.</p>
+
+
+<div class="pilwrap" id="parameters">
+  <h4>
+    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
+    Parameters
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@param {String} <code>event</code></strong> The name of the event you want to remove a listener from.</li>
+<li><strong>@param {Function} <code>listener</code></strong> The listener you want to remove.</li>
+</ul>
+
+
+<div class="pilwrap" id="returns">
+  <h4>
+    <a href="#returns" name="returns" class="pilcrow">&#182;</a>
+    Returns
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@return {Boolean}</strong> True if the listener was removed, false otherwise.</li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">classFunc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">removeListener</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">listener</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">replacement</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">successful</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    
+    <span class="kd">var</span> <span class="nx">propertyNames</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">ob</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">ob</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">k</span><span class="p">);</span>
+      <span class="p">}</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+    <span class="p">})(</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">propertyNames</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">].</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">][</span><span class="nx">i</span><span class="p">]</span> <span class="o">!==</span> <span class="nx">listener</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">replacement</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">][</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">successful</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">=</span> <span class="nx">replacement</span><span class="p">;</span>
+    
+    <span class="k">return</span> <span class="nx">successful</span><span class="p">;</span>
+  <span class="p">};</span>
+
+
+
+
+<span class="p">};</span>
+
+<span class="k">return</span> <span class="nx">addEvents</span><span class="p">;</span>
+
+<span class="p">});</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

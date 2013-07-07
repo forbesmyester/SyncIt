@@ -4,7 +4,7 @@ define("xstyle/core/utils", [], function(){
 	return {
 		when: function(value, callback){
 			return value && value.then ? 
-				value.then(callback) : callback(value);
+				(value.then(callback) || value) : callback(value);
 		},
 		convertCssNameToJs: function(name){
 			// TODO: put this in a util module since it is duplicated in parser.js
@@ -19,6 +19,27 @@ define("xstyle/core/utils", [], function(){
 			}
 			var elementString = (element = document.createElement(tag)).toString();
 			return supportedTags[tag] = !(elementString == "[object HTMLUnknownElement]" || elementString == "[object]");
+		},
+		extend: function(target, base, error){
+			var ref = target.getDefinition(base, true);
+			if(ref){
+				return this.when(ref, function(ref){
+					if(ref.extend){
+						ref.extend(target, true);
+					}else{
+						for(var i in ref){
+							target[i] = ref[i];
+						}
+					}
+				});
+			}else{
+				// extending a native element
+				target.tagName = base;
+				if(!this.isTagSupported(base)){
+					error("Extending undefined definition " + base);
+				}
+			}
+			
 		}
 	};
 });

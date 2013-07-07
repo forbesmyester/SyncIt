@@ -237,7 +237,7 @@ function(kernel, declare, listen, has, put, List, miscUtil){
 								sort: newSort
 							};
 							
-							if (listen.emit(target, "dgrid-sort", eventObj)){
+							if (listen.emit(event.target, "dgrid-sort", eventObj)){
 								// Stash node subject to DOM manipulations,
 								// to be referenced then removed by sort()
 								grid._sortNode = target;
@@ -464,11 +464,11 @@ function(kernel, declare, listen, has, put, List, miscUtil){
 		},
 		
 		setColumns: function(columns){
-			kernel.deprecated("setColumns(...)", 'use set("columns", ...) instead', "dgrid 1.0");
+			kernel.deprecated("setColumns(...)", 'use set("columns", ...) instead', "dgrid 0.4");
 			this.set("columns", columns);
 		},
 		setSubRows: function(subrows){
-			kernel.deprecated("setSubRows(...)", 'use set("subRows", ...) instead', "dgrid 1.0");
+			kernel.deprecated("setSubRows(...)", 'use set("subRows", ...) instead', "dgrid 0.4");
 			this.set("subRows", subrows);
 		},
 		

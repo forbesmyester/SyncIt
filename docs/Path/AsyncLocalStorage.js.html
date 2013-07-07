@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AsyncLocalStorage.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../", thisFile = "home/fozz/Projects/syncit//Path/AsyncLocalStorage.js", defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h2">
+        <a href="#new%20syncit_path_asynclocalstorage()">new SyncIt_Path_AsyncLocalStorage()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.getkeytimedecoder()">SyncIt_Path_AsyncLocalStorage.getKeyTimeDecoder()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.getrootitem()">SyncIt_Path_AsyncLocalStorage.getRootItem()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.getinfo()">SyncIt_Path_AsyncLocalStorage.getInfo()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.setinfo()">SyncIt_Path_AsyncLocalStorage.setInfo()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.setpathroot()">SyncIt_Path_AsyncLocalStorage.setPathroot()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.advance()">SyncIt_Path_AsyncLocalStorage.advance()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.removepathitemfrompath()">SyncIt_Path_AsyncLocalStorage.removePathitemFromPath()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.changepath()">SyncIt_Path_AsyncLocalStorage.changePath()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.removepath()">SyncIt_Path_AsyncLocalStorage.removePath()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._removepathitems()">SyncIt_Path_AsyncLocalStorage._removePathItems()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._removepathitem()">SyncIt_Path_AsyncLocalStorage._removePathItem()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._setroot()">SyncIt_Path_AsyncLocalStorage._setRoot()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._setpathitem()">SyncIt_Path_AsyncLocalStorage._setPathItem()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.__setitem()">SyncIt_Path_AsyncLocalStorage.__setItem()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._getpathitem()">SyncIt_Path_AsyncLocalStorage._getPathItem()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._getroot()">SyncIt_Path_AsyncLocalStorage._getRoot()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.__getitem()">SyncIt_Path_AsyncLocalStorage.__getItem()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._removeprivatepathstoragedata()">SyncIt_Path_AsyncLocalStorage._removePrivatePathStorageData()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._firefollowinformationtypeforroot()">SyncIt_Path_AsyncLocalStorage._fireFollowInformationTypeForRoot()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._calculatelink()">SyncIt_Path_AsyncLocalStorage._calculateLink()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.followpath()">SyncIt_Path_AsyncLocalStorage.followPath()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._createanonymouspath()">SyncIt_Path_AsyncLocalStorage._createAnonymousPath()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.pushpathitemstonewpath()">SyncIt_Path_AsyncLocalStorage.pushPathitemsToNewPath()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.push()">SyncIt_Path_AsyncLocalStorage.push()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.getdatasetnames()">SyncIt_Path_AsyncLocalStorage.getDatasetNames()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.getdatakeysindataset()">SyncIt_Path_AsyncLocalStorage.getDatakeysInDataset()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.findfirstdatasetdatakey()">SyncIt_Path_AsyncLocalStorage.findFirstDatasetDatakey()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.getfirstpathitem()">SyncIt_Path_AsyncLocalStorage.getFirstPathitem()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage._findfirstdatasetdatakeyreference()">SyncIt_Path_AsyncLocalStorage._findFirstDatasetDatakeyReference()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.clean()">SyncIt_Path_AsyncLocalStorage.clean()</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>AsyncLocalStorage.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// UMD from https://github.com/umdjs/umd/blob/master/returnExports.js</span>
+  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+  <span class="cm">/* jshint strict: false */</span>
+  <span class="cm">/* globals module: false, require: false, define: true */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
+      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../Constant.js&#39;</span><span class="p">),</span>
+      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../addEvents.js&#39;</span><span class="p">)</span>
+    <span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">(</span>
+      <span class="p">[</span><span class="s1">&#39;syncit/Constant&#39;</span><span class="p">,</span><span class="s1">&#39;syncit/addEvents&#39;</span><span class="p">],</span>
+      <span class="nx">factory</span>
+    <span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Path_AsyncLocalStorage</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
+      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Constant</span><span class="p">,</span>
+      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_addEvents</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">,</span><span class="nx">addEvents</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>Author: Matthew Forrester <matt_at_keyboardwritescode.com>
+Copyright: Matthew Forrester
+License: MIT/BSD-style</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+<span class="kd">var</span> <span class="nx">ERROR</span> <span class="o">=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">FOLLOW_INFORMATION_TYPE</span> <span class="o">=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">FollowInformationType</span><span class="p">;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="new%20syncit_path_asynclocalstorage()">
+  <h2>
+    <a href="#new%20syncit_path_asynclocalstorage()" name="new%20syncit_path_asynclocalstorage()" class="pilcrow">&#182;</a>
+    new SyncIt_Path_AsyncLocalStorage()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Constructor.</p>
+
+<ul>
+<li><strong>@param {AsyncLocalStorage} <code>asyncLocalStorage</code></strong></li>
+<li><strong>@param {TLEncoderDecoder} <code>tLEncoderDecoder</code></strong></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="kd">var</span> <span class="nx">Als</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">asyncLocalStorage</span><span class="p">,</span><span class="nx">tLEncoderDecoder</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span> <span class="o">=</span> <span class="nx">asyncLocalStorage</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ed</span> <span class="o">=</span> <span class="nx">tLEncoderDecoder</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.getkeytimedecoder()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.getkeytimedecoder()" name="syncit_path_asynclocalstorage.getkeytimedecoder()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.getKeyTimeDecoder()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>The instance has an internal Function that is used to generate a portion
+of the keys based on the current time. This is Function externally 
+accessible so that that key can be converted back into a timestamp.</p>
+
+<p>TODO: I don't think that this should be here really, look at removing it...</p>
+
+<ul>
+<li><strong>@return {Function}</strong></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getKeyTimeDecoder</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">key</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">).</span><span class="nx">length</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ed</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">key</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/.*\./</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.getrootitem()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.getrootitem()" name="syncit_path_asynclocalstorage.getrootitem()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.getRootItem()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Gets a Pathroot stored at a specific Dataset / Datakey / Path.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err, rootitem)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li>
+<li><strong>@param {Pathroot} <code>rootitem</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getRootItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">path</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_s&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">]));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.getinfo()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.getinfo()" name="syncit_path_asynclocalstorage.getinfo()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.getInfo()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>The Root can store information, this will function retrieve that information.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li>
+<li><strong>@param {Object} <code>info</code></strong> The information stored within the Root.</li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getInfo</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
+      <span class="nx">root</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_i&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,{});</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">.</span><span class="nx">_i</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.setinfo()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.setinfo()" name="syncit_path_asynclocalstorage.setinfo()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.setInfo()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>The Root can store information, this will function set that information.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Object} <code>info</code></strong> The Information to put in the Root</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setInfo</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">info</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">empty</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
+      <span class="nx">root</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">_i</span> <span class="o">=</span> <span class="nx">info</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">info</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">info</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">empty</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">empty</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">delete</span> <span class="nx">root</span><span class="p">.</span><span class="nx">_i</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.setpathroot()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.setpathroot()" name="syncit_path_asynclocalstorage.setpathroot()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.setPathroot()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will set a Pathroot.</p>
+
+<p>Note. This is a low level function and it the Pathitem linked to it will be
+lost.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Object} <code>data</code></strong> What to put into the Pathroot</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">setPathroot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">data</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
+      <span class="nx">root</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_s</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.advance()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.advance()" name="syncit_path_asynclocalstorage.advance()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.advance()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will advance the Path (which is like a queue) for a specific Dataset / Datakey.</p>
+
+<p>This function will call <code>calcNewRootOfPath</code> with the Pathroot and first
+Pathitem within that Dataset / Datakey which itself should should call it's
+own callback with the result of applying the first Pathitem onto the
+Pathroot. Once this callback has been called the Pathroot will be 
+set to that result.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Boolean} <code>removeOld</code></strong> If this is True the old Pathitem will be
+removed, however this will be <strong>after</strong> <code>next()</code> is called.</li>
+<li><strong>@param {Function} <code>calcNewRootOfPath</code></strong> This callback will be fired so
+that the new Pathroot can be calculated.</li>
+<li><strong>@param {Pathroot} <code>calcNewRootOfPath.pathroot</code></strong> The current Pathroot</li>
+<li><strong>@param {String} <code>calcNewRootOfPath.nameOfPath</code></strong> The name of the Path
+that is being advanced.</li>
+<li><strong>@param {Pathitem} <code>calcNewRootOfPath.firstPathitem</code></strong> The first
+PathItem in the Path.</li>
+<li><strong>@param {Function} <code>calcNewRootOfPath.newRootCalculated</code></strong>
+calcNewRootOfPath should call this function when the new Pathroot has been
+calculated. Signature: Function(newPathroot)</li>
+<li><strong>@param {Function} <code>calcNewRootOfPath.newRootCalculated.newPathroot</code></strong> The
+value that the new Pathroot will</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">advance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">removeOld</span><span class="p">,</span><span class="nx">calcNewRootOfPath</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">k</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^[a-z]$/</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">path</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">MULTIPLE_PATHS_FOUND</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nx">path</span> <span class="o">=</span> <span class="nx">k</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">path</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">NOTHING_TO_ADVANCE_TO</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_getPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">calcNewRootOfPath</span><span class="p">(</span>
+        <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_s&#39;</span><span class="p">)</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">])</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">,</span>
+        <span class="nx">item</span><span class="p">,</span>
+        <span class="kd">function</span><span class="p">(</span><span class="nx">newRoot</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">newRoot</span><span class="p">.</span><span class="nx">_s</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">newRoot</span><span class="p">.</span><span class="nx">_n</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">_n</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="kd">var</span> <span class="nx">toDelete</span> <span class="o">=</span> <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">;</span>
+          <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">]</span> <span class="o">=</span> <span class="nx">newRoot</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;advance&#39;</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">);</span>
+            <span class="nx">next</span><span class="p">(</span>
+              <span class="nx">err</span><span class="p">,</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">item</span><span class="p">),</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">])</span>
+            <span class="p">);</span>
+            <span class="k">if</span> <span class="p">((</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">removeOld</span><span class="p">))</span> <span class="p">{</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_removePathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">toDelete</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{});</span>
+            <span class="p">}</span>
+          <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+        <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+      <span class="p">);</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.removepathitemfrompath()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.removepathitemfrompath()" name="syncit_path_asynclocalstorage.removepathitemfrompath()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.removePathitemFromPath()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will remove all Pathitem in a specific Path for a Dataset / Datakey.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Boolean} <code>removeOld</code></strong> If this is True the old Pathitem will be
+removed, however this will be <strong>after</strong> <code>next()</code> is called.</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">removePathitemFromPath</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">removeOld</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">path</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">PATH_DOES_NOT_EXISTS</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">toRemove</span> <span class="o">=</span> <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;change-root&#39;</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">);</span>
+      <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">removeOld</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_removePathItems</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">toRemove</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{});</span>
+      <span class="p">}</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.changepath()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.changepath()" name="syncit_path_asynclocalstorage.changepath()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.changePath()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will move all Pathitem from <code>fromPath</code> to <code>toPath</code>, unhooking and 
+potentially removing all existing data in <code>toPath</code></p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {String} <code>fromPath</code></strong> Items will be moved from this Path</li>
+<li><strong>@param {String} <code>toPath</code></strong> Items will be moved into this Path, unhooking
+and perhaps deleting (see <code>removeOld</code>) items already existing there.</li>
+<li><strong>@param {Boolean} <code>removeOld</code></strong> If this is True the old Pathitem will be
+removed, however this will be <strong>after</strong> <code>next()</code> is called.</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">changePath</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">fromPath</span><span class="p">,</span><span class="nx">toPath</span><span class="p">,</span><span class="nx">removeOld</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">toRemove</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">fromPath</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">PATH_DOES_NOT_EXISTS</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">[</span><span class="nx">fromPath</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">PATH_DOES_NOT_EXISTS</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span>
+      <span class="nx">removeOld</span> <span class="o">&amp;&amp;</span>
+      <span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">toPath</span><span class="p">)</span> <span class="o">&amp;&amp;</span> 
+      <span class="nx">root</span><span class="p">[</span><span class="nx">toPath</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">)</span>
+    <span class="p">)</span> <span class="p">{</span>
+      <span class="nx">toRemove</span> <span class="o">=</span> <span class="nx">root</span><span class="p">[</span><span class="nx">toPath</span><span class="p">].</span><span class="nx">_n</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">root</span><span class="p">[</span><span class="nx">toPath</span><span class="p">].</span><span class="nx">_n</span> <span class="o">=</span> <span class="nx">root</span><span class="p">[</span><span class="nx">fromPath</span><span class="p">].</span><span class="nx">_n</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="nx">root</span><span class="p">[</span><span class="nx">fromPath</span><span class="p">];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;change-path&#39;</span><span class="p">,</span><span class="nx">fromPath</span><span class="p">,</span><span class="nx">toPath</span><span class="p">);</span>
+      <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">toRemove</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_removePathItems</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">toRemove</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{});</span>
+      <span class="p">}</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.removepath()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.removepath()" name="syncit_path_asynclocalstorage.removepath()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.removePath()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Removes all Pathitem and the Pathroot within a specific Dataset / Datakey /
+Path.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Boolean} <code>removeOld</code></strong> If this is True the old Pathitem will be
+removed, however this will be <strong>after</strong> <code>next()</code> is called.</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">removePath</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">removeOld</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">toRemove</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">path</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">PATH_DOES_NOT_EXISTS</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">PATH_DOES_NOT_EXISTS</span> <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">toRemove</span> <span class="o">=</span> <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;set-root&#39;</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">);</span>
+      <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">removeOld</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_removePathItems</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">toRemove</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{});</span>
+      <span class="p">}</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._removepathitems()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._removepathitems()" name="syncit_path_asynclocalstorage._removepathitems()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._removePathItems()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Attempts to remove a Pathitem at a specific Dataset / Datakey / Reference
+and then recursively remove all it's child Pathitem.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Reference} <code>ref</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_removePathItems</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">ref</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="kd">var</span> <span class="nx">removeAndTry</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ref</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_getPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">ref</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">nextRef</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">nextRef</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">_n</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_removePathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">ref</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nx">nextRef</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">))</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">removeAndTry</span><span class="p">(</span><span class="nx">nextRef</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+  <span class="nx">removeAndTry</span><span class="p">(</span><span class="nx">ref</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._removepathitem()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._removepathitem()" name="syncit_path_asynclocalstorage._removepathitem()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._removePathItem()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Removes a Pathitem at a specific Dataset / Datakey / Reference.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Reference} <code>reference</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_removePathItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="p">[</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;remove-item&#39;</span><span class="p">,</span><span class="nx">k</span><span class="p">);</span>
+    <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._setroot()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._setroot()" name="syncit_path_asynclocalstorage._setroot()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._setRoot()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Sets a Root at a Dataset / Datakey.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Object} <code>value</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_setRoot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">__setItem</span><span class="p">([</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._setpathitem()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._setpathitem()" name="syncit_path_asynclocalstorage._setpathitem()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._setPathItem()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Sets a Pathitem at a specific Dataset / Datakey / Reference.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Reference} <code>reference</code></strong></li>
+<li><strong>@param {Object} <code>value</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_setPathItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">__setItem</span><span class="p">([</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.__setitem()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.__setitem()" name="syncit_path_asynclocalstorage.__setitem()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.__setItem()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Low level function for setting data at a key within the underlying storage.</p>
+
+<ul>
+<li><strong>@param {String} <code>storageKey</code></strong></li>
+<li><strong>@param {Object} <code>value</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">__setItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">storageKey</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="nx">storageKey</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;set-item&#39;</span><span class="p">,</span><span class="nx">storageKey</span><span class="p">,</span><span class="nx">value</span><span class="p">);</span>
+    <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._getpathitem()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._getpathitem()" name="syncit_path_asynclocalstorage._getpathitem()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._getPathItem()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Gets a Pathitem.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Reference} <code>reference</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_getPathItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">__getItem</span><span class="p">([</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span><span class="nx">next</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._getroot()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._getroot()" name="syncit_path_asynclocalstorage._getroot()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._getRoot()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Gets a Root at a Dataset / Datakey.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_getRoot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">__getItem</span><span class="p">([</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span><span class="nx">next</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.__getitem()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.__getitem()" name="syncit_path_asynclocalstorage.__getitem()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.__getItem()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Low level function for getting data at a key within the underlying storage.</p>
+
+<ul>
+<li><strong>@param {String} <code>storageKey</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">__getItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">storageKey</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="nx">storageKey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">item</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._removeprivatepathstoragedata()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._removeprivatepathstoragedata()" name="syncit_path_asynclocalstorage._removeprivatepathstoragedata()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._removePrivatePathStorageData()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>SyncIt_Path_AsyncLocalStorage will store data for it's own purposes within
+the Root or Pathitem which will start with an "_", this function will filter
+that information out and is used to help make sure that data is presented
+correctly to the outside world.</p>
+
+<ul>
+<li><strong>@param {Object} <code>ob</code></strong></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">{};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">ob</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">k</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^_/</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">ob</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">r</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">ob</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._firefollowinformationtypeforroot()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._firefollowinformationtypeforroot()" name="syncit_path_asynclocalstorage._firefollowinformationtypeforroot()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._fireFollowInformationTypeForRoot()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Both <code>SyncIt_Path_AsyncLocalStorage.push()</code> and 
+<code>SyncIt_Path_AsyncLocalStorage.followPath()</code> fire a callback multiple times
+as they progress through from the Pathroot through all Pathitem within that
+Dataset / Datakey. The callbacks between these functions should be 
+consistent so this function is used called as a step towards unifying the
+code to fire that callback.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Root} <code>root</code></strong></li>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Function} <code>func</code></strong></li>
+<li><strong>@return {Number}</strong> The first non-zero Errorcode return by func (note, 
+it still continues running).</li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_fireFollowInformationTypeForRoot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">err</span> <span class="o">=</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">perhapsSetErr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">inErr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">inErr</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+  <span class="kd">var</span> <span class="nx">key</span> <span class="o">=</span> <span class="p">[</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nx">path</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_i&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">perhapsSetErr</span><span class="p">(</span>
+      <span class="nx">func</span><span class="p">(</span>
+        <span class="nx">key</span><span class="p">,</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">_i</span><span class="p">),</span>
+        <span class="nx">FOLLOW_INFORMATION_TYPE</span><span class="p">.</span><span class="nx">INFO</span>
+      <span class="p">)</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_s&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">perhapsSetErr</span><span class="p">(</span>
+      <span class="nx">func</span><span class="p">(</span>
+        <span class="nx">key</span><span class="p">,</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">]),</span>
+        <span class="nx">FOLLOW_INFORMATION_TYPE</span><span class="p">.</span><span class="nx">ROOTITEM</span>
+      <span class="p">)</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">paths</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="nx">k</span> <span class="o">!==</span> <span class="nx">path</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">k</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^[a-z]$/</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">paths</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">k</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">perhapsSetErr</span><span class="p">(</span>
+    <span class="nx">func</span><span class="p">(</span>
+      <span class="nx">key</span><span class="p">,</span>
+      <span class="nx">paths</span><span class="p">,</span>
+      <span class="nx">FOLLOW_INFORMATION_TYPE</span><span class="p">.</span><span class="nx">OTHER_PATHS</span>
+    <span class="p">)</span>
+  <span class="p">);</span>
+
+  <span class="k">return</span> <span class="nx">err</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._calculatelink()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._calculatelink()" name="syncit_path_asynclocalstorage._calculatelink()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._calculateLink()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Gets a presentable version the link between Pathitem given a Dataset, 
+Datakey and Reference.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Reference} <code>reference</code></strong></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_calculateLink</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.followpath()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.followpath()" name="syncit_path_asynclocalstorage.followpath()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.followPath()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will follow all the way from Pathroot through to the final Pathitem of a
+Dataset / Datakey / Path calling <code>forEvery</code> for every piece of information
+found.</p>
+
+<p>Currently supported information types can be found by looking in 
+SyncIt_Constant.FollowInformationType.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Function} <code>forEvery</code></strong> Signature(key, data, informationType)
+<ul><li><strong>@param {String} <code>key</code></strong> The current key of the underlying storage, will
+be [dataset].[datakey]:[path] for Pathroot.</li>
+<li><strong>@param {Object} <code>data</code></strong> The <code>informationType</code> stored at <code>key</code>.</li>
+<li><strong>@param {Number} <code>informationType</code></strong> The type of data that the callback
+has been called for.</li></ul></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err) This will be called
+when reading has finished.
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">followPath</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">forEvery</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">path</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">_fireFollowInformationTypeForRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">forEvery</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">follow</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ref</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_getPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">ref</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">nextRef</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">nextRef</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">_n</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">forEvery</span><span class="p">(</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_calculateLink</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">ref</span><span class="p">),</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">item</span><span class="p">),</span>
+          <span class="nx">FOLLOW_INFORMATION_TYPE</span><span class="p">.</span><span class="nx">PATHITEM</span>
+        <span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">nextRef</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">follow</span><span class="p">(</span><span class="nx">nextRef</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+    <span class="nx">follow</span><span class="p">(</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">);</span>
+
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._createanonymouspath()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._createanonymouspath()" name="syncit_path_asynclocalstorage._createanonymouspath()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._createAnonymousPath()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Adds Pathitem which are connected to each other, but nothing else.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Array} <code>pathitems</code></strong> An array of Pathitem.</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_createAnonymousPath</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">pathitems</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">refs</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">pathitems</span><span class="p">.</span><span class="nx">length</span><span class="p">),</span>
+    <span class="nx">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  
+  <span class="k">for</span> <span class="p">(</span><span class="nx">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">pathitems</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">pos</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">pos</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">refs</span><span class="p">[</span><span class="nx">pos</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ed</span><span class="p">.</span><span class="nx">encode</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="nx">pos</span> <span class="o">=</span> <span class="nx">pathitems</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">pushOne</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">pos</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">refs</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">pos</span> <span class="o">!==</span> <span class="nx">pathitems</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">pathitems</span><span class="p">[</span><span class="nx">pos</span><span class="p">].</span><span class="nx">_n</span> <span class="o">=</span> <span class="nx">refs</span><span class="p">[</span><span class="nx">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_setPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">refs</span><span class="p">[</span><span class="nx">pos</span><span class="p">],</span><span class="nx">pathitems</span><span class="p">[</span><span class="nx">pos</span><span class="p">],</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">pos</span><span class="o">--</span><span class="p">;</span>
+      <span class="nx">pushOne</span><span class="p">();</span>
+    <span class="p">});</span>
+
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+  <span class="nx">pushOne</span><span class="p">();</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.pushpathitemstonewpath()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.pushpathitemstonewpath()" name="syncit_path_asynclocalstorage.pushpathitemstonewpath()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.pushPathitemsToNewPath()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will add a series of Pathitem to a Path, that path must not already exist.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Array} <code>pathitems</code></strong> Array of Pathitem</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">pushPathitemsToNewPath</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">pathitems</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
+      <span class="nx">root</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">path</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">PATH_ALREADY_EXISTS</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_createAnonymousPath</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">pathitems</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">firstRef</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="nx">_n</span><span class="o">:</span> <span class="nx">firstRef</span><span class="p">};</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.push()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.push()" name="syncit_path_asynclocalstorage.push()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.push()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Adds a Pathitem to a Path, unless there is no Pathroot, in which case a
+Pathroot will be created.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Pathitem} <code>pathitem</code></strong></li>
+<li><strong>@param {Boolean} <code>mustBeSinglePath</code></strong> If this is true then adding will
+fail if there is more than one Path.</li>
+<li><strong>@param {Function} <code>forEvery</code></strong> Called for the Pathroot and Pathitem upto
+the point that the Pathitem is added, it will also then be called for
+the new <code>Pathitem</code>. For further information see 
+SyncIt_Path_AsyncLocalStorage.followPath().</li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">push</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">,</span><span class="nx">mustBeSinglePath</span><span class="p">,</span><span class="nx">forEvery</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="kd">var</span> <span class="nx">doNext</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">reference</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;push&#39;</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">);</span>
+      <span class="nx">forEvery</span><span class="p">(</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_calculateLink</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">),</span>
+        <span class="nx">pathitem</span><span class="p">,</span>
+        <span class="nx">FOLLOW_INFORMATION_TYPE</span><span class="p">.</span><span class="nx">PATHITEM</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="o">?</span> <span class="nx">pathitem</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  
+  <span class="kd">var</span> <span class="nx">updateChildPointer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span> <span class="nx">toReference</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_getPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">doNext</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">,</span><span class="nx">reference</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">item</span><span class="p">.</span><span class="nx">_n</span> <span class="o">=</span> <span class="nx">toReference</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_setPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">item</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">toReference</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">follow</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">tlid</span><span class="p">,</span><span class="nx">lastitem</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">lastitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">reference</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ed</span><span class="p">.</span><span class="nx">encode</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">reference</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nx">updateChildPointer</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">tlid</span><span class="p">,</span><span class="nx">reference</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_getPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">lastitem</span><span class="p">.</span><span class="nx">_n</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">lastitem</span><span class="p">.</span><span class="nx">_n</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">forEvery</span><span class="p">(</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_calculateLink</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">lastitem</span><span class="p">.</span><span class="nx">_n</span><span class="p">),</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">item</span><span class="p">),</span>
+        <span class="nx">FOLLOW_INFORMATION_TYPE</span><span class="p">.</span><span class="nx">PATHITEM</span>
+      <span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">};</span>
+      <span class="k">return</span> <span class="nx">follow</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">lastitem</span><span class="p">.</span><span class="nx">_n</span><span class="p">,</span> <span class="nx">item</span><span class="p">);</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">kCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">root</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">((</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">path</span><span class="p">)))</span> <span class="p">{</span>
+      <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">mustBeSinglePath</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^[a-z]$/</span><span class="p">)</span> <span class="o">||</span> <span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">))</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="nx">kCount</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">MULTIPLE_PATHS_FOUND</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nx">err</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_fireFollowInformationTypeForRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">forEvery</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">reference</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ed</span><span class="p">.</span><span class="nx">encode</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">reference</span><span class="p">);</span> <span class="p">}</span>
+        <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span> <span class="o">=</span> <span class="nx">reference</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">reference</span><span class="p">);</span>
+        <span class="p">});</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">forEvery</span><span class="p">(</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_calculateLink</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">),</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">item</span><span class="p">),</span>
+        <span class="nx">FOLLOW_INFORMATION_TYPE</span><span class="p">.</span><span class="nx">PATHITEM</span>
+      <span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">follow</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">,</span><span class="nx">item</span><span class="p">);</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.getdatasetnames()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.getdatasetnames()" name="syncit_path_asynclocalstorage.getdatasetnames()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.getDatasetNames()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Lists Dataset names.</p>
+
+<ul>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err,datasets)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li>
+<li><strong>@param {Array} <code>datasets</code></strong> An array of Dataset names.</li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getDatasetNames</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">findKeys</span><span class="p">(</span><span class="s1">&#39;*.*&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">datasetDatakey</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">datasetDatakey</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">k</span> <span class="o">=</span><span class="nx">datasetDatakey</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.getdatakeysindataset()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.getdatakeysindataset()" name="syncit_path_asynclocalstorage.getdatakeysindataset()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.getDatakeysInDataset()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Lists the Datakeys within a Dataset.</p>
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err,datakeys)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li>
+<li><strong>@param {Array} <code>datakeys</code></strong> An array of Datakeys found within the Dataset</li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getDatakeysInDataset</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">findKeys</span><span class="p">(</span><span class="s1">&#39;*.*&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">datasetDatakey</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">datasetDatakey</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="nx">datasetDatakey</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nx">dataset</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.findfirstdatasetdatakey()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.findfirstdatasetdatakey()" name="syncit_path_asynclocalstorage.findfirstdatasetdatakey()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.findFirstDatasetDatakey()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will find the Reference which is lowest and return the Dataset / Datakey
+that it is attached to.</p>
+
+<ul>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err, dataset, datakey)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li>
+<li><strong>@param {String} <code>dataset</code></strong></li>
+<li><strong>@param {String} <code>datakey</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">findFirstDatasetDatakey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_findFirstDatasetDatakeyReference</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.getfirstpathitem()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.getfirstpathitem()" name="syncit_path_asynclocalstorage.getfirstpathitem()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.getFirstPathitem()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will find the first Pathitem via the lowest Reference and return it along
+with the Dataset, Datakey and Pathitem.</p>
+
+<ul>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err, dataset, datakey, reference, pathitem)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li>
+<li><strong>@param {String} <code>dataset</code></strong></li>
+<li><strong>@param {String} <code>datakey</code></strong></li>
+<li><strong>@param {String} <code>reference</code></strong></li>
+<li><strong>@param {Pathitem} <code>pathitem</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getFirstPathitem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_findFirstDatasetDatakeyReference</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">pathitem</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage._findfirstdatasetdatakeyreference()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage._findfirstdatasetdatakeyreference()" name="syncit_path_asynclocalstorage._findfirstdatasetdatakeyreference()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage._findFirstDatasetDatakeyReference()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Will find the lowest Reference and return it along with the Dataset, Datakey
+it was found at.</p>
+
+<ul>
+<li><strong>@param {Path} <code>path</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_findFirstDatasetDatakeyReference</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">findKeys</span><span class="p">(</span><span class="s1">&#39;*.*.*&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">keys</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">keys</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ed</span><span class="p">.</span><span class="nx">sort</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">processOne</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">keys</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">PATH_EMPTY</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+      <span class="nx">k</span> <span class="o">=</span> <span class="nx">k</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">length</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">processOne</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="nx">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span>
+          <span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="o">&amp;&amp;</span> 
+          <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span> <span class="o">==</span> <span class="nx">k</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="nx">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="nx">k</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="nx">processOne</span><span class="p">();</span>
+      <span class="p">});</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    <span class="nx">processOne</span><span class="p">();</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.clean()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.clean()" name="syncit_path_asynclocalstorage.clean()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.clean()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>This function will find disconnected Pathitem and delete them.</p>
+
+<p>When adding Pathitem SyncIt_Path_AsyncLocalStorage will first create the 
+Pathitem and then link it. This means that the main datastructure will
+stay consistent but it also means that if things go wrong it can leave
+a disconnected Pathitem.</p>
+
+<p>Note, this probably should not be done while other data is being be added.</p>
+
+<ul>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">clean</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
+</div>
+<p>TODO This should be possible to do per Dataset / Datakey as aposed to
+for the whole database at once, this might give nicer code and lower
+memory consumption.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-35" id="section-35">&#182;</a>
+</div>
+<p>Get all non root data points</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="kd">var</span> <span class="nx">getAllKeysAsObj</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">findKeys</span><span class="p">(</span><span class="s1">&#39;*.*.*&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">allKeysWithoutNamespace</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="nx">r</span> <span class="o">=</span> <span class="p">{};</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">allKeysWithoutNamespace</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">k</span> <span class="o">=</span> <span class="nx">allKeysWithoutNamespace</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">r</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="p">{</span>
+          <span class="nx">r</span><span class="p">[</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{};</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">r</span><span class="p">[</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="p">{</span>
+          <span class="nx">r</span><span class="p">[</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="nx">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{};</span>
+        <span class="p">}</span>
+        <span class="nx">r</span><span class="p">[</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="nx">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="nx">k</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+  <span class="kd">var</span> <span class="nx">removeItems</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">notVisited</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">datasetK</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="nx">datakeyK</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="nx">refK</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="nx">flattenedNotVisited</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="nx">datasetK</span> <span class="k">in</span> <span class="nx">notVisited</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">notVisited</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">datasetK</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">datakeyK</span> <span class="k">in</span> <span class="nx">notVisited</span><span class="p">[</span><span class="nx">datasetK</span><span class="p">])</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">notVisited</span><span class="p">[</span><span class="nx">datasetK</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">datakeyK</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nx">refK</span> <span class="k">in</span> <span class="nx">notVisited</span><span class="p">[</span><span class="nx">datasetK</span><span class="p">][</span><span class="nx">datakeyK</span><span class="p">])</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="nx">notVisited</span><span class="p">[</span><span class="nx">datasetK</span><span class="p">][</span><span class="nx">datakeyK</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">refK</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nx">flattenedNotVisited</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+                  <span class="p">{</span><span class="nx">dataset</span><span class="o">:</span> <span class="nx">datasetK</span><span class="p">,</span> <span class="nx">datakey</span><span class="o">:</span> <span class="nx">datakeyK</span><span class="p">,</span> <span class="nx">ref</span><span class="o">:</span> <span class="nx">refK</span><span class="p">}</span>
+                <span class="p">);</span>
+              <span class="p">}</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">doRemove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      
+      <span class="kd">var</span> <span class="nx">keyInfo</span> <span class="o">=</span> <span class="p">{};</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">flattenedNotVisited</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="nx">keyInfo</span> <span class="o">=</span> <span class="nx">flattenedNotVisited</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_removePathItem</span><span class="p">(</span>
+        <span class="nx">keyInfo</span><span class="p">.</span><span class="nx">dataset</span><span class="p">,</span>
+        <span class="nx">keyInfo</span><span class="p">.</span><span class="nx">datakey</span><span class="p">,</span>
+        <span class="nx">keyInfo</span><span class="p">.</span><span class="nx">ref</span><span class="p">,</span>
+        <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="nx">doRemove</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">);</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+    <span class="nx">doRemove</span><span class="p">();</span>
+
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  
+  <span class="nx">getAllKeysAsObj</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">refsStillToBeVisited</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="p">}</span>
+  
+    <span class="kd">var</span> <span class="nx">follow</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">data</span><span class="p">,</span><span class="nx">innerNext</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">data</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">innerNext</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">delete</span> <span class="nx">refsStillToBeVisited</span><span class="p">[</span><span class="nx">dataset</span><span class="p">][</span><span class="nx">datakey</span><span class="p">][</span><span class="nx">data</span><span class="p">.</span><span class="nx">_n</span><span class="p">];</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_getPathItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">data</span><span class="p">.</span><span class="nx">_n</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">innerNext</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nx">follow</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">data</span><span class="p">,</span><span class="nx">innerNext</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">followRoot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">innerNext</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+          <span class="nx">mainErr</span> <span class="o">=</span> <span class="nx">err</span><span class="p">,</span>
+          <span class="nx">toComplete</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">innerNext</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">finishedMonitor</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">toComplete</span> <span class="o">=</span> <span class="nx">toComplete</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">mainErr</span> <span class="o">=</span> <span class="nx">err</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">toComplete</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">innerNext</span><span class="p">(</span><span class="nx">mainErr</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">toComplete</span> <span class="o">=</span> <span class="nx">toComplete</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="nx">follow</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">data</span><span class="p">[</span><span class="nx">k</span><span class="p">],</span><span class="nx">finishedMonitor</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">processDataset</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">innerNext</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">getDatakeysInDataset</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">datakeys</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="kd">var</span> <span class="nx">toComplete</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="nx">mainErr</span> <span class="o">=</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span> 
+          <span class="k">return</span> <span class="nx">innerNext</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">finishedMonitor</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">toComplete</span><span class="o">--</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">mainErr</span> <span class="o">=</span> <span class="nx">err</span><span class="p">;</span>
+          <span class="p">}</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">toComplete</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">innerNext</span><span class="p">(</span><span class="nx">mainErr</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">toComplete</span><span class="o">=</span><span class="nx">l</span><span class="o">=</span><span class="nx">datakeys</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">followRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakeys</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span><span class="nx">finishedMonitor</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">getDatasetNames</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">datasets</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span> 
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">mainErr</span> <span class="o">=</span> <span class="nx">err</span><span class="p">,</span>
+        <span class="nx">toComplete</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+      <span class="kd">var</span> <span class="nx">finishedMonitor</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">toComplete</span><span class="o">--</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">mainErr</span> <span class="o">=</span> <span class="nx">err</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">toComplete</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">mainErr</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">mainErr</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="nx">removeItems</span><span class="p">(</span><span class="nx">refsStillToBeVisited</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">toComplete</span><span class="o">=</span><span class="nx">l</span><span class="o">=</span><span class="nx">datasets</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">processDataset</span><span class="p">(</span><span class="nx">datasets</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span><span class="nx">finishedMonitor</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+<span class="p">};</span>
+
+<span class="nx">addEvents</span><span class="p">(</span><span class="nx">Als</span><span class="p">,[</span><span class="s1">&#39;set-root&#39;</span><span class="p">,</span><span class="s1">&#39;set-item&#39;</span><span class="p">,</span><span class="s1">&#39;remove-item&#39;</span><span class="p">,</span><span class="s1">&#39;advance&#39;</span><span class="p">,</span><span class="s1">&#39;push&#39;</span><span class="p">,</span><span class="s1">&#39;change-path&#39;</span><span class="p">,</span><span class="s1">&#39;change-root&#39;</span><span class="p">]);</span>
+
+<span class="k">return</span> <span class="nx">Als</span><span class="p">;</span>
+
+<span class="p">});</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>

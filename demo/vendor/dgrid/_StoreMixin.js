@@ -13,7 +13,7 @@ function(kernel, declare, lang, Deferred, listen, aspect, put){
 			// Ensure we actually have an error object, so we can attach a reference.
 			err = new Error(err);
 		}
-		// TODO: remove this @ 1.0 (prefer grid property directly on event object)
+		// TODO: remove this @ 0.4 (prefer grid property directly on event object)
 		err.grid = this;
 		
 		if(listen.emit(this.domNode, "dgrid-error", {
@@ -103,11 +103,11 @@ function(kernel, declare, lang, Deferred, listen, aspect, put){
 			sort ? this.set("sort", sort) : this.refresh();
 		},
 		setStore: function(store, query, queryOptions){
-			kernel.deprecated("setStore(...)", 'use set("store", ...) instead', "dgrid 1.0");
+			kernel.deprecated("setStore(...)", 'use set("store", ...) instead', "dgrid 0.4");
 			this.set("store", store, query, queryOptions);
 		},
 		setQuery: function(query, queryOptions){
-			kernel.deprecated("setQuery(...)", 'use set("query", ...) instead', "dgrid 1.0");
+			kernel.deprecated("setQuery(...)", 'use set("query", ...) instead', "dgrid 0.4");
 			this.set("query", query, queryOptions);
 		},
 		
@@ -167,7 +167,7 @@ function(kernel, declare, lang, Deferred, listen, aspect, put){
 			dirtyObj[field] = value;
 		},
 		setDirty: function(id, field, value){
-			kernel.deprecated("setDirty(...)", "use updateDirty() instead", "dgrid 1.0");
+			kernel.deprecated("setDirty(...)", "use updateDirty() instead", "dgrid 0.4");
 			this.updateDirty(id, field, value);
 		},
 		
@@ -193,11 +193,16 @@ function(kernel, declare, lang, Deferred, listen, aspect, put){
 					var colsWithSet = self._columnsWithSet,
 						updating = self._updating,
 						key, data;
-					// Copy dirty props to the original, applying setters if applicable
-					for(key in dirtyObj){
-						object[key] = dirtyObj[key];
+
+					if (typeof object.set === "function") {
+						object.set(dirtyObj);
+					} else {
+						// Copy dirty props to the original, applying setters if applicable
+						for(key in dirtyObj){
+							object[key] = dirtyObj[key];
+						}
 					}
-					
+
 					// Apply any set methods in column definitions.
 					// Note that while in the most common cases column.set is intended
 					// to return transformed data for the key in question, it is also
