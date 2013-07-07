@@ -786,8 +786,9 @@ Als.prototype.pushPathitemsToNewPath = function(dataset,datakey,path,pathitems,n
  *		fail if there is more than one Path.
  * * **@param {Function} `forEvery`** Called for the Pathroot and Pathitem upto
  *		the point that the Pathitem is added, it will also then be called for
- *		the new `Pathitem`. For further information see 
- *		SyncIt_Path_AsyncLocalStorage.followPath().
+ *		the new `Pathitem`. If this function does not return 
+ *		SyncIt_Constant.Error.OK then `push()` will terminate with that Errorcode.
+ *		See SyncIt_Path_AsyncLocalStorage.followPath() for further information.
  * * **@param {Function} `next`** Signature: Function(err)
  *   * **@param {Errorcode} `err`**
  */
