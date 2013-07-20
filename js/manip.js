@@ -1,4 +1,7 @@
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
+
+	"use strict";
+
 	if (typeof exports === 'object') {
 		module.exports = factory();
 	} else if (typeof define === 'function' && define.amd) {
@@ -6,6 +9,7 @@
 	} else {
 		root.SyncIt_manip = factory();
 	}
+
 }(this, function () {
 	
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
@@ -29,7 +33,7 @@
 var manip = function(ob,jsonDoc,cloneFunc) {
 	var k = '',
 		r = null,
-		_cloneFunc = function(ob) { return JSON.parse(JSON.stringify(ob)) };
+		_cloneFunc = function(ob) { return JSON.parse(JSON.stringify(ob)); };
 	
 	if (cloneFunc === undefined) {
 		r = _cloneFunc(ob);
@@ -108,7 +112,7 @@ manip._getKey = function(r,path) {
 		}
 		t = t[k];
 	}
-	return null;
+	return undefined;
 };
 
 /**
@@ -178,12 +182,34 @@ manip.addManipulation('unset',function(ob,jsonSnippet) {
 });
 
 /**
+ * Adds the 'push' which is will add to a sub array (or create it it des not
+ * exist.
+ */
+manip.addManipulation('push',function(ob,jsonSnippet) {
+	var k = '';
+	for (k in jsonSnippet) { if (jsonSnippet.hasOwnProperty(k)) {
+		var v = manip._getKey(ob,k);
+		if (v === undefined) {
+			v = [];
+		}
+		if (!ob[k] instanceof Array) {
+			v = [ob[k]];
+		}
+		for (var i=0, l=jsonSnippet[k].length; i<l; i++) {
+			v.push(jsonSnippet[k][i]);
+		}
+		ob = manip._setKey(ob,k,v);
+	} }
+	return ob;
+});
+
+/**
  * Adds the 'inc' which is similar to the MongoDB operation of the same name.
  */
 manip.addManipulation('inc',function(ob,jsonSnippet) {
 	var k = '';
 	for (k in jsonSnippet) { if (jsonSnippet.hasOwnProperty(k)) {
-		var x = parseInt(manip._getKey(ob,k));
+		var x = parseInt(manip._getKey(ob,k),10);
 		if (!x) { x = 0; }
 		x = x + jsonSnippet[k];
 		ob = manip._setKey(ob,k,x);
