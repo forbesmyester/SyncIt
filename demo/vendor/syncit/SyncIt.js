@@ -1040,7 +1040,6 @@ SyncIt.prototype.getDatasetNames = function(whenDatasetsKnown) {
  * #### Parameters
  * 
  * * **@param {Dataset} `datasetName`**
- * * **@param {Number} `inWhere`** Selects if you want *Datakey* names in the Queue, Store or both. Sum your desired SyncIt_Constant.Location.IN_QUEUE + SyncIt_Constant.Location.IN_STORE
  * * **@param {Function} `whenDatakeysKnown`** Signature: `function(err, arrayOfNames)`
  *   * **@param {ErrorCode} `whenDatakeysKnown.err`** See SyncIt_Constant.Error.
  *   * **@param {Array} `whenDatakeysKnown.arrayOfNames`** An array of *Datakey* names

@@ -1350,8 +1350,9 @@ Pathroot will be created.</p>
 fail if there is more than one Path.</li>
 <li><strong>@param {Function} <code>forEvery</code></strong> Called for the Pathroot and Pathitem upto
 the point that the Pathitem is added, it will also then be called for
-the new <code>Pathitem</code>. For further information see 
-SyncIt_Path_AsyncLocalStorage.followPath().</li>
+the new <code>Pathitem</code>. If this function does not return 
+SyncIt_Constant.Error.OK then <code>push()</code> will terminate with that Errorcode.
+See SyncIt_Path_AsyncLocalStorage.followPath() for further information.</li>
 <li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
 <ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
 </ul>
