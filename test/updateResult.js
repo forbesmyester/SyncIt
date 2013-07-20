@@ -1,5 +1,8 @@
 /*jshint smarttabs:true */
 (function (root, factory) {
+
+	"use strict";
+
 	if (typeof exports === 'object') {
 		// Node. Does not work with strict CommonJS, but
 		// only CommonJS-like enviroments that support module.exports,
@@ -30,6 +33,8 @@
 ) {
 // =============================================================================
 
+"use strict";
+
 var _cloneObj = function(ob) {
 	return JSON.parse(JSON.stringify(ob));
 };
@@ -58,6 +63,29 @@ describe('updateResult op="set"',function() {
 			expect(r).to.eql({i:{color:'blue',size:'bigger'},v:4,r:false,m:'bob'}); 
 		}
 	);
+});
+
+describe('updateResult op="update"',function() {
+	it('should be able to $set a subfield',function() {
+		var queueitem = {
+			u:{$set:{color:'red'}},
+			m:'bob',
+			b:3,
+			o:'update'
+		};
+		var original = {
+			i:{
+				color:'blue',
+				size:'large'
+			},
+			v:3,
+			r:true,
+			m:'aa'
+		};
+		var r = updateResult(original, queueitem, _cloneObj);
+		delete r.t;
+		expect(r).to.eql({i:{color:'red',size:'large'},v:4,r:false,m:'bob'}); 
+	});
 });
 
 describe('updateResult op="remove"',function() {
