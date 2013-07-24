@@ -941,7 +941,10 @@ SyncIt.prototype._addObviousInforation = function(dataset,datakey,reference,ob) 
  */
 SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
 	this.getFull(dataset, datakey, function(e, r) {
-		whenDataRetrieved(e, r.i);
+		if (e === ERROR.OK) {
+			return whenDataRetrieved(e, r.i);
+		}
+		whenDataRetrieved(e);
 	});
 };
 
