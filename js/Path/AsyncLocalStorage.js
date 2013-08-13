@@ -436,6 +436,12 @@ Als.prototype._removePathItem = function(dataset,datakey,reference,next) {
 	}.bind(this));
 };
 
+var validateDatesetOrDatakey = function(str) {
+	if (typeof str !== 'string') { return false; }
+	if (str.length < 2) { return false; }
+	if (str.indexOf('.') > -1) { return false; }
+	return true;
+};
 /**
  * ## SyncIt_Path_AsyncLocalStorage._setRoot()
  *
@@ -448,6 +454,12 @@ Als.prototype._removePathItem = function(dataset,datakey,reference,next) {
  *   * **@param {Errorcode} `err`**
  */
 Als.prototype._setRoot = function(dataset,datakey,value,next) {
+	if (!validateDatesetOrDatakey(dataset)) {
+		return next(ERROR.INVALID_DATASET);
+	}
+	if (!validateDatesetOrDatakey(datakey)) {
+		return next(ERROR.INVALID_DATAKEY);
+	}
 	this.__setItem([dataset,datakey].join('.'),value,next);
 };
 
@@ -464,6 +476,12 @@ Als.prototype._setRoot = function(dataset,datakey,value,next) {
  *   * **@param {Errorcode} `err`**
  */
 Als.prototype._setPathItem = function(dataset,datakey,reference,value,next) {
+	if (!validateDatesetOrDatakey(dataset)) {
+		return next(ERROR.INVALID_DATASET);
+	}
+	if (!validateDatesetOrDatakey(datakey)) {
+		return next(ERROR.INVALID_DATAKEY);
+	}
 	this.__setItem([dataset,datakey,reference].join('.'),value,next);
 };
 
@@ -839,7 +857,7 @@ Als.prototype.push = function(dataset,datakey,path,pathitem,mustBeSinglePath,for
 			);
 			if (err !== ERROR.OK) {
 				return doNext(err);
-			};
+			}
 			return follow(dataset,datakey,lastitem._n, item);
 		}.bind(this));
 	}.bind(this);
