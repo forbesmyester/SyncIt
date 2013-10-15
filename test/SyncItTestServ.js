@@ -180,4 +180,105 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
     });
 });
 
+describe('SyncItTestServ can respond to data requests',function() {
+    
+    var syncItServ = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
+    
+	var injectR = function(ob) {
+		var r = JSON.parse(JSON.stringify(ob));
+		r.r = false;
+		return r;
+	};
+    
+    it('when there is a point to go from',function(done) {
+    	
+    	var data1 = { body: {
+				s: 'usersA',
+				k: 'me',
+				b: 0,
+				m: 'me',
+				t: new Date().getTime(),
+				o: 'set',
+				u: {name: "Jack Smith" }
+		} };
+		
+		var data2 = { body: {
+			s: 'usersA',
+			k: 'me',
+			b: 1,
+			m: 'me',
+			t: new Date().getTime(),
+			o: 'update',
+			u: {eyes: "Blue" }
+		} };
+    	
+		syncItServ.PUT(data1, function(status, result) {
+			expect(status).to.equal('created');
+			syncItServ.PATCH(data2, function(status, result) {  
+				expect(status).to.equal('ok');                
+				syncItServ.getQueueitem(
+					{ params: {s: 'usersA'}, query: { from: 'usersA.me@1' } },
+					function(status, data) {
+						expect(status).to.equal('ok');
+						expect(data).to.eql({          
+							queueitems: [ injectR(data2.body) ],
+							to: "usersA.me@2"
+						});
+						done();
+					}
+				);
+			});
+		});
+    });
+    
+    it('when there is no point to go from',function(done) {
+    	
+    	var data1 = { body: {
+				s: 'usersB',
+				k: 'me',
+				b: 0,
+				m: 'me',
+				t: new Date().getTime(),
+				o: 'set',
+				u: {name: "Jack Smith" }
+		} };
+		
+		var data2 = { body: {
+			s: 'usersB',
+			k: 'me',
+			b: 1,
+			m: 'me',
+			t: new Date().getTime(),
+			o: 'update',
+			u: {eyes: "Blue" }
+		} };
+    	
+		syncItServ.PUT(data1, function(status, result) {
+			expect(status).to.equal('created');
+			syncItServ.PATCH(data2, function(status, result) {  
+				expect(status).to.equal('ok');                
+				syncItServ.getQueueitem(
+					{ params: {s: 'usersB'} },
+					function(status, data) {
+						expect(status).to.equal('ok');
+						expect(data).to.eql({          
+							queueitems: [
+								injectR(data1.body),
+								injectR(data2.body)
+							],
+							to: "usersB.me@2"
+						});
+						done();
+					}
+				);
+			});
+		});
+		
+    });
+    
+    
+});
+
+
+
 });

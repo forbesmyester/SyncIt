@@ -62,13 +62,16 @@ TestServer.prototype.getDatasetNames = function(req,responder) {
  *   * **@param {Object} `responder.data`** An object in the form `{queueitems: [<Queueitem>,<Queu...>], to: <QueueitemId>}`
  */
 TestServer.prototype.getQueueitem = function(req,responder) {
-	var filter = {};
+	
 	if (!this._validate_params_dataset(req)) {
 		return responder('validation_error',null);
 	}
+	
 	this._serverPersist.getQueueitem(
 		req.params.s,
-		req.query.hasOwnProperty('from') ? req.query.from : null,
+		req.hasOwnProperty('query') ?
+			req.query.hasOwnProperty('from') ? req.query.from : null :
+			null,
 		function(err,queueitems,to) {
 			if (err) { throw err; }
 			return responder('ok',{ queueitems:queueitems, to: to});
@@ -201,8 +204,6 @@ var feedErrors = {
  *      * **@param {String} `responder.data.to`** The Id which which was just created, this is for use in [TestServer.getQueueitem()](#testserver.getqueueitem--)
  */
 TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
-	var datakey = '',
-		dataset = '';
 	
 	if (!this._validate_queueitem(req)) {
 		return responder('validation_error',null);
