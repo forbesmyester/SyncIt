@@ -13,9 +13,10 @@
 		"marked": "0.2.x"
     },
     "engines": {
-        "node": "0.9.x"
+        "node": ">0.9"
     },
     "repository": {
-        "url": "fozz@markdown:/exports/repositories/project-syncit"
+    	"type": "git",
+        "url": "https://github.com/forbesmyester/SyncIt.git"
     }
 }
