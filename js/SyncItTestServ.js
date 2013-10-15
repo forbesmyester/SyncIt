@@ -1,22 +1,13 @@
 /*jshint smarttabs:true */
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
 	if (typeof exports === 'object') {
-		module.exports = factory(
-			require('./SyncIt.js'),
-			require('./Constant.js')
-		);
+		module.exports = factory(require('./Constant.js'));
 	} else if (typeof define === 'function' && define.amd) {
-		define(
-			['syncit/SyncIt','syncit/Constant'],
-			factory
-		);
+		define(['syncit/Constant'], factory);
 	} else {
-		root.SyncItTestServ = factory(
-			root.SyncIt,
-			root.SyncIt_Constant
-		);
+		root.SyncItTestServ = factory(root.SyncIt_Constant);
 	}
-})(this, function (SyncItLib,SyncIt_Constant) {
+})(this, function (SyncIt_Constant) {
 
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
 // Copyright: 2013 Matthew Forrester
