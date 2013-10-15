@@ -215,7 +215,7 @@ SyncIt_ServerPersist_MemoryAsync.prototype.getQueueitem = function(dataset,fromV
 					k: this._d[i].k,
 					b: this._d[i].b,
 					m: this._d[i].m,
-					r: this._d[i].r,
+					r: this._d[i].r ? true : false,
 					u: this._d[i].u,
 					o: this._d[i].o,
 					t: this._d[i].t
