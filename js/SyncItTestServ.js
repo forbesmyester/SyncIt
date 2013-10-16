@@ -56,7 +56,7 @@ TestServer.prototype.getDatasetNames = function(req,responder) {
  *
  * * **@param {Request} `req`** A Express like Request Object
  *   * **@param {String} `req.params.dataset`** REQUIRED: The *Dataset* you want to download updates from
- *   * **@param {String} `req.params.from`** OPTIONAL: The last known Id for a Queueitem, if supplied all items from that Queuitem, but not including it will be downloaded.
+ *   * **@param {String} `req.query.from`** OPTIONAL: The last known Id for a Queueitem, if supplied all items from that Queuitem, but not including it will be downloaded.
  * * **@param {Function} `responder`** Callback. Signature: `function (statusString, data)`
  *   * **@param {String} `responder.statusString`** 'validation_error' if no dataset supplied, 'ok' otherwise.
  *   * **@param {Object} `responder.data`** An object in the form `{queueitems: [<Queueitem>,<Queu...>], to: <QueueitemId>}`
