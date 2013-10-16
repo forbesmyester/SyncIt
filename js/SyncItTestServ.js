@@ -373,9 +373,31 @@ TestServer.prototype._getQueueitemFromRequestBody = function(request) {
 				requestBody[queueitemProperties[i]];
 		}
 	}
-	r.m = this._getModifier(request);
-	return r;
-};
+	
+	var fixTypesBeforeStore = function(ob) {
+		
+		var forceStr = function(v) { return "" + v; };
+		var forceInt = function(v) { return parseInt(v,10); };
+		var forceBool = function(v) { return v ? true : false; };
+		var forceField = function(ob,field,forcingFunc) {
+			if (ob.hasOwnProperty(field)) {
+				ob[field] = forcingFunc(ob[field]);
+			}
+			return ob;
+		};
+		
+		ob = forceField(ob, 's', forceStr);
+		ob = forceField(ob, 'k', forceStr);
+		ob = forceField(ob, 'b', forceInt);
+		ob = forceField(ob, 'm', forceStr);
+		ob = forceField(ob, 'r', forceBool);
+		ob = forceField(ob, 'o', forceStr);
+		ob = forceField(ob, 't', forceInt);
+		
+		return ob;
+	};
+	
+	return fixTypesBeforeStore(r);};
 
 /**
  * ### validateInputFieldAgainstRegex
