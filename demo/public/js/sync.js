@@ -554,7 +554,10 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 
 (function() { // Setup Server
 	
-	var syncItTestServer = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
+	var syncItTestServer = new SyncItTestServer(
+		new SyncIt_ServerPersist_MemoryAsync(),
+		function(req) { return req.body.m; }
+	);
 	
 	serverGrid = viewExtraServer('server-view',syncItTestServer);
 	on(serverTabControl,'tab-change',function() {

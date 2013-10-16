@@ -27,9 +27,16 @@
     }
 })(this, function (expect, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync,SyncIt_Constant) {
 
+var getModifierFromRequestHackFunc = function(req) {
+	return req.body.m;
+};
+
 describe('When SyncItTestServ responds to a getDatasetNames request',function() {
     
-    var syncItTestServer = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
+    var syncItTestServer = new SyncItTestServer(
+    	new SyncIt_ServerPersist_MemoryAsync(),
+    	getModifierFromRequestHackFunc
+    );
     
     it('should respond with an empty object, when it is',function(done) {
         syncItTestServer.getDatasetNames({},function(status,data) {
@@ -42,7 +49,10 @@ describe('When SyncItTestServ responds to a getDatasetNames request',function() 
 
 describe('When SyncItTestServ responds to a PATCH request',function() {
     
-    var syncItTestServer = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
+    var syncItTestServer = new SyncItTestServer(
+    	new SyncIt_ServerPersist_MemoryAsync(),
+    	getModifierFromRequestHackFunc
+    );
     var emitCount = 0;
     var lastEmitQueueitem = null;
     var lastEmitJrec = null;
@@ -182,7 +192,10 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
 
 describe('SyncItTestServ can respond to data requests',function() {
     
-    var syncItServ = new SyncItTestServer(new SyncIt_ServerPersist_MemoryAsync());
+    var syncItServ = new SyncItTestServer(
+    	new SyncIt_ServerPersist_MemoryAsync(),
+    	getModifierFromRequestHackFunc
+    );
     
 	var injectR = function(ob) {
 		var r = JSON.parse(JSON.stringify(ob));

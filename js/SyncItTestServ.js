@@ -15,6 +15,8 @@
 
 "use strict";
 
+var queueitemProperties = ['s','k','b','m','t','u','o'];
+
 /**
  * ### new TestServer()
  * 
@@ -23,10 +25,12 @@
  * #### Parameters
  * 
  * * **@param {ServerPersist} `serverPersist`** A [ServerPersist](ServerPersist/MemoryAsync.js.html) instance.
+ * * **@param {Function} `extractModifierFromRequestFunc`** This function will be used to get the modifier for a Dataset / Datakey, it is anticipated this is from the Express Request.
  */
-var TestServer = function(serverPersist) {
+var TestServer = function(serverPersist, extractModifierFromRequestFunc) {
 	this._serverPersist = serverPersist;
 	this._listeners = {fed: []};
+	this._getModifier = extractModifierFromRequestFunc;
 };
 
 /**
@@ -55,23 +59,27 @@ TestServer.prototype.getDatasetNames = function(req,responder) {
  * #### Parameters
  *
  * * **@param {Request} `req`** A Express like Request Object
- *   * **@param {String} `req.params.dataset`** REQUIRED: The *Dataset* you want to download updates from
- *   * **@param {String} `req.query.from`** OPTIONAL: The last known Id for a Queueitem, if supplied all items from that Queuitem, but not including it will be downloaded.
+ *   * **@param {String} `req.(param|query|body).s`** REQUIRED: The *Dataset* you want to download updates from
+ *   * **@param {String} `req.(param|query|body).from`** OPTIONAL: The last known Id for a Queueitem, if supplied all items from, but not including that Queueitem will be downloaded.
  * * **@param {Function} `responder`** Callback. Signature: `function (statusString, data)`
  *   * **@param {String} `responder.statusString`** 'validation_error' if no dataset supplied, 'ok' otherwise.
  *   * **@param {Object} `responder.data`** An object in the form `{queueitems: [<Queueitem>,<Queu...>], to: <QueueitemId>}`
  */
 TestServer.prototype.getQueueitem = function(req,responder) {
 	
-	if (!this._validate_params_dataset(req)) {
+	var reqInfo = this._extractInfoFromRequest(req, ['from']);
+	
+	if (!this._validateInputFieldAgainstRegexp(
+		's',
+		SyncIt_Constant.Validation.DATASET_REGEXP,
+		reqInfo
+	)) {
 		return responder('validation_error',null);
 	}
 	
 	this._serverPersist.getQueueitem(
-		req.params.s,
-		req.hasOwnProperty('query') ?
-			req.query.hasOwnProperty('from') ? req.query.from : null :
-			null,
+		reqInfo.s,
+		reqInfo.hasOwnProperty('from') ? reqInfo.from : null,
 		function(err,queueitems,to) {
 			if (err) { throw err; }
 			return responder('ok',{ queueitems:queueitems, to: to});
@@ -85,20 +93,30 @@ TestServer.prototype.getQueueitem = function(req,responder) {
  * #### Parameters
  *
  * * **@param {Request} `req`** A Express like Request Object
+ *   * **@param {String} `req.(param|query|body).k`** REQUIRED: The *Datakey* you want to get the value from.
+ *   * **@param {String} `req.(param|query|body).s`** REQUIRED: The *Dataset* you want to get the value from.
  * * **@param {Function} `responder`** Callback. Signature: `function (statusString, data)`
  *   * **@param {String} `responder.statusString`** `validation_error` if not given a valid looking Dataset and Datakey. `not_found` If the Dataset and Datakey has no records. `gone` If there was data, but it has been deleted. `ok` should data be found.
  *   * **@param {Object} `responder.data`** The Jrec stored at that location.
  */
 TestServer.prototype.getValue = function(req,responder) {
-	if (!this._validate_params_dataset(req)) {
-		return responder('validation_error',null);
-	}
-	if (!this._validate_params_datakey(req)) {
-		return responder('validation_error',null);
-	}
+	
+	var reqInfo = this._extractInfoFromRequest(req);
+	
+	if (!this._validateInputFieldAgainstRegexp(
+		's',
+		SyncIt_Constant.Validation.DATASET_REGEXP,
+		reqInfo
+	)) { return responder('validation_error',null); }
+	if (!this._validateInputFieldAgainstRegexp(
+		'k',
+		SyncIt_Constant.Validation.DATASET_REGEXP,
+		reqInfo
+	)) { return responder('validation_error',null); }
+	
 	this._serverPersist.getValue(
-		req.params.s,
-		req.params.k,
+		reqInfo.s,
+		reqInfo.k,
 		function(err,jrec) {
 			if (err === SyncIt_Constant.Error.NO_DATA_FOUND) {
 				return responder('not_found',null);
@@ -153,40 +171,6 @@ TestServer.prototype.listen = function(event,listener) {
 	return true;
 };
 
-// Translations from SyncIt_Constant.Error to StatusString.
-var feedErrors = {
-	lockedError:function(err) {
-		if (err === SyncIt_Constant.Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED) {
-			return 'service_unavailable';
-		}
-		return false;
-	},
-	versionError: function(err) {
-		if (err === SyncIt_Constant.Error.TRYING_TO_ADD_FUTURE_QUEUEITEM) {
-			return 'conflict';
-		}
-		return false;
-	},
-	unexpectedError: function(err) {
-		if (err !== SyncIt_Constant.Error.OK) {
-			throw "TestServer.unexpectedError: Unexpected error code "+err;
-		}
-		return false;
-	},
-	tryingToApplyOld: function(err) {
-		if (err == SyncIt_Constant.Error.TRYING_TO_ADD_QUEUEITEM_BASED_ON_OLD_VERSION) {
-			return 'out_of_date';
-		}
-		return false;
-	},
-	modifyRemoved: function(err) {
-		if (err == SyncIt_Constant.Error.DATA_ALREADY_REMOVED) {
-			return 'gone';
-		}
-		return false;
-	}
-};
-
 /**
  * ### TestServer._setRemoveOrUpdate()
  * 
@@ -196,7 +180,7 @@ var feedErrors = {
  * purpose function.
  *
  * * **@param {Request} `req`** A Express like Request Object
- *   * **@param {Object} `req.body`** Should look like a Queueitem. See [TestServer._getQueueitemFromRequestBody()](#testserver._getqueueitemfromrequestbody--)
+ *   * **@param {Object} `req.(param|query|body)`** Should look like a Queueitem.
  * * **@param {Function} `responder`** Callback. Signature: `function (statusString, data)`
  *   * **@param {String} `responder.statusString`** Quite a set... `validation_error` || `service_unavailable` || `conflict` || `out_of_date` || `gone` || `created` || `ok`
  *   * **@param {Object} `responder.data`** Object {loc: <location>, to: <lastId>}
@@ -209,7 +193,41 @@ TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 		return responder('validation_error',null);
 	}
 	
-	var queueitem = this._getQueueitemFromRequestBody(req);
+	var queueitem = this._extractInfoFromRequest(req);
+	
+	// Translations from SyncIt_Constant.Error to StatusString.
+	var feedErrors = {
+		lockedError:function(err) {
+			if (err === SyncIt_Constant.Error.UNABLE_TO_PROCESS_BECAUSE_LOCKED) {
+				return 'service_unavailable';
+			}
+			return false;
+		},
+		versionError: function(err) {
+			if (err === SyncIt_Constant.Error.TRYING_TO_ADD_FUTURE_QUEUEITEM) {
+				return 'conflict';
+			}
+			return false;
+		},
+		unexpectedError: function(err) {
+			if (err !== SyncIt_Constant.Error.OK) {
+				throw "TestServer.unexpectedError: Unexpected error code "+err;
+			}
+			return false;
+		},
+		tryingToApplyOld: function(err) {
+			if (err == SyncIt_Constant.Error.TRYING_TO_ADD_QUEUEITEM_BASED_ON_OLD_VERSION) {
+				return 'out_of_date';
+			}
+			return false;
+		},
+		modifyRemoved: function(err) {
+			if (err == SyncIt_Constant.Error.DATA_ALREADY_REMOVED) {
+				return 'gone';
+			}
+			return false;
+		}
+	};
 	
 	if (queueitem.hasOwnProperty('o') && (queueitem.o !== operation)) {
 		return responder('validation_error');
@@ -301,17 +319,6 @@ TestServer.prototype.DELETE = function(req,responder) {
 	this._setRemoveOrUpdate(req,'remove',responder);
 };
 
-/** 
- * ### TestServer._getModifier()
- * 
- * Gets the Modifier (m) of the client uploading the data.
- * 
- * If the TestServer was running on a __real__ server, it would probably be doing something sensible, instead of just taking the `m` property from the `body` or the `req` object.
- */
-TestServer.prototype._getModifier = function(req) {
-	return req.body.m;
-};
-
 /**
  * **TestServer._emit()**
  * 
@@ -336,12 +343,10 @@ TestServer.prototype._emit = function(event) {
 	
 };
 
-var queueitemProperties = ['s','k','b','m','t','u','o'];
-
 /**
- * ### TestServer._getQueueitemFromRequestBody()
+ * ### TestServer._extractInfoFromRequest()
  * 
- * Converts a Express `req.body` into a Queueitem.
+ * Extracts Queueitem information and any extra from an express `req`.
  * 
  * Expects to see something like the following:
  * 
@@ -362,15 +367,30 @@ var queueitemProperties = ['s','k','b','m','t','u','o'];
  * #### Parameters
  *
  * * **@param {Request} `req`** A Express like Request Object.
- *   * **@param {Object} `req.body`** See description.
+ * * **@param {Array} `extras`** See description.
  */
-TestServer.prototype._getQueueitemFromRequestBody = function(request) {
+TestServer.prototype._extractInfoFromRequest = function(req, extras) {
+	
 	var r = {},
-		requestBody = request.body;
-	for (var i=0; i<queueitemProperties.length; i++) {
-		if (requestBody.hasOwnProperty(queueitemProperties[i])){
-			r[queueitemProperties[i]] =
-				requestBody[queueitemProperties[i]];
+		i = 0,
+		j = 0,
+		inputZones = ['body', 'query', 'params'];
+	
+	for (i=0; i<inputZones.length; i++) {
+		if (!req.hasOwnProperty(inputZones[i])) {
+			continue;
+		}
+		for (j=0; j<queueitemProperties.length; j++) {
+			if (req[inputZones[i]].hasOwnProperty(queueitemProperties[j])) {
+				r[queueitemProperties[j]] = req[inputZones[i]][queueitemProperties[j]];
+			}
+		}
+		if (extras !== undefined) {
+			for (j=0; j<extras.length; j++) {
+				if (req[inputZones[i]].hasOwnProperty(extras[j])) {
+					r[extras[j]] = req[inputZones[i]][extras[j]];
+				}
+			}
 		}
 	}
 	
@@ -397,7 +417,9 @@ TestServer.prototype._getQueueitemFromRequestBody = function(request) {
 		return ob;
 	};
 	
-	return fixTypesBeforeStore(r);};
+	return fixTypesBeforeStore(r);
+
+};
 
 /**
  * ### validateInputFieldAgainstRegex
@@ -408,93 +430,58 @@ TestServer.prototype._getQueueitemFromRequestBody = function(request) {
  *
  * * **@param {String} `field`** The field you are checking.
  * * **@param {Regexp} `regexp`** The RegExp you are checking the field against.
- * * **@param {Boolean} `fromBody`** If this is `true` the field will be found in the Request Body (`req.body`), otherwise the Request Params (`req.params`)
- * * **@param {Request} `req`** The Request ot look in to find the data.
+ * * **@param {Request} `reqInfo`** Information extract from an express `req` via TestServer._extractInfoFromRequest()
  * * **@return {Boolean}** `true` if the input is OK.
  */
-var validateInputFieldAgainstRegexp = function(field,regexp,fromBody,req) {
+TestServer.prototype._validateInputFieldAgainstRegexp = function(field,regexp,reqInfo) {
 	if (!regexp) {
 		return false;
 	}
-	if (!req.hasOwnProperty(fromBody ? 'body' : 'params')) {
+	if (!reqInfo.hasOwnProperty(field)) {
 		return false;
 	}
-	if (!req[fromBody ? 'body' : 'params'].hasOwnProperty(field)) {
-		return false;
-	}
-	if (req[fromBody ? 'body' : 'params'][field].match(regexp) !== null) {
+	if (reqInfo[field].match(regexp) !== null) {
 		return true;
 	}
 	return false;
 };
 
-TestServer.prototype._validate_params_dataset = function(req) {
-	return validateInputFieldAgainstRegexp(
+TestServer.prototype._validate_queueitem = function(req) {
+	
+	var reqInfo = this._extractInfoFromRequest(req);
+	
+	// dataset
+	if (!this._validateInputFieldAgainstRegexp(
 		's',
 		SyncIt_Constant.Validation.DATASET_REGEXP,
-		false,
-		req
-	);
-};
-
-TestServer.prototype._validate_params_datakey = function(req) {
-	return validateInputFieldAgainstRegexp(
-		'k',
-		SyncIt_Constant.Validation.DATASET_REGEXP,
-		false,
-		req
-	);
-};
-
-TestServer.prototype._validate_body_queueitem_dataset = function(req) {
-	return validateInputFieldAgainstRegexp(
-		's',
-		SyncIt_Constant.Validation.DATASET_REGEXP,
-		true,
-		req
-	);
-};
-
-TestServer.prototype._validate_body_queueitem_datakey = function(req) {
-	return validateInputFieldAgainstRegexp(
+		reqInfo
+	)) { return false; }
+	
+	// datakey
+	if (!this._validateInputFieldAgainstRegexp(
 		'k',
 		SyncIt_Constant.Validation.DATAKEY_REGEXP,
-		true,
-		req
-	);
-};
-
-TestServer.prototype._validate_body_queueitem_modifier = function(req) {
-	if (!validateInputFieldAgainstRegexp(
-		'm',
-		SyncIt_Constant.Validation.MODIFIER_REGEXP,
-		true,
-		req
-	)) {
-		return false;
-	}
-	return (req.body.m === this._getModifier(req));
-};
-
-TestServer.prototype._validate_body_queueitem_operation = function(req) {
-	return validateInputFieldAgainstRegexp(
+		reqInfo
+	)) { return false; }
+	
+	// modifier
+	if (!this._getModifier(req).match(
+		SyncIt_Constant.Validation.MODIFIER_REGEXP
+	)) { return false; }
+	
+	// operation
+	if (!this._validateInputFieldAgainstRegexp(
 		'o',
 		SyncIt_Constant.Validation.OPERATION_REGEXP,
-		true,
-		req
-	);
-};
-
-TestServer.prototype._validate_queueitem = function(req) {
-	if (!this._validate_body_queueitem_dataset(req)) { return false; }
-	if (!this._validate_body_queueitem_datakey(req)) { return false; }
-	if (!this._validate_body_queueitem_modifier(req)) { return false; }
-	if (!this._validate_body_queueitem_operation(req)) { return false; }
+		reqInfo
+	)) { return false; }
+	
 	for (var i=0; i < queueitemProperties.length; i++) {
-		if (!req.body.hasOwnProperty(queueitemProperties[i])) {
+		if (!reqInfo.hasOwnProperty(queueitemProperties[i])) {
 			return false;
 		}
 	}
+	
 	return true;
 };
 
