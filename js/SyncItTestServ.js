@@ -1,5 +1,6 @@
 /*jshint smarttabs:true */
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
+	"use strict";
 	if (typeof exports === 'object') {
 		module.exports = factory(require('./Constant.js'));
 	} else if (typeof define === 'function' && define.amd) {
@@ -30,6 +31,9 @@ var queueitemProperties = ['s','k','b','m','t','u','o'];
 var TestServer = function(serverPersist, extractModifierFromRequestFunc) {
 	this._serverPersist = serverPersist;
 	this._listeners = {fed: []};
+	if (typeof extractModifierFromRequestFunc != 'function') {
+		throw "You must specify a way to get the modifier";
+	}
 	this._getModifier = extractModifierFromRequestFunc;
 };
 
@@ -394,6 +398,8 @@ TestServer.prototype._extractInfoFromRequest = function(req, extras) {
 		}
 	}
 	
+	r.m = this._getModifier(req);
+	
 	var fixTypesBeforeStore = function(ob) {
 		
 		var forceStr = function(v) { return "" + v; };
@@ -464,9 +470,12 @@ TestServer.prototype._validate_queueitem = function(req) {
 		reqInfo
 	)) { return false; }
 	
+	
 	// modifier
-	if (!this._getModifier(req).match(
-		SyncIt_Constant.Validation.MODIFIER_REGEXP
+	if (!this._validateInputFieldAgainstRegexp(
+		'm',
+		SyncIt_Constant.Validation.MODIFIER_REGEXP,
+		reqInfo
 	)) { return false; }
 	
 	// operation
@@ -474,7 +483,7 @@ TestServer.prototype._validate_queueitem = function(req) {
 		'o',
 		SyncIt_Constant.Validation.OPERATION_REGEXP,
 		reqInfo
-	)) { return false; }
+	)) { console.log("o"); return false; }
 	
 	for (var i=0; i < queueitemProperties.length; i++) {
 		if (!reqInfo.hasOwnProperty(queueitemProperties[i])) {

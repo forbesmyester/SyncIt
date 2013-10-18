@@ -72,7 +72,7 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
         var test = function(status,data) {
             expect(status).to.equal('created');
             syncItTestServer.getValue(
-                {params:{s:'xx',k:'yy'}},
+                {params:{s:'xx',k:'yy'}, body: { m: 'aa' } },
                 
                 function(err,jrec) {
                     expect(err).to.equal('ok');
@@ -118,7 +118,7 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
             body:{ s:'xx', k:'yy', b:1, m:'bb', r:false, t:new Date().getTime(), u:{c:'d'},o:'set' } // the time will be wrong
         };
         var test = function(status,data) {
-            syncItTestServer.getValue({params:{s:'xx',k:'yy'}},function(err,jrec) {
+            syncItTestServer.getValue({params:{s:'xx',k:'yy'},body:{m:'bb'}},function(err,jrec) {
                 expect(status).to.equal('out_of_date');
                 expect(jrec.m).to.equal('aa');
                 expect(jrec.i).to.eql({c:'d'});
@@ -206,13 +206,13 @@ describe('SyncItTestServ can respond to data requests',function() {
     it('when there is a point to go from',function(done) {
     	
     	var data1 = { body: {
-				s: 'usersA',
-				k: 'me',
-				b: 0,
-				m: 'me',
-				t: new Date().getTime(),
-				o: 'set',
-				u: {name: "Jack Smith" }
+			s: 'usersA',
+			k: 'me',
+			b: 0,
+			m: 'me',
+			t: new Date().getTime(),
+			o: 'set',
+			u: {name: "Jack Smith" }
 		} };
 		
 		var data2 = { body: {
@@ -230,7 +230,7 @@ describe('SyncItTestServ can respond to data requests',function() {
 			syncItServ.PATCH(data2, function(status, result) {  
 				expect(status).to.equal('ok');                
 				syncItServ.getQueueitem(
-					{ params: {s: 'usersA'}, query: { from: 'usersA.me@1' } },
+					{ params: {s: 'usersA'}, body: {m: 'me'}, query: { from: 'usersA.me@1' } },
 					function(status, data) {
 						expect(status).to.equal('ok');
 						expect(data).to.eql({          
@@ -247,13 +247,13 @@ describe('SyncItTestServ can respond to data requests',function() {
     it('when there is no point to go from',function(done) {
     	
     	var data1 = { body: {
-				s: 'usersB',
-				k: 'me',
-				b: 0,
-				m: 'me',
-				t: new Date().getTime(),
-				o: 'set',
-				u: {name: "Jack Smith" }
+			s: 'usersB',
+			k: 'me',
+			b: 0,
+			m: 'me',
+			t: new Date().getTime(),
+			o: 'set',
+			u: {name: "Jack Smith" }
 		} };
 		
 		var data2 = { body: {
@@ -271,7 +271,7 @@ describe('SyncItTestServ can respond to data requests',function() {
 			syncItServ.PATCH(data2, function(status, result) {  
 				expect(status).to.equal('ok');                
 				syncItServ.getQueueitem(
-					{ params: {s: 'usersB'} },
+					{ params: {s: 'usersB'}, body: {m: 'me'} },
 					function(status, data) {
 						expect(status).to.equal('ok');
 						expect(data).to.eql({          
