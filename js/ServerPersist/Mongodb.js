@@ -13,36 +13,9 @@ module.exports = (function() {
 
 var CommonFuncs = require('./CommonFuncs.js');
 var SyncIt_Constant = require('../Constant.js');
-
-/**
- * SyncIt relies on being able to have a incremental dataversion within a Dataset
- * so clients can request updates from that version. This function will generate
- * version numbers. NOTE it is perfectly fine for this sequence to have holes in.
- *
- * Throws on Mongo Error.
- *
- * * **@param {MongoskinConnection} `mongoskinConnection`** Must be connected.
- * * **@param {String} `sequenceCollection`** The name of the collection to store sequences in.
- * * **@param {String} `sequenceName`** The sequence you wish to generate the Id for.
- * * **@param {Function} `callback`** Will be called once the number has been generated.
- *   * **@param {Reserverd} `callback.err`** Space reserved for errors.
- *   * **@param {Number} `callback.n`** The new number.
- */
-var getIncrementalNumber = function(mongoskinConnection, sequenceCollection, sequenceName, callback) {
-	mongoskinConnection.collection(sequenceCollection).findAndModify(
-		{_id: sequenceName},
-		{},
-		{$inc: {n: 1}},
-		{'new': true, upsert: true, multi: false},
-		function(err, result) {
-			if (err) {
-				throw new Error("getIncrementalNumber: ", err, sequenceCollection);
-			}
-			callback(err, result.n);
-		}
-	);
-};
-
+var getIncrementalNumber = require(
+	'../getIncrementalNumberFromMongodb'
+);
 
 /**
  * ### SyncIt_ServerPersist_MemoryAsync()
@@ -65,7 +38,7 @@ var SyncIt_ServerPersist_MongoDb = function(cloneFunc, mongoskinConnection, sequ
 		this._logger = logger;
 	}
 	this._mongoskinConnection.collection(dataCollection).ensureIndex(
-		{s: 1, k: 1, b: 1},
+		{"_id.s": 1, "_id.n": 1, k: 1, b: 1},
 		{unique: 1, sparse: false},
 		function(err,name) {
 			if (err) {
@@ -85,7 +58,7 @@ var SyncIt_ServerPersist_MongoDb = function(cloneFunc, mongoskinConnection, sequ
 };
 
 SyncIt_ServerPersist_MongoDb.prototype._find = function(collection, query, done) {
-	this._mongoskinConnection.collection(collection).find().toArray(function(err, items) {
+	this._mongoskinConnection.collection(collection).find(query).toArray(function(err, items) {
 		if (err) {
 			throw new Error("SyncIt: MongoDB: _find:", err, collection, query);
 		}
@@ -111,6 +84,20 @@ SyncIt_ServerPersist_MongoDb.prototype.getDatasetNames = function(done) {
 	});
 };
 
+SyncIt_ServerPersist_MongoDb.prototype._unserialize = function(rec) {
+	return {
+		s: rec._id.s,
+		k: rec.k,
+		b: rec.b,
+		m: rec.m,
+		r: rec.r,
+		u: JSON.parse(rec.u),
+		o: rec.o,
+		t: rec.t,
+		j: rec.j
+	};
+};
+
 /**
  * ### SyncIt_ServerPersist_MemoryAsync.getQueueitem()
  * 
@@ -125,25 +112,25 @@ SyncIt_ServerPersist_MongoDb.prototype.getDatasetNames = function(done) {
  */
 SyncIt_ServerPersist_MongoDb.prototype.getQueueitem = function(dataset, fromVersion, done) {
 	
-	var q = {};
+	var q = {"_id.s": dataset},
+		maxId = -1;
 	if (fromVersion !== undefined) {
-		q = {_id: {$gt: fromVersion}};
+		q["_id.n"] = {$gt: parseInt(fromVersion,10)};
+		maxId = fromVersion;
 	}
-	q.s = dataset; 
 	
 	this._find( this._dataCollection, q, function(err, items) {
-		var maxId = -1;
 		done(
 			err,
 			items.map(function(rec) {
-				if (rec._id > maxId) {
-					maxId = rec._id
+				if (rec._id.n > maxId) {
+					maxId = rec._id.n
 				}
-				return rec._id;
-			}),
+				return this._unserialize(rec);
+			}.bind(this)),
 			maxId
 		);
-	});
+	}.bind(this));
 	
 };
 
@@ -151,7 +138,7 @@ SyncIt_ServerPersist_MongoDb.prototype._getLast = function(dataset,datakey, proj
 	
 	// TODO done should be translated...
 	this._mongoskinConnection.collection(this._dataCollection).findOne(
-		{s: dataset, k: datakey},
+		{"_id.s": dataset, k: datakey},
 		projection,
 		{sort:[['b', -1]]},
 		function(err, result) {
@@ -159,11 +146,9 @@ SyncIt_ServerPersist_MongoDb.prototype._getLast = function(dataset,datakey, proj
 				throw new Error("SyncIt: MongoDB: _getLast:", err, dataset, datakey, projection);
 			}
 			if (result === null) { return done(err, result); }
-			if (result.hasOwnProperty('u')) {
-				result.u = JSON.parse(result.u);
-			}
-			return done(err, result);
-		}
+			result.s = result._id.s;
+			return done(err, this._unserialize(result));
+		}.bind(this)
 	);
 };
 
@@ -216,7 +201,6 @@ SyncIt_ServerPersist_MongoDb.prototype.push = function(queueitem, done) {
 			if (result.err) {
 				return(done(result.err, result.resultingJrec));
 			}
-			
 			getIncrementalNumber(
 				this._mongoskinConnection,
 				this._sequenceCollection,
@@ -226,8 +210,7 @@ SyncIt_ServerPersist_MongoDb.prototype.push = function(queueitem, done) {
 					this._logger("SyncIt: MongoDB: Sequence:",seqId);
 					
 					var toWrite = {
-						_id: seqId,
-						s: queueitem.s,
+						_id: {n: seqId, s: queueitem.s},
 						k: queueitem.k,
 						b: queueitem.b,
 						m: queueitem.m,

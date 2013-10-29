@@ -86,7 +86,7 @@ TestServer.prototype.getQueueitem = function(req,responder) {
 		reqInfo.hasOwnProperty('from') ? reqInfo.from : null,
 		function(err,queueitems,to) {
 			if (err) { throw err; }
-			return responder('ok',{ queueitems:queueitems, to: to});
+			return responder('ok',{ queueitems: queueitems, to: to});
 		}
 	);
 };
@@ -290,7 +290,8 @@ TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 				queueitem.b === 0 ? 'created' : 'ok',
 				{
 					loc: '/'+processedQueueitem.s+'/'+processedQueueitem.k,
-					to: createdId
+					to: createdId,
+					queueitem: queueitem
 				}
 			);
 		},
@@ -483,7 +484,7 @@ TestServer.prototype._validate_queueitem = function(req) {
 		'o',
 		SyncIt_Constant.Validation.OPERATION_REGEXP,
 		reqInfo
-	)) { console.log("o"); return false; }
+	)) { return false; }
 	
 	for (var i=0; i < queueitemProperties.length; i++) {
 		if (!reqInfo.hasOwnProperty(queueitemProperties[i])) {
