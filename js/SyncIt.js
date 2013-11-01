@@ -700,6 +700,20 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 };
 
 SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
+	var k,
+		requiredFields = {
+			s: SyncIt_Constant.Error.INVALID_DATASET,
+			k: SyncIt_Constant.Error.INVALID_DATAKEY,
+			o: SyncIt_Constant.Error.INVALID_OPERATION
+		}
+	for (k in requiredFields) {
+		if (
+			requiredFields.hasOwnProperty(k) && 
+			!queueitem.hasOwnProperty(k)
+		) {
+			return requiredFields[k]
+		}
+	}
 	if (queueitem.s.match(SyncIt_Constant.Validation.DATASET_REGEXP) === null) {
 		return SyncIt_Constant.Error.INVALID_DATASET;
 	}
@@ -778,6 +792,7 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, whe
 		true,
 		pathWatcher.getWatcher(),
 		function(err,ref) {
+			var pathWatchedItem = pathWatcher.getReaditem();
 			this._unlockFor(LOCKING.ADDING_TO_QUEUE);
 			if (err !== ERROR.OK) {
 				return whenAddedToQueue(err);
@@ -786,14 +801,14 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, whe
 				'added_to_queue',
 				dataset,
 				datakey,
-				this._addObviousInforation(dataset,datakey,ref,queueitem)
+				this._addObviousInforation(dataset,datakey,ref,queueitem,pathWatchedItem)
 			);
 			whenAddedToQueue(
 				err,
 				dataset,
 				datakey,
 				queueitem,
-				_makeFullReaditem(pathWatcher.getReaditem())
+				_makeFullReaditem(pathWatchedItem)
 			);
 		}.bind(this)
 	);
@@ -874,14 +889,14 @@ SyncIt.prototype.advance = function(done) {
 					'advanced',
 					dataset,
 					datakey,
-					this._addObviousInforation(dataset,datakey,addedPathkey,item),
+					this._addObviousInforation(dataset,datakey,addedPathkey,item,newRoot),
 					this._addObviousInforation(dataset,datakey,addedPathkey,newRoot)
 				);
 				return done(
 					err,
 					dataset,
 					datakey,
-					this._addObviousInforation(dataset,datakey,addedPathkey,item),
+					this._addObviousInforation(dataset,datakey,addedPathkey,item,newRoot),
 					this._addObviousInforation(dataset,datakey,addedPathkey,newRoot)
 				);
 			}.bind(this)
@@ -904,7 +919,7 @@ SyncIt.prototype.advance = function(done) {
  * **@param {Pathitem} `ob`** The item to add the "obvious" information to.
  * **@return {Object} `ob` with the "obvious" information.
  */
-SyncIt.prototype._addObviousInforation = function(dataset,datakey,reference,ob) {
+SyncIt.prototype._addObviousInforation = function(dataset,datakey,reference,ob,extra) {
 	var r = _shallowCopyKeys(ob),
 		k = '';
 	r.s = dataset;
@@ -917,6 +932,14 @@ SyncIt.prototype._addObviousInforation = function(dataset,datakey,reference,ob) 
 			throw "No time and no time found in key";
 		}
 		r.t = (this._ps.getKeyTimeDecoder())(reference);
+	}
+	if (extra !== undefined) {
+		if (!r.hasOwnProperty('b') && extra.hasOwnProperty('b')) {
+			r.b = parseInt(extra.b,10);
+		}
+		if (!r.hasOwnProperty('b') && extra.hasOwnProperty('v')) {
+			r.b = parseInt(extra.v,10) - 1;
+		}
 	}
 	for (k in r) {
 		if (k.match(/^_/)) {
@@ -993,6 +1016,9 @@ SyncIt.prototype.getFirst = function(done) {
 		function(err,dataset,datakey,reference,queueitem) {
 
 			if (err !== ERROR.OK) {
+				if (err === ERROR.PATH_EMPTY) {
+					return done(ERROR.NO_DATA_FOUND);
+				}
 				return done(err);
 			}
 

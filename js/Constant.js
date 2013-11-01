@@ -106,7 +106,7 @@ Error.TRYING_TO_ADD_ALREADY_ADDED_QUEUEITEM = 12;
 /**
  * For some reason, we are trying to add an item based on something that does not yet exist!
  */
-Error.TRYING_TO_ADD_FUTURE_QUEUEITEM = 14;
+Error.TRYING_TO_ADD_FUTURE_QUEUEITEM = 20;
 
 /**
  * It is only possible to use `SyncIt.feed()` for Queueitem coming from elsewhere.

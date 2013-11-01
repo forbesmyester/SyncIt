@@ -121,7 +121,7 @@ var checkIsFullRead = function(readitem) {
 	checkKeysFromSyncIt(readitem,['p','q','r','s','k','i','t','m','v']);
 };
 var checkQueueitemRead = function(readitem) {
-	checkKeysFromSyncIt(readitem,['o','u','s','k','t','m']);
+	checkKeysFromSyncIt(readitem,['o','u','s','k','t','m','b']);
 };
 var checkStoreRead = function(readitem) {
 	checkKeysFromSyncIt(readitem,['r','s','k','i','t','m','v']);
@@ -225,6 +225,7 @@ describe('When I want to add data to SyncIt I can call set and',function() {
 		syncIt.listenForAddedToPath(function(dataset,datakey,queueitem) {
 			expect(dataset).to.equal('cars');
 			expect(datakey).to.equal('bmw');
+			expect(queueitem.b).to.equal(0);
 			checkQueueitemRead(queueitem);
 			eventOccured = true;
 		});

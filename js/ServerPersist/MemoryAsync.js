@@ -1,23 +1,28 @@
 /*jshint smarttabs:true */
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
+	"use strict";
+	
 	if (typeof exports === 'object') {
 		module.exports = factory(
 			require('../Constant.js'),
-			require('../updateResult.js')
+			require('../updateResult.js'),
+			require('./CommonFuncs.js')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		define(
-			['syncit/Constant','syncit/updateResult'],
+			['syncit/Constant','syncit/updateResult','syncit/ServerPersist/CommonFuncs'],
 			factory
 		);
 	} else {
 		root.SyncIt_ServerPersist_MemoryAsync = factory(
 			root.SyncIt_Constant,
-			root.SyncIt_updateResult
+			root.SyncIt_updateResult,
+			root.SyncIt_ServerPersist_CommonFuncs
 		);
 	}
-})(this, function (SyncIt_Constant,updateResult) {
-	
+})(this, function (SyncIt_Constant,updateResult,CommonFuncs) {
+"use strict";
+
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
 // Copyright: 2013 Matthew Forrester
 // License: MIT/BSD-style
@@ -150,6 +155,7 @@ var getIdFromQueueitem = function(queueitem) {
 
 var SyncIt_ServerPersist_MemoryAsync = function(cloneFunc) {
 	this._d = [];
+	this._cloneFunc = cloneFunc;
 	if (this._cloneFunc === undefined) {
 		this._cloneFunc = function(v) {
 			return JSON.parse(JSON.stringify(v));
@@ -158,7 +164,7 @@ var SyncIt_ServerPersist_MemoryAsync = function(cloneFunc) {
 };
 
 /**
- * **SyncIt_ServerPersist_MemoryAsync.getDatasetNames()**
+ * ### SyncIt_ServerPersist_MemoryAsync.getDatasetNames()
  * 
  * #### Parameters
  * 
@@ -191,8 +197,6 @@ SyncIt_ServerPersist_MemoryAsync.prototype.getDatasetNames = function(done) {
  *   * **@param {Object} `done.lastQueueitemIdentifier`** The internal reference of that last item, passing this to this function again will lead to continual reading.
  */
 SyncIt_ServerPersist_MemoryAsync.prototype.getQueueitem = function(dataset,fromVersion,done) {
-	
-	var r = [];
 	
 	(makeLaggy(function() {
 		var r = [],
@@ -283,60 +287,15 @@ SyncIt_ServerPersist_MemoryAsync.prototype.push = function(queueitem,done) {
 			'b',
 			function(success,storedQueueitem) {
 				
-				// The starting queueitem (previous which does not exist) is 
-				// based on -1, because the first queueitem would be based on 0.
-				var highestBasedOn = -1,
-					resultingJrec;
-					
-				var _getEmptyJrec = function() {
-					return {
-						i:{},
-						v:0,
-						r:false,
-						t:(new Date()).getTime(),
-						m:null
-					};
-				};
-				
-				if (!success) {
-					throw new Error("findHighest did not return properly");
-				}
-				
-				// If there is something stored at that dataset/datakey we want
-				// a to look for one over that based on.
-				if (storedQueueitem !== null) {
-					highestBasedOn = storedQueueitem.b;
-				}
-				
-				// Check that we have not been given a future queueitem.
-				if (queueitem.b > highestBasedOn + 1) {
-					return done(SyncIt_Constant.Error.TRYING_TO_ADD_FUTURE_QUEUEITEM,queueitem);
-				}
-				
-				// Check that we are not adding a out of data queueitem
-				if (queueitem.b <= highestBasedOn) {
-					// If we are, it is the last one with the same modifier and 
-					// basedonversion then we send something about it being
-					// a duplicate.
-					if ((storedQueueitem.m == queueitem.m) && (storedQueueitem.b == queueitem.b)) {
-						return done(SyncIt_Constant.Error.TRYING_TO_ADD_ALREADY_ADDED_QUEUEITEM,queueitem);
-					}
-					// otherwise send back just a normal version conflict error.
-					return done(SyncIt_Constant.Error.TRYING_TO_ADD_QUEUEITEM_BASED_ON_OLD_VERSION,queueitem);
-				}
-				
-				// If we have a stored queueitem which had a remove operation, 
-				// the item will always stay removed.
-				if ((storedQueueitem !== null) && (storedQueueitem.o == 'remove')) {
-					return done(SyncIt_Constant.Error.DATA_ALREADY_REMOVED,queueitem);
-				}
-				
-				// Calculate the result
-				resultingJrec = updateResult(
-					(storedQueueitem === null) ? _getEmptyJrec() : storedQueueitem.j,
-					queueitem,
-					inst._cloneFunc
+				var result = CommonFuncs.getResultingJrecBasedOnOld(
+					inst._cloneFunc,
+					storedQueueitem,
+					queueitem
 				);
+				
+				if (result.err) {
+					return(done(result.err, result.resultingJrec));
+				}
 				
 				// Try and insert the record.
 				onlyInsert(
@@ -350,7 +309,7 @@ SyncIt_ServerPersist_MemoryAsync.prototype.push = function(queueitem,done) {
 						u: queueitem.u,
 						o: queueitem.o,
 						t: queueitem.t,
-						j: resultingJrec
+						j: result.resultingJrec
 					},
 					function(success) {
 						
@@ -367,7 +326,7 @@ SyncIt_ServerPersist_MemoryAsync.prototype.push = function(queueitem,done) {
 						return done(
 							SyncIt_Constant.Error.OK,
 							queueitem,
-							resultingJrec,
+							result.resultingJrec,
 							getIdFromQueueitem(queueitem)
 						);
 					}
