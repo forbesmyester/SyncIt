@@ -974,7 +974,7 @@ SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
 /**
  * ### SyncIt.getVersion()
  * 
- * Will retrieve information from SyncIt by reading what is first in the *Store* and then every *Pathitem* for the same Dataset / Datakey.
+ * Will retrieve information about the version in the store.
  * 
  * #### Parameters
  * 
@@ -982,7 +982,7 @@ SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
  * * **@param {Datakey} `datakey`**
  * * **@param {Function} `whenVersionFound`** Signature: `function(err, version)`
  *   * **@param {ErrorCode} `whenDataRetrieved.err`** See SyncIt_Constant.Error.
- *   * **@param {Number} `whenDataRetrieved.version`** The version of the data, 0 means not found, 1 is the first version.
+ *   * **@param {Number} `whenDataRetrieved.version`** The version of the data, 0 means no data found found, 1 is the first version.
  */
 SyncIt.prototype.getVersion = function(dataset, datakey, whenVersionFound) {
 	this.getFull(dataset, datakey, function(e, r) {
