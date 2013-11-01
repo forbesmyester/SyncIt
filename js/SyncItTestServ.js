@@ -469,7 +469,7 @@ TestServer.prototype._validate_queueitem = function(req) {
 	// datakey
 	if (!this._validateInputFieldAgainstRegexp(
 		'm',
-		SyncIt_Constant.Validation.DATAKEY_REGEXP,
+		SyncIt_Constant.Validation.MODIFIER_REGEXP,
 		reqInfo
 	)) { return false; }
 	
