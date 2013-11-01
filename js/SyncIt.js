@@ -949,6 +949,32 @@ SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
 };
 
 /**
+ * ### SyncIt.getVersion()
+ * 
+ * Will retrieve information from SyncIt by reading what is first in the *Store* and then every *Pathitem* for the same Dataset / Datakey.
+ * 
+ * #### Parameters
+ * 
+ * * **@param {Dataset} `dataset`**
+ * * **@param {Datakey} `datakey`**
+ * * **@param {Function} `whenVersionFound`** Signature: `function(err, version)`
+ *   * **@param {ErrorCode} `whenDataRetrieved.err`** See SyncIt_Constant.Error.
+ *   * **@param {Number} `whenDataRetrieved.version`** The version of the data, 0 means not found, 1 is the first version.
+ */
+SyncIt.prototype.getVersion = function(dataset, datakey, whenVersionFound) {
+	this.getFull(dataset, datakey, function(e, r) {
+		if (e === ERROR.NO_DATA_FOUND) {
+			return whenVersionFound(ERROR.OK, 0)
+		}
+		if (e === ERROR.OK) {
+			return whenVersionFound(e, r.b + 1);
+		}
+		whenVersionFound(e);
+	});
+};
+
+
+/**
  * ### SyncIt.getFirst()
  *
  * Gets the Pathitem which should be next uploaded to the server or will be advanced

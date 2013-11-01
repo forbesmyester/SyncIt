@@ -394,6 +394,8 @@ TestServer.prototype._extractInfoFromRequest = function(req, extras) {
 		}
 	}
 	
+	r.m = this._getModifier(req);
+	
 	var fixTypesBeforeStore = function(ob) {
 		
 		var forceStr = function(v) { return "" + v; };
@@ -464,9 +466,11 @@ TestServer.prototype._validate_queueitem = function(req) {
 		reqInfo
 	)) { return false; }
 	
-	// modifier
-	if (!this._getModifier(req).match(
-		SyncIt_Constant.Validation.MODIFIER_REGEXP
+	// datakey
+	if (!this._validateInputFieldAgainstRegexp(
+		'm',
+		SyncIt_Constant.Validation.DATAKEY_REGEXP,
+		reqInfo
 	)) { return false; }
 	
 	// operation
