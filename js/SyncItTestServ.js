@@ -91,6 +91,10 @@ TestServer.prototype.getQueueitem = function(req,responder) {
 	);
 };
 
+TestServer.prototype.getLastQueueitem = function(dataset, datakey, callback) {
+	return this._serverPersist.getLastQueueitem(dataset, datakey, callback);
+};
+
 /**
  * ### TestServer.getValue()
  *

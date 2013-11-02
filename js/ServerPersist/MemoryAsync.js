@@ -235,8 +235,9 @@ SyncIt_ServerPersist_MemoryAsync.prototype.getQueueitem = function(dataset,fromV
 	
 };
 
+
 /**
- * ### SyncIt_ServerPersist_MemoryAsync.getValue()
+ * ### SyncIt_ServerPersist_MemoryAsync.getLastQueueitem()
  * 
  * #### Parameters
  * 
@@ -244,9 +245,9 @@ SyncIt_ServerPersist_MemoryAsync.prototype.getQueueitem = function(dataset,fromV
  * * **@param {String} `datakey`**
  * * **@param {Function} `done`** Signature: `function (err, jrec)`
  *   * **@param {Number} `done.err`** See SyncIt_Constant.Error
- *   * **@param {Jrec} `done.jrec`** The result of all the Queueitem.
+ *   * **@param {Jrec} `done.queueitem`** The last Queueitem.
  */
-SyncIt_ServerPersist_MemoryAsync.prototype.getValue = function(dataset,datakey,done) {
+SyncIt_ServerPersist_MemoryAsync.prototype.getLastQueueitem = function(dataset,datakey,done) {
 	findHighest(
 		this._d,
 		{s:dataset, k:datakey},
@@ -258,7 +259,31 @@ SyncIt_ServerPersist_MemoryAsync.prototype.getValue = function(dataset,datakey,d
 			if (storedQueueitem === null) {
 				return done(SyncIt_Constant.Error.NO_DATA_FOUND);
 			}
-			return done(SyncIt_Constant.Error.OK,storedQueueitem.j);
+			return done(SyncIt_Constant.Error.OK,storedQueueitem);
+		}
+	);
+};
+
+/**
+ * ### SyncIt_ServerPersist_MemoryAsync.getValue()
+ * 
+ * #### Parameters
+ * 
+ * * **@param {String} `dataset`**
+ * * **@param {String} `datakey`**
+ * * **@param {Function} `done`** Signature: `function (err, jrec)`
+ *   * **@param {Number} `done.err`** See SyncIt_Constant.Error
+ *   * **@param {Jrec} `done.jrec`** The result (j) of all the Queueitem.
+ */
+SyncIt_ServerPersist_MemoryAsync.prototype.getValue = function(dataset,datakey,done) {
+	this.getLastQueueitem(
+		dataset,
+		datakey,
+		function(err, result) {
+			if (err) {
+				return done(err);
+			}
+			return done(err,result.j);
 		}
 	);
 };

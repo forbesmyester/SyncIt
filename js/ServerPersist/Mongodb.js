@@ -134,6 +134,11 @@ SyncIt_ServerPersist_MongoDb.prototype.getQueueitem = function(dataset, fromVers
 	
 };
 
+
+SyncIt_ServerPersist_MongoDb.prototype.getLastQueueitem = function(dataset,datakey, projection, done) {
+	return this._getLast(dataset, datakey, {}, done);
+};
+
 SyncIt_ServerPersist_MongoDb.prototype._getLast = function(dataset,datakey, projection, done) {
 	
 	// TODO done should be translated...
