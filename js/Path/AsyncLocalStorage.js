@@ -430,10 +430,7 @@ Als.prototype._removePathItems = function(dataset,datakey,ref,next) {
  */
 Als.prototype._removePathItem = function(dataset,datakey,reference,next) {
 	var k = [dataset,datakey,reference].join('.');
-	this._ls.removeItem(k,function() {
-		this._emit('remove-item',k);
-		next(ERROR.OK);
-	}.bind(this));
+	this.__removeItem(k,next);
 };
 
 var validateDatesetOrDatakey = function(str) {
@@ -498,6 +495,22 @@ Als.prototype._setPathItem = function(dataset,datakey,reference,value,next) {
 Als.prototype.__setItem = function(storageKey,value,next) {
 	this._ls.setItem(storageKey,value,function() {
 		this._emit('set-item',storageKey,value);
+		next(ERROR.OK);
+	}.bind(this));
+};
+
+/**
+ * ## SyncIt_Path_AsyncLocalStorage.__removeItem()
+ *
+ * Low level function for removing data at a key within the underlying storage.
+ *
+ * * **@param {String} `storageKey`**
+ * * **@param {Function} `next`** Signature: Function(err)
+ *   * **@param {Errorcode} `err`**
+ */
+Als.prototype.__removeItem = function(storageKey,next) {
+	this._ls.removeItem(storageKey, function() {
+		this._emit('remove-item',storageKey);
 		next(ERROR.OK);
 	}.bind(this));
 };
@@ -1039,8 +1052,12 @@ Als.prototype._findFirstDatasetDatakeyReference = function(path,next) {
 				return processOne();
 			}
 			this._getRoot(k[0],k[1],function(err,root) {
+				if (err == ERROR.NO_DATA_FOUND) {
+					keys.shift();
+					return processOne();
+				}
 				if (err !== ERROR.OK) {
-					next(err);
+					return next(err);
 				}
 				if (
 					root.hasOwnProperty(path) && 
@@ -1054,6 +1071,29 @@ Als.prototype._findFirstDatasetDatakeyReference = function(path,next) {
 		}.bind(this);
 		processOne();
 	}.bind(this));
+};
+
+Als.prototype.purge = function(dataset, next) {
+	
+	this._ls.findKeys(dataset + '.*',function(rootKeys) {
+		
+		this._ls.findKeys(dataset + '.*.*',function(pathKeys) {
+			
+			var toProccess = rootKeys.concat(pathKeys);
+			
+			var removeOne = function() {
+				if (toProccess.length === 0) {
+					return next(ERROR.OK);
+				}
+				this.__removeItem(toProccess.shift(), removeOne);
+			}.bind(this);
+			
+			removeOne();
+			
+		}.bind(this));
+			
+	}.bind(this));
+
 };
 
 /**
@@ -1098,21 +1138,20 @@ Als.prototype.clean = function(next) {
 			return next(ERROR.OK,r);
 		}.bind(this));
 	}.bind(this);
-
-	var removeItems = function(notVisited,next) {
-
-		var datasetK = '',
+	
+	var flattenNotVisited = function(notVisited) {
+		var r = [],
+			datasetK = '',
 			datakeyK = '',
-			refK = '',
-			flattenedNotVisited = [];
-
+			refK = '';
+			
 		for (datasetK in notVisited) {
 			if (notVisited.hasOwnProperty(datasetK)) {
 				for (datakeyK in notVisited[datasetK]) {
 					if (notVisited[datasetK].hasOwnProperty(datakeyK)) {
 						for (refK in notVisited[datasetK][datakeyK]) {
 							if (notVisited[datasetK][datakeyK].hasOwnProperty(refK)) {
-								flattenedNotVisited.push(
+								r.push(
 									{dataset: datasetK, datakey: datakeyK, ref: refK}
 								);
 							}
@@ -1121,7 +1160,13 @@ Als.prototype.clean = function(next) {
 				}
 			}
 		}
+		return r;
+	}
 
+	var removeItems = function(notVisited, next) {
+
+		var flattenedNotVisited = flattenNotVisited(notVisited);
+		
 		var doRemove = function() {
 			
 			var keyInfo = {};
@@ -1225,9 +1270,31 @@ Als.prototype.clean = function(next) {
 			}.bind(this));
 		}.bind(this);
 		
+		var cleanOrphaned = function(data, next) {
+			var removeOne = function() {
+				if (data.length === 0) {
+					return next(ERROR.OK);
+				}
+				
+				var item = data.shift();
+				this.__removeItem(
+					[item.dataset, item.datakey, item.ref].join("."),
+					removeOne
+				);
+			}.bind(this);
+			removeOne();
+		}.bind(this);
+		
 		this.getDatasetNames(function(err,datasets) {
 			if (err !== ERROR.OK) { 
 				return next(err);
+			}
+			
+			if (datasets.length === 0) {
+				cleanOrphaned(
+					flattenNotVisited(refsStillToBeVisited),
+					next
+				);
 			}
 
 			var i = 0,
@@ -1244,7 +1311,16 @@ Als.prototype.clean = function(next) {
 					if (mainErr !== ERROR.OK) {
 						return next(mainErr);
 					}
-					removeItems(refsStillToBeVisited,next);
+					removeItems(
+						refsStillToBeVisited,
+						function(err) {
+							if (err) { next(err); }
+							cleanOrphaned(
+								flattenNotVisited(refsStillToBeVisited),
+								next
+							);
+						}
+					);
 				}
 			}.bind(this);
 

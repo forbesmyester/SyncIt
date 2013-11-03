@@ -406,9 +406,6 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 		});
 	});
 
-
-
-
 	it('can clean and get first queueitem',function(done) {
 		this.timeout(60000);
 		var localStorage = new SyncIt_FakeLocalStorage();
@@ -529,6 +526,64 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 										});
 									});
 								});
+							});
+						});
+					});
+				});
+			});
+		});
+	});
+	
+	it('will exit when nothing to clean',function(done) {
+		this.timeout(6000);
+		var localStorage = new SyncIt_FakeLocalStorage();
+		var asyncLocalStorage = new AsyncLocalStorage(
+			localStorage,
+			'aa',
+			JSON.stringify,
+			JSON.parse
+		);
+		var pathStore = new SyncIt_Path_AsyncLocalStorage(
+			asyncLocalStorage,
+			new EncoderDecoder(new Date(1980,1,1).getTime()),
+			'aa'
+		);
+		pathStore.clean(function(err) {
+			expect(err).to.equal(ERROR.OK);
+			done();
+		});
+	});
+	
+	it('can purge datasets',function(done) {
+		this.timeout(60000);
+		var localStorage = new SyncIt_FakeLocalStorage();
+		var asyncLocalStorage = new AsyncLocalStorage(
+			localStorage,
+			'aa',
+			JSON.stringify,
+			JSON.parse
+		);
+		var pathStore = new SyncIt_Path_AsyncLocalStorage(
+			asyncLocalStorage,
+			new EncoderDecoder(new Date(1980,1,1).getTime()),
+			'aa'
+		);
+		visualizeData('graph',pathStore,localStorage,'aa');
+		pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+			pathStore.push('cars','subaru','p',{c:'d'},false,function() { return ERROR.OK; },function(err) {
+				pathStore.push('cars','subaru','c',{e:'f'},false,function() { return ERROR.OK; },function(err) {
+					asyncLocalStorage.findKeys('*.*.*', function(keys) {
+						expect(keys.length).to.equal(3);
+						pathStore.purge('cars', function() {
+							asyncLocalStorage.findKeys('*.*.*', function(keys) {
+								expect(keys.length).to.equal(0);
+								asyncLocalStorage.findKeys(
+									'*.*',
+									function(keys) {
+										expect(keys.length).to.equal(0);
+										done();
+									}
+								);
 							});
 						});
 					});

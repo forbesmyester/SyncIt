@@ -1106,6 +1106,20 @@ SyncIt.prototype.getDatakeysInDataset = function(datasetName, whenDatakeysKnown)
 };
 
 /**
+ * ### Remove any outstanding uploads for a specific Dataset / Datakey.
+ *
+ * #### Parameters
+ *
+ * * **@param {Dataset} `dataset`**
+ * * **@param {Datakey} `datakey`**
+ * * **@param {Function} `next`** Signature: Function(err)
+ *   * **@param {ErrorCode} `next.err`** See SyncIt_Constant.Error.
+ */
+SyncIt.prototype.purge = function(dataset, next) {
+	return this._ps.purge(dataset, next);
+};
+
+/**
  * ### SyncIt.clean()
  *
  * Will remove the remnants of conflict resolution, these __should__ only be
