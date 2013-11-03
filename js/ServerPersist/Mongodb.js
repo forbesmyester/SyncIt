@@ -135,11 +135,11 @@ SyncIt_ServerPersist_MongoDb.prototype.getQueueitem = function(dataset, fromVers
 };
 
 
-SyncIt_ServerPersist_MongoDb.prototype.getLastQueueitem = function(dataset,datakey, projection, done) {
+SyncIt_ServerPersist_MongoDb.prototype.getLastQueueitem = function(dataset,datakey, done) {
 	return this._getLast(dataset, datakey, {}, done);
 };
 
-SyncIt_ServerPersist_MongoDb.prototype._getLast = function(dataset,datakey, projection, done) {
+SyncIt_ServerPersist_MongoDb.prototype._getLast = function(dataset, datakey, projection, done) {
 	
 	// TODO done should be translated...
 	this._mongoskinConnection.collection(this._dataCollection).findOne(
@@ -150,9 +150,11 @@ SyncIt_ServerPersist_MongoDb.prototype._getLast = function(dataset,datakey, proj
 			if (err) {
 				throw new Error("SyncIt: MongoDB: _getLast:", err, dataset, datakey, projection);
 			}
-			if (result === null) { return done(err, result); }
+			if (result === null) {
+				return done(SyncIt_Constant.Error.NO_DATA_FOUND, result);
+			}
 			result.s = result._id.s;
-			return done(err, this._unserialize(result));
+			return done(SyncIt_Constant.Error.OK, this._unserialize(result));
 		}.bind(this)
 	);
 };
