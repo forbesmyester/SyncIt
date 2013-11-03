@@ -95,7 +95,7 @@ describe('TransitionState',function() {
 		expect(evented).to.equal(true);
 		expect(ts.current()).to.equal('DATA_PARTIAL_OFFLINE');
 	});
-	it('bad transitions to errors', function() {
+	it('change to bad state errors', function() {
 		var ts = new TransitionState('ANALYZE');
 		var evented = false;
 		ts.addState('ANALYZE', ['DATA_PARTIAL_OFFLINE', 'DATA_FULL_OFFLINE']);
@@ -106,6 +106,25 @@ describe('TransitionState',function() {
 			expect(newState).to.equal('ANALYZE');
 			expect(
 				function() { ts.change('BAD_STATE') }
+			).to.throwError(function(e) {
+				expect(e.message).to.match(/TransitionState/);
+			});
+		});
+		ts.start();
+		expect(evented).to.equal(true);
+		expect(ts.current()).to.equal('ANALYZE');
+	});
+	it('going to valid state, from valid state, but with invalid transition errors', function() {
+		var ts = new TransitionState('ANALYZE');
+		var evented = false;
+		ts.addState('ANALYZE', ['DATA_PARTIAL_OFFLINE', 'DATA_FULL_OFFLINE']);
+		ts.addState('DATA_PARTIAL_OFFLINE', ['ANALYZE']);
+		ts.addState('DATA_FULL_OFFLINE', ['ANALYZE']);
+		ts.on('initial-state',function(newState) {
+			evented = true;
+			expect(newState).to.equal('ANALYZE');
+			expect(
+				function() { ts.change('ANALYZE') }
 			).to.throwError(function(e) {
 				expect(e.message).to.match(/TransitionState/);
 			});

@@ -37,6 +37,11 @@ TransitionState.prototype.change = function(newState) {
 			"state '" + this._state + "' to state '" + newState +
 			"' but state '" + newState + "' does not exist.");
 	}
+	if (this._states[oldState].indexOf(newState) == -1) {
+		throw new Error("TransitionState: Attempting to transition to " +
+			"state '" + newState + "' from state '" + this._state +
+			"' but that is not a valid transition");
+	}
 	this._state = newState;
 	this._emit('changed-state', oldState, newState);
 }
