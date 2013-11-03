@@ -213,7 +213,7 @@ TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 		},
 		versionError: function(err) {
 			if (err === SyncIt_Constant.Error.TRYING_TO_ADD_FUTURE_QUEUEITEM) {
-				return 'conflict';
+				return 'precondition-failed';
 			}
 			return false;
 		},
@@ -225,7 +225,7 @@ TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 		},
 		tryingToApplyOld: function(err) {
 			if (err == SyncIt_Constant.Error.TRYING_TO_ADD_QUEUEITEM_BASED_ON_OLD_VERSION) {
-				return 'out_of_date';
+				return 'conflict';
 			}
 			return false;
 		},

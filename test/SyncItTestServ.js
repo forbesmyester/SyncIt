@@ -112,14 +112,14 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
         syncItTestServer.PUT(req,  test );
         syncItTestServer.PUT(req,  test );
     });
-    it('will respond with out_of_date when trying to update with out of date patch',function(done) {
+    it('will respond with conflict when trying to update with out of date patch',function(done) {
         var testCount = 0;
         var req = {
             body:{ s:'xx', k:'yy', b:1, m:'bb', r:false, t:new Date().getTime(), u:{c:'d'},o:'set' } // the time will be wrong
         };
         var test = function(status,data) {
             syncItTestServer.getValue({params:{s:'xx',k:'yy'},body:{m:'bb'}},function(err,jrec) {
-                expect(status).to.equal('out_of_date');
+                expect(status).to.equal('conflict');
                 expect(jrec.m).to.equal('aa');
                 expect(jrec.i).to.eql({c:'d'});
                 if (++testCount == 2) {
