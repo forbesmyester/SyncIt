@@ -596,7 +596,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			['i','v','m','t','r']
 		);
 		
-		var joinCPathToA = function(dataset,datakey,next) {
+		var joinCPathToA = function(dataset,datakey,baseV,next) {
 			return this._ps.changePath(dataset,datakey,'c','a',this._autoClean,function(err) {
 				if (err) {
 					return unlockAndError(err,feedQueue);
@@ -617,7 +617,8 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 								dataset,
 								datakey,
 								storagekey.replace(/.*\./,''),
-								item
+								item,
+								{ b: baseV++ }
 							)
 						);
 						return ERROR.OK;
@@ -661,7 +662,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 				);
 				feedQueue.shift();
 				if (newRoot.v == info.cv) {
-					return joinCPathToA(dataset,datakey,feedOne);
+					return joinCPathToA(dataset,datakey,newRoot.v,feedOne);
 				}
 				feedOne();
 			}.bind(this)
@@ -1116,7 +1117,15 @@ SyncIt.prototype.getDatakeysInDataset = function(datasetName, whenDatakeysKnown)
  *   * **@param {ErrorCode} `next.err`** See SyncIt_Constant.Error.
  */
 SyncIt.prototype.purge = function(dataset, next) {
-	return this._ps.purge(dataset, next);
+	if (this.isLocked()) {
+		done(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
+		return false;
+	}
+	this._lockFor(LOCKING.CLEANING);
+	return this._ps.purge(dataset, function(err) {
+		this._unlockFor(LOCKING.CLEANING);
+		next(err);
+	});
 };
 
 /**

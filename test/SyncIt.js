@@ -569,8 +569,12 @@ describe('when feeding',function() {
 	it('can handle a conflict when there are no changes in conflict resolution',function(done) {
 		var syncIt = getFreshSyncIt();
 		var eventOccuredCount = 0;
+		var expectedBVer = 0;
 		syncIt.listenForFed(function() {
 			eventOccuredCount = eventOccuredCount + 1;
+		});
+		syncIt.listenForAddedToPath(function(s, k, queueitem) {
+			expect(queueitem.b).to.equal(expectedBVer++);
 		});
 
 		runSequence(
