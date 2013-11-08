@@ -349,9 +349,9 @@ var syncIts = (function() {
 		var formdata = domForm.toObject(
 			domQuery.NodeList(evt.target).parents('form')[0]
 		);
-		var url = "/dataset/"+formdata.dataset+'?from='+formdata.from;
-		if (formdata.from == "") {
-			url = url = "/dataset/"+formdata.dataset;
+		var url = "/dataset/"+formdata.dataset+'?m='+getHandSide(evt);
+		if (formdata.from != "") {
+			url = url + '&from='+formdata.from
 		}
 		xhr(url, {
 			handleAs: "json",
@@ -556,7 +556,9 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 	
 	var syncItTestServer = new SyncItTestServer(
 		new SyncIt_ServerPersist_MemoryAsync(),
-		function(req) { return req.body.m; }
+		function(req) {
+			return (req.hasOwnProperty('query') && req.query.hasOwnProperty('m')) ? req.query.m : req.body.m;
+		}
 	);
 	
 	serverGrid = viewExtraServer('server-view',syncItTestServer);

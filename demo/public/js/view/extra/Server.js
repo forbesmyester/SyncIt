@@ -29,7 +29,7 @@ function(viewExtraCommon,declare,ColumnResizer, Memory,Observable) {
 			dojoStore
 		);
 		
-		syncItServer.listenForFed(function(dataset, datakey, queueitem, jrec) {
+		syncItServer.listenForFed(function(req, to, dataset, datakey, queueitem, jrec) {
 			dojoStore.put(
 				{
 					id:queueitem.s+'.'+queueitem.k, 

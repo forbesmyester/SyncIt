@@ -56,7 +56,7 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
     var emitCount = 0;
     var lastEmitQueueitem = null;
     var lastEmitJrec = null;
-    syncItTestServer.listenForFed(function(dataset,datakey,queueitem,jrec) {
+    syncItTestServer.listenForFed(function(req, seqId, dataset, datakey, queueitem, jrec) {
 		expect(dataset).to.equal('xx');
 		expect(datakey).to.equal('yy');
         emitCount = emitCount + 1;
@@ -66,15 +66,20 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
     
     it('will respond with created when creating data',function(done) {
         var testCount = 0;
+        var createdCount = 0;
         var req = {
             body:{ s:'xx', k:'yy', b:0, m:'aa', r:false, t:new Date().getTime(), u:{b:'c'}, o:'set' }
         };
-        var test = function(status,data) {
-            expect(status).to.equal('created');
+        var test = function(status, data) {
+        	expect(data.queueitem.m).to.equal('aa');
+            expect(['created', 'see_other'].indexOf(status)).to.be.greaterThan(-1);
+			if (status == 'created') {
+				createdCount++;
+			}
             syncItTestServer.getValue(
-                {params:{s:'xx',k:'yy'}, body: { m: 'aa' } },
-                
+                { params:{s:'xx',k:'yy'}, body: { m: 'aa' } },
                 function(err,jrec) {
+                	expect(createdCount).to.equal(1);
                     expect(err).to.equal('ok');
                     expect(jrec.i).to.eql({b:'c'});
                     expect(jrec.m).to.equal('aa');
@@ -95,16 +100,24 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
     });
     it('will respond with ok when updating data',function(done) {
         var testCount = 0;
+        var okCount = 0;
         var req = {
             params:{s:'xx',k:'yy'},
             body:{ s:'xx', k:'yy', b:1, m:'aa', r:false, t:new Date().getTime(), u:{c:'d'}, o:'set' }
         };
-        var test = function(status,data) {
+        var test = function(status, data) {
+			expect(['ok', 'see_other'].indexOf(status)).to.be.greaterThan(-1);
+			expect(data.queueitem.s).to.equal('xx');
+			expect(data.queueitem.k).to.equal('yy');
+			expect(data.queueitem.m).to.equal('aa');
+			if (status == 'ok') {
+				okCount++;
+			}
             syncItTestServer.getValue(req,function(err,jrec) {
-                expect(status).to.equal('ok');
                 expect(jrec.m).to.equal('aa');
                 expect(jrec.i).to.eql({c:'d'});
                 if (++testCount == 2) {
+                	expect(okCount).to.equal(1);
                     done();
                 }
             });
@@ -132,14 +145,18 @@ describe('When SyncItTestServ responds to a PATCH request',function() {
     });
     it('will respond when deleting',function(done) {
         var testCount = 0;
+		var okCount = 0;
         var req = {
             params:{s:'xx',k:'yy'},
             body:{ s:'xx', k:'yy', b:2, m:'aa', r:false, t:new Date().getTime(), u:{t:'t'}, o:'remove' } // the time will be wrong
         };
-        var test = function(status,data) {
-            expect(status).to.equal('ok');
+        var test = function(status, data) {
+            expect(['ok', 'see_other'].indexOf(status)).to.be.greaterThan(-1);
+			if (status == 'ok') {
+				okCount++;
+			}
             syncItTestServer.getValue(req,function(err,jrec) {
-                expect(status).to.equal('ok');
+            	expect(okCount).to.equal(1);
                 expect(jrec.m).to.equal('aa');
                 expect(jrec.r).to.equal(true);
                 expect(jrec.i).to.eql({c:'d'});

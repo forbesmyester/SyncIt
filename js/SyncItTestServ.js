@@ -143,7 +143,9 @@ TestServer.prototype.getValue = function(req,responder) {
  *
  * #### Parameters
  *
- * * **@param {Function} `listener`** Callback. Signature: `function (processedQueueitem, processedJrec)`
+ * * **@param {Function} `listener`** Callback. Signature: `function (processedQueueitem, processedJrec)`.
+ *   * **@param {Request} `listener.req`** An Express Request (first param of TestServer._setRemoveOrUpdate()).
+ *   * **@param {Request} `listener.to`** The sequence within the Dataset.
  *   * **@param {String} `listener.dataset`** The dataset of the just fed Queueitem.
  *   * **@param {String} `listener.datakey`** The datakey of the just fed Queueitem.
  *   * **@param {Queueitem} `listener.processedQueueitem`** The Queueitem which has just been added
@@ -191,9 +193,9 @@ TestServer.prototype.listen = function(event,listener) {
  *   * **@param {Object} `req.(param|query|body)`** Should look like a Queueitem.
  * * **@param {Function} `responder`** Callback. Signature: `function (statusString, data)`
  *   * **@param {String} `responder.statusString`** Quite a set... `validation_error` || `service_unavailable` || `conflict` || `out_of_date` || `gone` || `created` || `ok`
- *   * **@param {Object} `responder.data`** Object {loc: <location>, to: <lastId>}
- *      * **@param {String} `responder.data.loc`** The Dataset and Datakey seperated by a '/'
- *      * **@param {String} `responder.data.to`** The Id which which was just created, this is for use in [TestServer.getQueueitem()](#testserver.getqueueitem--)
+ *   * **@param {Object} `responder.data`**
+ *   * **@param {String} `responder.data.to`** The update number within the Dataset
+ *   * **@param {Queueitem} `responder.data.queueitem`** The Queueitem which has just been added
  */
 TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 	
@@ -281,22 +283,24 @@ TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 				}
 			}
 			
-			if (emit) {
-				inst._emit(
-					'fed',
-					processedQueueitem.s,
-					processedQueueitem.k,
-					processedQueueitem,
-					processedJrec
+			if (!emit) {
+				return responder(
+					'see_other',
+					{ to: createdId, queueitem: processedQueueitem }
 				);
 			}
+			inst._emit(
+				'fed',
+				req,
+				createdId,
+				processedQueueitem.s,
+				processedQueueitem.k,
+				processedQueueitem,
+				processedJrec
+			);
 			return responder(
 				queueitem.b === 0 ? 'created' : 'ok',
-				{
-					loc: '/'+processedQueueitem.s+'/'+processedQueueitem.k,
-					to: createdId,
-					queueitem: queueitem
-				}
+				{ to: createdId, queueitem: processedQueueitem }
 			);
 		},
 		function() { console.log("SERVER_APPLIED"); }
