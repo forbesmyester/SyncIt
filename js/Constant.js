@@ -188,6 +188,9 @@ Validation.MODIFIER_REGEXP = /^[A-Za-z][A-Za-z0-9\-]+$/;
 
 Validation.OPERATION_REGEXP = /^(set)|(update)|(remove)$/;
 
+/**
+ * These identify different types of information found while navigating a path.
+ */
 var FollowInformationType = {};
 FollowInformationType.INFO = 1;
 FollowInformationType.ROOTITEM = 2;

@@ -706,7 +706,7 @@ SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
 			s: SyncIt_Constant.Error.INVALID_DATASET,
 			k: SyncIt_Constant.Error.INVALID_DATAKEY,
 			o: SyncIt_Constant.Error.INVALID_OPERATION
-		}
+		};
 	for (k in requiredFields) {
 		if (
 			requiredFields.hasOwnProperty(k) && 
