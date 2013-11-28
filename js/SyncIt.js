@@ -1125,7 +1125,7 @@ SyncIt.prototype.purge = function(dataset, next) {
 	return this._ps.purge(dataset, function(err) {
 		this._unlockFor(LOCKING.CLEANING);
 		next(err);
-	});
+	}.bind(this));
 };
 
 /**
