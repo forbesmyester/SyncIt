@@ -118,7 +118,7 @@ TestServer.prototype.getValue = function(req,responder) {
 	)) { return responder('validation_error',null); }
 	if (!this._validateInputFieldAgainstRegexp(
 		'k',
-		SyncIt_Constant.Validation.DATASET_REGEXP,
+		SyncIt_Constant.Validation.DATAKEY_REGEXP,
 		reqInfo
 	)) { return responder('validation_error',null); }
 	
@@ -302,6 +302,8 @@ TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 				queueitem.b === 0 ? 'created' : 'ok',
 				{ to: createdId, queueitem: processedQueueitem }
 			);
+		},
+		function() {
 		}
 	);
 
