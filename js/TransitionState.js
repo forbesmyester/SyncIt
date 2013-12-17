@@ -44,7 +44,7 @@ TransitionState.prototype.change = function(newState) {
 	}
 	this._state = newState;
 	this._emit('changed-state', oldState, newState);
-}
+};
 
 TransitionState.prototype.start = function() {
 	var i, l, k, nextStates;

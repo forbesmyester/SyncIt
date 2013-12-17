@@ -21,6 +21,7 @@
 		);
 	}
 })(this, function (SyncIt_Constant,updateResult,CommonFuncs) {
+
 "use strict";
 
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
@@ -46,6 +47,7 @@
  */
 var makeLaggy = function(func,factor) {
 	return function() {
+		/* global setTimeout */
 		var args = Array.prototype.slice.call(arguments);
 		setTimeout(function() {
 			func.apply(this,args);

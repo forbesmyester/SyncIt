@@ -124,7 +124,7 @@ SyncIt_ServerPersist_MongoDb.prototype.getQueueitem = function(dataset, fromVers
 			err,
 			items.map(function(rec) {
 				if (rec._id.n > maxId) {
-					maxId = rec._id.n
+					maxId = rec._id.n;
 				}
 				return this._unserialize(rec);
 			}.bind(this)),

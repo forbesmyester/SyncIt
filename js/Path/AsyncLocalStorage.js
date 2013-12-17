@@ -1161,7 +1161,7 @@ Als.prototype.clean = function(next) {
 			}
 		}
 		return r;
-	}
+	};
 
 	var removeItems = function(notVisited, next) {
 

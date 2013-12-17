@@ -1,4 +1,5 @@
 (function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
+	"use strict";
 	if (typeof exports === 'object') {
 		module.exports = factory();
 	} else if (typeof define === 'function' && define.amd) {

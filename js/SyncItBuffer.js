@@ -24,6 +24,7 @@
  */
 
 var SyncItBuffer = function(syncIt) {
+	/* global setInterval */
 	this._syncIt = syncIt;
 	this._instructions = [];
 	this._current = null;
@@ -39,7 +40,7 @@ var SyncItBuffer = function(syncIt) {
 					c.apply(
 						this._syncIt,
 						arguments
-					)
+					);
 				}
 			}.bind(this));
 			this._current.f.apply(this._syncIt, args);

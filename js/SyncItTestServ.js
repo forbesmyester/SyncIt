@@ -302,8 +302,7 @@ TestServer.prototype._setRemoveOrUpdate = function(req,operation,responder) {
 				queueitem.b === 0 ? 'created' : 'ok',
 				{ to: createdId, queueitem: processedQueueitem }
 			);
-		},
-		function() { console.log("SERVER_APPLIED"); }
+		}
 	);
 
 };

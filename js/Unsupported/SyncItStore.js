@@ -86,11 +86,11 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 			indexItem(dataset, datakey, function() {} );
 		});
 		
-		inst._syncIt.listenForAdvanced(function(dataset, datakey, queueitem) {
+		inst._syncIt.listenForAdvanced(function(dataset, datakey) {
 			indexItem(dataset, datakey, function() {} );
 		});
 		
-		inst._syncIt.listenForFed(function(dataset, datakey, queueitem) {
+		inst._syncIt.listenForFed(function(dataset, datakey) {
 			indexItem(dataset, datakey, function() {} );
 		});
 		
@@ -105,8 +105,7 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 				}
 				
 				var i = 0,
-					l = 0,
-					allKeyPromises = [];
+					l = 0;
 				
 				// Fired when all indexes have been created for one jrec.
 				var indexed = function() {
@@ -245,8 +244,6 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 				// }
 				return null;
 			};
-		
-			var deferred = null;
 			
 			var sort = {attribute:'id',descending:false},
 				i,j,l = 0;
@@ -325,10 +322,16 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 				
 				return deferred;
 			};
-			if (!doingPromise) {
-				return QueryResults(getDataFromLastResultSet(resultIds));
-			}
-			return QueryResults(getPromiseResultSet(resultIds));
+			
+			var getResult = function(doingPromise) {
+				/* jshint newcap: false */
+				if (!doingPromise) {
+					return QueryResults(getDataFromLastResultSet(resultIds));
+				}
+				return QueryResults(getPromiseResultSet(resultIds));
+			};
+			
+			return getResult(doingPromise);
 		};
 	},
 	query: function(query,options) {

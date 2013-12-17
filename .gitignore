@@ -1,4 +1,5 @@
 node_modules
+*.marks
 *.sublime-project
 *.sublime-workspace
 docs

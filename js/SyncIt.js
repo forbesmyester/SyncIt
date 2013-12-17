@@ -712,7 +712,7 @@ SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
 			requiredFields.hasOwnProperty(k) && 
 			!queueitem.hasOwnProperty(k)
 		) {
-			return requiredFields[k]
+			return requiredFields[k];
 		}
 	}
 	if (queueitem.s.match(SyncIt_Constant.Validation.DATASET_REGEXP) === null) {
@@ -988,7 +988,7 @@ SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
 SyncIt.prototype.getVersion = function(dataset, datakey, whenVersionFound) {
 	this.getFull(dataset, datakey, function(e, r) {
 		if (e === ERROR.NO_DATA_FOUND) {
-			return whenVersionFound(ERROR.OK, 0)
+			return whenVersionFound(ERROR.OK, 0);
 		}
 		if (e === ERROR.OK) {
 			return whenVersionFound(e, r.b + 1);
@@ -1118,7 +1118,7 @@ SyncIt.prototype.getDatakeysInDataset = function(datasetName, whenDatakeysKnown)
  */
 SyncIt.prototype.purge = function(dataset, next) {
 	if (this.isLocked()) {
-		done(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
+		next(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
 		return false;
 	}
 	this._lockFor(LOCKING.CLEANING);
