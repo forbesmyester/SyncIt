@@ -570,11 +570,15 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 		);
 		visualizeData('graph',pathStore,localStorage,'aa');
 		pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+			expect(err).to.equal(ERROR.OK);
 			pathStore.push('cars','subaru','p',{c:'d'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(ERROR.OK);
 				pathStore.push('cars','subaru','c',{e:'f'},false,function() { return ERROR.OK; },function(err) {
+					expect(err).to.equal(ERROR.OK);
 					asyncLocalStorage.findKeys('*.*.*', function(keys) {
 						expect(keys.length).to.equal(3);
-						pathStore.purge('cars', function() {
+						pathStore.purge('cars', function(err) {
+							expect(err).to.equal(ERROR.OK);
 							asyncLocalStorage.findKeys('*.*.*', function(keys) {
 								expect(keys.length).to.equal(0);
 								asyncLocalStorage.findKeys(
@@ -592,6 +596,167 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 		});
 	});
 	
+	describe('removal of whole dataset and datakey', function() {
+		it('is possible', function(done) {
+			this.timeout(60000);
+			var localStorage = new SyncIt_FakeLocalStorage();
+			var asyncLocalStorage = new AsyncLocalStorage(
+				localStorage,
+				'aa',
+				JSON.stringify,
+				JSON.parse
+			);
+			var pathStore = new SyncIt_Path_AsyncLocalStorage(
+				asyncLocalStorage,
+				new EncoderDecoder(new Date(1980,1,1).getTime()),
+				'aa'
+			);
+			visualizeData('graph',pathStore,localStorage,'aa');
+			pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(0);
+				expect(
+					getPaths(localStorage,'aa','p')
+				).to.eql([
+					{from:'cars.subaru._0',to:null},
+					{from:'cars.subaru:p',to:'_0'}
+				]);
+				pathStore.push('cars','subaru','p',{$set:{c:'d'}},false,function() { return ERROR.OK; }, function(err) {
+					expect(err).to.equal(ERROR.OK);
+					pathStore.push('cars','subaru','q',{$set:{c:'d'}},false,function() { return ERROR.OK; }, function(err) {
+						expect(err).to.equal(ERROR.OK);
+						pathStore.getDatakeysInDataset('cars', function(err, datakeys) {
+							expect(datakeys).to.eql(['subaru']);
+							pathStore.removeDatasetDatakey(
+								'cars',
+								'subaru',
+								true,
+								function(err) {
+									expect(err).to.equal(ERROR.OK);
+									pathStore.getDatakeysInDataset(
+										'cars',
+										function(err, datakeys) {
+											expect(datakeys).to.eql([]);
+											expect(localStorage.length).to.equal(0); // naughty check, but useful
+											done();
+										}
+									);
+								}
+							);
+						});
+					});
+				});		
+			});
+		});
+	});
+	
+	describe('promotePathToOrRemove', function() {
+		it('will remove if no path to promote', function(done) {
+			this.timeout(60000);
+			var localStorage = new SyncIt_FakeLocalStorage();
+			var asyncLocalStorage = new AsyncLocalStorage(
+				localStorage,
+				'aa',
+				JSON.stringify,
+				JSON.parse
+			);
+			var pathStore = new SyncIt_Path_AsyncLocalStorage(
+				asyncLocalStorage,
+				new EncoderDecoder(new Date(1980,1,1).getTime()),
+				'aa'
+			);
+			visualizeData('graph',pathStore,localStorage,'aa');
+			pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(ERROR.OK);
+				expect(
+					getPaths(localStorage,'aa','p')
+				).to.eql([
+					{from:'cars.subaru._0',to:null},
+					{from:'cars.subaru:p',to:'_0'}
+				]);
+				pathStore.push('cars','subaru','p',{$set:{c:'d'}},false,function() { return ERROR.OK; }, function(err) {
+					expect(err).to.equal(ERROR.OK);
+					pathStore.push('cars','subaru','q',{$set:{c:'d'}},false,function() { return ERROR.OK; }, function(err) {
+						expect(err).to.equal(ERROR.OK);
+						pathStore.getDatakeysInDataset('cars', function(err, datakeys) {
+							expect(datakeys).to.eql(['subaru']);
+							pathStore.promotePathToOrRemove(
+								'cars',
+								'subaru',
+								'x',
+								'p',
+								true,
+								function(err) {
+									expect(err).to.equal(ERROR.OK);
+									pathStore.getDatakeysInDataset(
+										'cars',
+										function(err, datakeys) {
+											expect(datakeys).to.eql([]);
+											expect(localStorage.length).to.equal(0); // naughty check, but useful
+											done();
+										}
+									);
+								}
+							);
+						});
+					});
+				});		
+			});
+		});
+
+		it('will move the path to be promoted', function(done) {
+			this.timeout(60000);
+			var localStorage = new SyncIt_FakeLocalStorage();
+			var asyncLocalStorage = new AsyncLocalStorage(
+				localStorage,
+				'aa',
+				JSON.stringify,
+				JSON.parse
+			);
+			var pathStore = new SyncIt_Path_AsyncLocalStorage(
+				asyncLocalStorage,
+				new EncoderDecoder(new Date(1980,1,1).getTime()),
+				'aa'
+			);
+			visualizeData('graph',pathStore,localStorage,'aa');
+			pathStore.push('cars','subaru','p',{a:'b'},false,function() { return ERROR.OK; },function(err) {
+				expect(err).to.equal(0);
+				expect(
+					getPaths(localStorage,'aa','p')
+				).to.eql([
+					{from:'cars.subaru._0',to:null},
+					{from:'cars.subaru:p',to:'_0'}
+				]);
+				pathStore.push('cars','subaru','p',{$set:{c:'d'}},false,function() { return ERROR.OK; }, function(err) {
+					expect(err).to.equal(ERROR.OK);
+					pathStore.push('cars','subaru','q',{$set:{c:'d'}},false,function() { return ERROR.OK; }, function(err) {
+						expect(err).to.equal(ERROR.OK);
+						pathStore.getDatakeysInDataset('cars', function(err, datakeys) {
+							expect(datakeys).to.eql(['subaru']);
+							pathStore.promotePathToOrRemove(
+								'cars',
+								'subaru',
+								'q',
+								'p',
+								true,
+								function(err) {
+									expect(err).to.equal(ERROR.OK);
+									pathStore.getDatakeysInDataset(
+										'cars',
+										function(err, datakeys) {
+											expect(datakeys).to.eql(['subaru']);
+											expect(localStorage.length).to.equal(2); // naughty check, but useful
+											done();
+										}
+									);
+								}
+							);
+						});
+					});
+				});		
+			});
+		});
+
+	});
 
 });
 

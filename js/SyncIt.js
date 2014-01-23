@@ -568,7 +568,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 						storerecord.m = this.getModifier();
 					}
 					return storerecord;
-				}.bind(this))(),
+				}.bind(this)()),
 				queue,
 				fedForSameDatasetAndDatakey,
 				function(resolved,mergePathitem) {
@@ -595,6 +595,25 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			),
 			['i','v','m','t','r']
 		);
+		
+		if (feedQueue[0].o == 'remove') {
+			return this._ps.promotePathToOrRemove(feedQueue[0].s,feedQueue[0].k,'c','a',false,function(err) {
+				if (err !== ERROR.OK) {
+					return unlockAndError(err);
+				}
+				var dataset = feedQueue[0].s;
+				var datakey = feedQueue[0].k;
+				this._emit(
+					'fed',
+					dataset,
+					datakey,
+					feedQueue[0],
+					null
+				);
+				feedQueue.shift();
+				feedOne();
+			}.bind(this));
+		}
 		
 		var joinCPathToA = function(dataset,datakey,baseV,next) {
 			return this._ps.changePath(dataset,datakey,'c','a',this._autoClean,function(err) {
@@ -873,6 +892,9 @@ SyncIt.prototype.advance = function(done) {
 				addedPathkey = key;
 				// Filter to just keys r, v, i and possibly t anything else can
 				// be recreated.
+				if (item.o === 'remove') {
+					return newRootCb(null);
+				}
 				newRoot = updateResult(pathRoot,item,this._cloneObj);
 				newRoot = _shallowCopyKeys(
 					this._addObviousInforation(dataset,datakey,addedPathkey,newRoot),
@@ -965,6 +987,9 @@ SyncIt.prototype._addObviousInforation = function(dataset,datakey,reference,ob,e
  */
 SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
 	this.getFull(dataset, datakey, function(e, r) {
+		if (e === ERROR.DATA_ALREADY_REMOVED) {
+			return whenDataRetrieved(e, null);
+		}
 		if (e === ERROR.OK) {
 			return whenDataRetrieved(e, r.i);
 		}
@@ -990,7 +1015,7 @@ SyncIt.prototype.getVersion = function(dataset, datakey, whenVersionFound) {
 		if (e === ERROR.NO_DATA_FOUND) {
 			return whenVersionFound(ERROR.OK, 0);
 		}
-		if (e === ERROR.OK) {
+		if ([ERROR.OK,ERROR.DATA_ALREADY_REMOVED].indexOf(e) > -1) {
 			return whenVersionFound(e, r.b + 1);
 		}
 		whenVersionFound(e);
@@ -1061,13 +1086,18 @@ SyncIt.prototype.getFull = function(dataset, datakey, whenDataRetrieved) {
 	var pathWatcher = this._getPathWatcher();
 	
 	this._ps.followPath(dataset,datakey,'a',pathWatcher.getWatcher(),function(err) {
+		
+		var fullData;
+		
 		if (err !== ERROR.OK) {
 			return whenDataRetrieved(err);
 		}
-		return whenDataRetrieved(
-			err,
-			this._addObviousInforation(dataset,datakey,null,pathWatcher.getReaditem())
-		);
+		
+		fullData = this._addObviousInforation(dataset,datakey,null,pathWatcher.getReaditem());
+		if (fullData.r === true) {
+			err = ERROR.DATA_ALREADY_REMOVED;
+		}
+		return whenDataRetrieved(err,fullData);
 	}.bind(this));
 };
 
