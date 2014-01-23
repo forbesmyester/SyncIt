@@ -69,19 +69,6 @@ var _cloneObj = function(ob) {
 var ERROR = SyncIt_Constant.Error;
 
 var getNewPathStore = function() {
-	var EncoderDecoder = SyncIt_getTLIdEncoderDecoder;
-
-	//var EncoderDecoder = function() {
-	//	this.index = 0;
-	//};
-	//
-	//EncoderDecoder.prototype.encode = function() {
-	//	return '_'+(this.index++);
-	//};
-	//
-	//EncoderDecoder.prototype.sort = function(a,b) {
-	//	return parseInt(a.substr(1),10) - parseInt(a.substr(1),10);
-	//}
 
 	var localStorage = new SyncIt_FakeLocalStorage();
 	var asyncLocalStorage = new SyncIt_AsyncLocalStorage(
@@ -93,7 +80,7 @@ var getNewPathStore = function() {
 	);
 	var pathStore = new SyncIt_Path_AsyncLocalStorage(
 		asyncLocalStorage,
-		new EncoderDecoder(new Date(1980,1,1).getTime())
+		new SyncIt_getTLIdEncoderDecoder(new Date(1980,1,1).getTime())
 	);
 	SyncIt_Unsupported_PathStorageAnalysis.visualizeData('graph',pathStore,localStorage,'aa');
 	return pathStore;
