@@ -67,6 +67,10 @@ return function(syncIt) {
 				}
 			};
 			
+			if (datakeys.length === 0) {
+				return whenDatakeysKnown(SyncIt_Constant.Error.OK,[]);
+			}
+			
 			for (i=0, l=datakeys.length; i<l; i++) {
 				syncIt.getFull(dataset,datakeys[i],handleGetFull);
 			}

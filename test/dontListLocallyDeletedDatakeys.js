@@ -114,6 +114,18 @@ describe('dontListLocallyDeletedDatakeys',function() {
 			});
 		});
 	});
+	
+	it('will still fire callback when no datakeys',function(done) {
+		
+		var syncIt = dontListLocallyDeletedDatakeys(getFreshSyncIt());
+
+		syncIt.getDatakeysInDataset('cars', function(err, datakeys) {
+			expect(err).to.eql(SyncIt_Constant.Error.OK);
+			expect(datakeys).to.eql([]);
+			done();					
+		});
+		
+	});
 });
 
 });
