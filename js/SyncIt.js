@@ -8,7 +8,6 @@
 				'syncit/Constant',
 				'syncit/addEvents',
 				'syncit/addLocking',
-				'syncit/getTLIdEncoderDecoder',
 				'syncit/updateResult'
 			],
 			factory
@@ -18,7 +17,6 @@
 			require('./Constant.js'),
 			require('./addEvents.js'),
 			require('./addLocking.js'),
-			require('./getTLIdEncoderDecoder.js'),
 			require('./updateResult.js')
 		);
 	} else {
@@ -26,11 +24,10 @@
 			root.SyncIt_Constant,
 			root.SyncIt_addEvents,
 			root.SyncIt_addLocking,
-			root.SyncIt_getTLIdEncoderDecoder,
 			root.SyncIt_updateResult
 		);
 	}
-}(this, function(SyncIt_Constant, addEvents, addLocking, getTLIdEncoderDecoder, updateResult) {
+}(this, function(SyncIt_Constant, addEvents, addLocking, updateResult) {
 
 "use strict";
 
