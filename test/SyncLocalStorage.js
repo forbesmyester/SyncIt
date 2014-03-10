@@ -5,7 +5,7 @@
 		// only CommonJS-like enviroments that support module.exports,
 		// like Node.
 		module.exports = factory(
-			require('../node_modules/expect.js/expect.js'),
+			require('expect.js'),
 			require('../js/FakeLocalStorage.js'),
 			require('../js/SyncLocalStorage.js')
 		);
@@ -13,11 +13,10 @@
 		// AMD. Register as an anonymous module.
 		define(
 			[
-				'expect.js',
-				'syncit/FakeLocalStorage',
-				'syncit/SyncLocalStorage'
+				'../js/FakeLocalStorage',
+				'../js/SyncLocalStorage'
 			],
-			factory
+			factory.bind(this, expect)
 		);
 	} else {
 		// Browser globals (root is window)

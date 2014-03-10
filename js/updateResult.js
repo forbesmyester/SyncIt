@@ -4,18 +4,9 @@
 	"use strict";
 
 	if (typeof exports === 'object') {
-		module.exports = factory(
-			require('./manip.js')
-		);
-	} else if (typeof define === 'function' && define.amd) {
-		define(
-			['syncit/manip'],
-			factory
-		);
+		module.exports = factory(require('manip'));
 	} else {
-		root.SyncIt_updateResult = factory(
-			root.SyncIt_manip
-		);
+		define(['manip'], factory);
 	}
 })(this, function (manip) {
 

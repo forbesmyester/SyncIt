@@ -1,6 +1,6 @@
 /*jshint smarttabs:true */
 define(
-['syncit/SyncIt','syncit/Constant','dojo/_base/declare','dojo/Deferred',"dojo/promise/all",
+['../SyncIt','../Constant','dojo/_base/declare','dojo/Deferred',"dojo/promise/all",
 	"dojo/_base/array",'dojo/store/util/QueryResults'],
 function(SyncIt,SyncIt_Constant,declare,Deferred,promiseAll,dojoBaseArray,QueryResults) {
 
@@ -68,7 +68,10 @@ return declare('syncit.Unsupported.SyncItStore',[], {
 			};
 			
 			inst._syncIt.getFull(dataset,datakey,function(err,jread) {
-				if (err) { throw err; }
+				if (
+					(err != SyncIt_Constant.Error.OK) &&
+					(err != SyncIt_Constant.Error.DATA_ALREADY_REMOVED)
+				) { throw err; }
 				var wasAlreadyThere = inst._removeFromIndexes(dataset+'.'+datakey);
 				perform(inst._makeFullStoreRecord(jread,dataset+'.'+datakey));
 				if (inst.hasOwnProperty('notify')) {

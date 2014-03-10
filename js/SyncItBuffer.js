@@ -5,10 +5,8 @@
 			require('./Constant.js'),
 			require('./SyncIt.js')
 		);
-	} else if (typeof define === 'function' && define.amd) {
-		define(['syncit/Constant', 'syncit/SyncIt'], factory);
 	} else {
-		root.SyncIt_SyncItBuffer = factory(root.SyncIt_Constant, root.SyncIt);
+		define(['./Constant', './SyncIt'], factory);
 	}
 }(this, function (SyncItConstant, SyncIt) {
 	

@@ -1,20 +1,8 @@
 // if the module has no dependencies, the above pattern can be simplified to
 (function (root, factory) {
-	
 	"use strict";
-
-	if (typeof exports === 'object') {
-		// Node. Does not work with strict CommonJS, but
-		// only CommonJS-like enviroments that support module.exports,
-		// like Node.
-		module.exports = factory();
-	} else if (typeof define === 'function' && define.amd) {
-		// AMD. Register as an anonymous module.
-		define(factory);
-	} else {
-		// Browser globals (root is window)
-		root.SyncIt_Constant = factory();
-  }
+	if (typeof exports === 'object') { module.exports = factory(); }
+	else { define(factory); }
 }(this, function () {
 
 "use strict";

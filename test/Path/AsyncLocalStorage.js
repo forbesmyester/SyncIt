@@ -8,11 +8,11 @@
 		// only CommonJS-like enviroments that support module.exports,
 		// like Node.
 		module.exports = factory(
-			require('../../node_modules/expect.js/expect.js'),
+			require('expect.js'),
 			require('../../js/Constant.js'),
 			require('../../js/FakeLocalStorage.js'),
 			require('../../js/AsyncLocalStorage.js'),
-			require('../../js/getTLIdEncoderDecoder.js'),
+			require('get_tlid_encoder_decoder'),
 			require('../../js/Path/AsyncLocalStorage.js'),
 			require('../../js/Unsupported/PathStorageAnalysis.js')
 		);
@@ -20,15 +20,14 @@
 		// AMD. Register as an anonymous module.
 		define(
 			[
-				'expect.js',
-				'syncit/Constant',
-				'syncit/FakeLocalStorage.js',
-				'syncit/AsyncLocalStorage.js',
-				'syncit/getTLIdEncoderDecoder',
-				'syncit/Path/AsyncLocalStorage.js',
-				'syncit/Unsupported/PathStorageAnalysis.js'
+				'../../js/Constant',
+				'../../js/FakeLocalStorage.js',
+				'../../js/AsyncLocalStorage.js',
+				'get_tlid_encoder_decoder',
+				'../../js/Path/AsyncLocalStorage.js',
+				'../../js/Unsupported/PathStorageAnalysis.js'
 			],
-			factory
+			factory.bind(this, expect)
 		);
 	} else {
 		// Browser globals (root is window)
@@ -36,7 +35,7 @@
 			root.expect,
 			root.SyncIt_Constant,
 			root.SyncIt_FakeLocalStorage,
-			root.SyncIt_AsyncLocalStorage,
+			root.get_tlid_encoder_decoder,
 			root.SyncIt_getTLIdEncoderDecoder,
 			root.SyncIt_Path_AsyncLocalStorage,
 			root.SyncIt_Unsupported_PathStorageAnalysis

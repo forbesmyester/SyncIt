@@ -2,10 +2,8 @@
 	"use strict";
 	if (typeof exports === 'object') {
 		module.exports = factory(require('./Constant.js'));
-	} else if (typeof define === 'function' && define.amd) {
-		define(['syncit/Constant'],factory);
 	} else {
-		root.SyncIt_dontListLocallyDeletedDatakeys = factory(root.SyncIt_Constant);
+		define(['./Constant'],factory);
 	}
 }(this, function (SyncIt_Constant) {
 	

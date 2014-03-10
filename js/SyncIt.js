@@ -5,26 +5,19 @@
 	if (typeof define === 'function' && define.amd) {
 		define(
 			[
-				'syncit/Constant',
-				'syncit/addEvents',
-				'syncit/addLocking',
-				'syncit/updateResult'
+				'./Constant',
+				'add-events',
+				'./addLocking',
+				'./updateResult'
 			],
 			factory
 		);
-	} else if (typeof exports === 'object') {
+	} else {
 		module.exports = factory(
 			require('./Constant.js'),
-			require('./addEvents.js'),
+			require('add-events'),
 			require('./addLocking.js'),
 			require('./updateResult.js')
-		);
-	} else {
-		root.SyncIt = factory(
-			root.SyncIt_Constant,
-			root.SyncIt_addEvents,
-			root.SyncIt_addLocking,
-			root.SyncIt_updateResult
 		);
 	}
 }(this, function(SyncIt_Constant, addEvents, addLocking, updateResult) {
@@ -40,6 +33,27 @@ var ERROR = SyncIt_Constant.Error;
 var FOLLOW_INFORMATION_TYPE = SyncIt_Constant.FollowInformationType;
 
 /**
+ * **_map()**
+ *
+ * Simple map function for when Array.map() is not available.
+ *
+ * * **@param {Array} `arr`** The array to filter.
+ * * **@param {Function} `filterFunc`** The function to use for filtering
+ */
+var _map = function(arr, func) {
+	
+	if (arr.map) { return arr.map(func); }
+	
+	var i, l,
+		r = [];
+	
+	for (i=0, l=arr.length; i<l; i++) {
+		r.push(func(arr[i]));
+	}
+	return r;
+};
+
+/**
  * **_filter()**
  *
  * Simple filter function for when Array.filter() is not available.
@@ -48,6 +62,9 @@ var FOLLOW_INFORMATION_TYPE = SyncIt_Constant.FollowInformationType;
  * * **@param {Function} `filterFunc`** The function to use for filtering
  */
 var _filter = function(arr,filterFunc) {
+	
+	if (arr.filter) { return arr.filter(filterFunc); }
+	
 	var i = 0,
 		l = 0,
 		r = [];
@@ -437,6 +454,30 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 	// they conflict with the items sent from the server.
 	var perhapsResolved = function(storedrecord,fedForSameDatasetAndDatakey,resolved,mergePathitem,next) {
 		
+		var sanatizeMergeItem = function(queueitem) {
+			var r = {},
+				copyKeys = ['o','u','t'],
+				disallowedKeys = ['i','j','q','r','v'],
+				i;
+			for (i=0; i<disallowedKeys.length; i++) {
+				if (queueitem.hasOwnProperty(disallowedKeys[i])) {
+					throw "Merge queue cannot include any " + disallowedKeys.join(', ');
+				}
+			}
+			for (i=0; i<copyKeys.length; i++) {
+				if (queueitem.hasOwnProperty(copyKeys[i])) {
+					r[copyKeys[i]] = queueitem[copyKeys[i]];
+				}
+			}
+			if (queueitem.hasOwnProperty('s') && (queueitem.s != storedrecord.s)) {
+				throw "Merge queue cannot use different dataset to stored record";
+			}
+			if (queueitem.hasOwnProperty('k') && (queueitem.k != storedrecord.k)) {
+				throw "Merge queue cannot use different datakey to stored record";
+			}
+			return r;
+		};
+		
 		if (!resolved) {
 			unlockAndError(ERROR.NOT_RESOLVED);
 		}
@@ -451,7 +492,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			feedQueue[0].s,
 			feedQueue[0].k,
 			'c',
-			mergePathitem,
+			_map(mergePathitem,sanatizeMergeItem),
 			function(err) {
 				if (err) {
 					return unlockAndError(err,feedQueue);

@@ -1,7 +1,0 @@
-#!/bin/sh
-
-PWD_LENGTH=`expr length "  $PWD"`
-RELATIVE_FILENAME=`echo $1 | cut -c${PWD_LENGTH}-`
-TEST_FILENAME=`echo ${RELATIVE_FILENAME} | sed s/^js/test/`
-SOURCE_FILENAME=`echo ${RELATIVE_FILENAME} | sed s/^test/js/`
-node_modules/.bin/jshint $TEST_FILENAME && node_modules/.bin/jshint $SOURCE_FILENAME && mocha $TEST_FILENAME

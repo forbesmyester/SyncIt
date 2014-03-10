@@ -8,17 +8,16 @@
 		// only CommonJS-like enviroments that support module.exports,
 		// like Node.
 		module.exports = factory(
-			require('../node_modules/expect.js/expect.js'),
+			require('expect.js'),
 			require('../js/updateResult.js')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		// AMD. Register as an anonymous module.
 		define(
 			[
-				'expect.js',
-				'syncit/updateResult'
+				'../js/updateResult'
 			],
-			factory
+			factory.bind(this, expect)
 		);
 	} else {
 		// Browser globals (root is window)

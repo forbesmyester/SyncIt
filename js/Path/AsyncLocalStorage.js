@@ -1,21 +1,14 @@
 (function(root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
 	"use strict";
-	/* jshint strict: false */
-	/* globals module: false, require: false, define: true */
 	if (typeof exports === 'object') {
 		module.exports = factory(
 			require('../Constant.js'),
-			require('../addEvents.js')
-		);
-	} else if (typeof define === 'function' && define.amd) {
-		define(
-			['syncit/Constant','syncit/addEvents'],
-			factory
+			require('add-events')
 		);
 	} else {
-		root.SyncIt_Path_AsyncLocalStorage = factory(
-			root.SyncIt_Constant,
-			root.SyncIt_addEvents
+		define(
+			['../Constant','add-events'],
+			factory
 		);
 	}
 })(this, function(SyncIt_Constant,addEvents) {

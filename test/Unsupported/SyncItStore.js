@@ -1,6 +1,17 @@
 /*jshint smarttabs:true */
-require(['syncit/SyncIt','syncit/Constant','syncit/AsyncLocalStorage', 'syncit/getTLIdEncoderDecoder', 'syncit/Path/AsyncLocalStorage', 'syncit/FakeLocalStorage','syncit/Unsupported/SyncItStore','dojo/node!expect.js',"dojo/_base/array","dojo/promise/all"],
-function(SyncIt,SyncIt_Constant,SyncIt_AsyncLocalStorage, SyncIt_getTLIdEncoderDecoder, SyncIt_Path_AsyncLocalStorage, SyncIt_FakeLocalStorage,SyncItStore,expect,dojoBaseArray,dojoPromiseAll) {
+require([
+	'../../js/SyncIt',
+	'../../js/Constant',
+	'../../js/AsyncLocalStorage',
+	'get_tlid_encoder_decoder',
+	'../../js/Path/AsyncLocalStorage',
+	'../../js/FakeLocalStorage',
+	'../../js/Unsupported/SyncItStore',
+	"dojo/_base/array",
+	"dojo/promise/all",
+	'expect.js'
+],
+function(SyncIt, SyncIt_Constant, SyncIt_AsyncLocalStorage, SyncIt_getTLIdEncoderDecoder, SyncIt_Path_AsyncLocalStorage, SyncIt_FakeLocalStorage, SyncItStore, dojoBaseArray, dojoPromiseAll, expect) {
 
 "use strict";
 

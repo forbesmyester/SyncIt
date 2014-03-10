@@ -2,10 +2,8 @@
 	"use strict";
 	if (typeof exports === 'object') {
 		module.exports = factory();
-	} else if (typeof define === 'function' && define.amd) {
+	} else{
 		define(factory);
-	} else {
-		root.SyncIt_SyncLocalStorage = factory();
 	}
 }(this, function () {
 

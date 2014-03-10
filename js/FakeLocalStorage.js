@@ -4,10 +4,8 @@
 
 	if (typeof exports === 'object') {
 		module.exports = factory();
-	} else if (typeof define === 'function' && define.amd) {
-		define(factory);
 	} else {
-		root.SyncIt_FakeLocalStorage = factory();
+		define(factory);
 	}
 }(this, function () {
 	

@@ -5,13 +5,8 @@
 			require('./SyncLocalStorage.js'),
 			require('./makeAsync.js')
 		);
-	} else if (typeof define === 'function' && define.amd) {
-		define(['syncit/SyncLocalStorage','syncit/makeAsync'],factory);
 	} else {
-		root.SyncIt_AsyncLocalStorage = factory(
-			root.SyncIt_SyncLocalStorage,
-			root.SyncIt_makeAsync
-		);
+		define(['./SyncLocalStorage','./makeAsync'],factory);
 	}
 }(this, function (SyncLocalStorage,makeAsync) {
 

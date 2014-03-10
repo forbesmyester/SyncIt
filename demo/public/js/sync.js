@@ -1,7 +1,33 @@
 require(
-["dojo/request/xhr", 'syncit/SyncIt','syncit/AsyncLocalStorage', 'syncit/getTLIdEncoderDecoder', 'syncit/Path/AsyncLocalStorage', 'syncit/FakeLocalStorage', 'syncit/Constant', 'syncit/Unsupported/PathStorageAnalysis', "syncitserv/view/extra/ConsLog", 'syncitserv/SyncItLog', "syncitserv/TabControl", 'syncit/Unsupported/SyncItStore', 'syncit/SyncItTestServ', 'syncit/ServerPersist/MemoryAsync', 'syncitserv/ServerSimulator',  'syncitserv/view/extra/Server', 'syncit/Unsupported/PathStorageAnalysis', "dojox/html/entities", 'dojo/dom-construct', "dojo/dom-class", 'dojo/query', 'dojo/dom-attr', "dgrid/Grid", 'dojo/store/Memory', "dojo/store/Observable", "dgrid/OnDemandGrid", 'dojo/Deferred', "dojo/promise/all", 'dojo/dom', 'dojo/on', "dojo/dom-form", "dijit/Dialog", "dojo/NodeList-traverse", "dojo/NodeList-manipulate","dojo/domReady!"
+["dojo/request/xhr", 'syncit/SyncIt','syncit/AsyncLocalStorage',
+'get_tlid_encoder_decoder', 'syncit/Path/AsyncLocalStorage',
+'syncit/FakeLocalStorage', 'syncit/Constant',
+'syncit/Unsupported/PathStorageAnalysis', "syncitserv/view/extra/ConsLog",
+'syncitserv/SyncItLog', "syncitserv/TabControl",
+'syncit/Unsupported/SyncItStore', 'syncit-server/ReferenceServer',
+'syncit-server/ServerImplementation', 'syncit-server/ServerPersist/MemoryAsync',
+'syncitserv/ServerSimulator', 'syncitserv/view/extra/Server',
+'syncit/Unsupported/PathStorageAnalysis', "dojox/html/entities",
+'dojo/dom-construct', "dojo/dom-class", 'dojo/query',
+'dojo/dom-attr', "dgrid/Grid", 'dojo/store/Memory', "dojo/store/Observable",
+"dgrid/OnDemandGrid", 'dojo/Deferred', "dojo/promise/all", 'dojo/dom',
+'dojo/on', "dojo/dom-form", "dijit/Dialog", "dojo/NodeList-traverse",
+"dojo/NodeList-manipulate","dojo/domReady!"
 ],
-function(xhr, SyncIt, SyncIt_AsyncLocalStorage, SyncIt_getTLIdEncoderDecoder, SyncIt_Path_AsyncLocalStorage, SyncIt_FakeLocalStorage, SyncIt_Constant, SyncIt_Unsupported_PathStorageAnalysis, ConsLog, syncItLog, TabControl, SyncItStore, SyncItTestServer, SyncIt_ServerPersist_MemoryAsync, ServerSimulator, viewExtraServer, PathStorageAnalysis, htmlEntities, domConstruct, domClass, domQuery, domAttr, Grid, Memory, Observable, OnDemandGrid, Deferred, promiseAll, dom, on, domForm, dijitDialog) {
+function(
+xhr, SyncIt, SyncIt_AsyncLocalStorage,
+SyncIt_getTLIdEncoderDecoder, SyncIt_Path_AsyncLocalStorage,
+SyncIt_FakeLocalStorage, SyncIt_Constant,
+SyncIt_Unsupported_PathStorageAnalysis, ConsLog,
+syncItLog, TabControl,
+SyncItStore, ReferenceServer,
+ServerImplementation, SyncIt_ServerPersist_MemoryAsync,
+ServerSimulator, viewExtraServer,
+PathStorageAnalysis, htmlEntities,
+domConstruct, domClass, domQuery,
+domAttr, Grid, Memory, Observable,
+OnDemandGrid, Deferred, promiseAll, dom,
+on, domForm, dijitDialog) {
 
 dojo.byId('clienttwo-holder').innerHTML = dojo.byId('clientone-holder').innerHTML.replace(/lhs/g,'rhs');
 
@@ -350,8 +376,8 @@ var syncIts = (function() {
 			domQuery.NodeList(evt.target).parents('form')[0]
 		);
 		var url = "/dataset/"+formdata.dataset+'?m='+getHandSide(evt);
-		if (formdata.from != "") {
-			url = url + '&from='+formdata.from
+		if (formdata.seqId != "") {
+			url = url + '&seqId='+formdata.seqId
 		}
 		xhr(url, {
 			handleAs: "json",
@@ -365,11 +391,11 @@ var syncIts = (function() {
 					if (err === 0) {
 						domAttr.set(
 							domQuery(
-								'input[name="from"]',
+								'input[name="seqId"]',
 								domQuery.NodeList(evt.target).parents('form')[0]
 							)[0],
 							'value',
-							doc.to
+							doc.seqId
 						);
 						return;
 					}
@@ -554,11 +580,11 @@ var showDisplayGridForSyncIt = function(syncIt,divId) {
 
 (function() { // Setup Server
 	
-	var syncItTestServer = new SyncItTestServer(
-		new SyncIt_ServerPersist_MemoryAsync(),
+	var syncItTestServer = new ReferenceServer(
 		function(req) {
 			return (req.hasOwnProperty('query') && req.query.hasOwnProperty('m')) ? req.query.m : req.body.m;
-		}
+		},
+		new ServerImplementation(new SyncIt_ServerPersist_MemoryAsync())
 	);
 	
 	serverGrid = viewExtraServer('server-view',syncItTestServer);

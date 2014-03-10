@@ -124,7 +124,7 @@
 										<select name="dataset" class="updates-in-dataset">
 										</select>
 										from position
-										<input type="text" name="from" value=""/>
+										<input type="text" name="seqId" value=""/>
 										then <input type="submit" value="downloading it and feed them into SyncIt"/>
 									</form>
 								</li>
@@ -250,7 +250,7 @@
 			<h2>SyncIt Demo Introduction</h2>
 			<p>NOTE: Demo has a somewhat broken UI in Firefox, please use Chrome!</p>
 			<p>This big and rather confusing screen is designed to show you how SyncIt works, it is broken up into many different areas!</p>
-			<p>On the top row in the middle there is a SyncItTestServer which is running on simulated AJAX calls (through Sinon.JS), the Server is the single point of truth for SyncIt.</p>
+			<p>On the top row in the middle there is a ReferenceServer which is running on simulated AJAX calls (through Sinon.JS), the Server is the single point of truth for SyncIt.</p>
 			<p>Either side of the Server view and the next three rows the screen can be thought of as being in two halves, each is a simulation of a seperate client and can be used to test out different scenarios for synchronization. In the top row beside the Server view are two tabbed areas for executing different API calls, note the "?" icon at the top right of them, it will explain in more detail what every tab does.</p>
 			<p>The row beneath the Server is the data which is available to each client through the SyncIt API. It is probably the data that you will use to draw the screen for the client.</p>
 			<p>Next up the screen becomes split into four, but it is really split into two halves, with each half split into two. There is a Queue and a Store, the Queue is information that still needs to be sent to the Server, while the Store should be data which is confirmed to be on the Server. The Server and the client are not tightly coupled however and you need to tell it that a particular update has been sent to the server using the Advance function. Do try and do silly things however, I think I have designed it to be pretty robust!</p>
@@ -287,7 +287,7 @@ syncIt.feed(
 			<p>If all Queueitem have been dowloaded from the server, fed into SyncIt.feed() and the last callback has been called with an OK Errorcode then all changes that are on the server have been advanced locally.</p>
 			<h3>This Tab: Download</h3>
 			<p>The "get Dataset names" button will reveal another form that will enable you to download updates for different Datasets from the Server.</p>
-			<p>The "downloading it and feed them into SyncIt" button in the second form will download the updates from the simulated SyncItTestServer and perform a SyncIt.feed() operation.</p>
+			<p>The "downloading it and feed them into SyncIt" button in the second form will download the updates from the simulated ReferenceServer and perform a SyncIt.feed() operation.</p>
 		</div>
 		
 		<div id="help-upload" class="popup-content-template">
@@ -323,7 +323,7 @@ syncIt.feed(
     });
 </code>
 			<h3>This Tab: Upload</h3>
-                <p>The "to the server" button will call the SyncIt.getFirst() method and do a simulated AJAX call to the SyncItTestServer, you can see the result of this in the "Simulated AJAX Request Log" in the "Server Log" tab at the top of the page.</p>
+                <p>The "to the server" button will call the SyncIt.getFirst() method and do a simulated AJAX call to the ReferenceServer, you can see the result of this in the "Simulated AJAX Request Log" in the "Server Log" tab at the top of the page.</p>
                 <p>If the request was successfully added to the Server you should proceed to the Advance tab.</p>
             </div>
 
@@ -429,7 +429,11 @@ syncIt.feed(
 			{name:'xstyle',location:'vendor/xstyle'},
 			{name:'put-selector',location:'vendor/put-selector'},
 			{name:'syncit',location:'vendor/syncit'},
-			{name:'syncitserv',location:'js'}
+			{name:'syncit-server',location:'vendor/syncit-server'},
+			{name:'syncitserv',location:'js'},
+			{name:'get_tlid_encoder_decoder',location: 'vendor/get_tlid_encoder_decoder',main:'index'},
+			{name:'add-events',location: 'vendor/add-events',main:'index'},
+			{name:'manip',location: 'vendor/manip',main:'index'}
 		]
 	};
 </script>

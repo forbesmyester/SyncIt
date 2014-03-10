@@ -7,7 +7,7 @@
 		module.exports = factory(require('../SyncLocalStorage.js'));
 	} else if (typeof define === 'function' && define.amd) {
 		define(
-			['syncit/SyncLocalStorage'],
+			['../SyncLocalStorage'],
 			factory
 		);
 	} else {
