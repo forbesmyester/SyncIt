@@ -1,6 +1,6 @@
 {
-  "name": "syncit",
-  "version": "0.9.0",
+  "name": "sync-it",
+  "version": "0.9.1",
   "description": "Framework for data synchronization",
   "author": "Matthew Forrester <matt@keyboardwritescode.com>",
   "dependencies": {
