@@ -1,0 +1,27 @@
+{
+  "name": "syncit",
+  "version": "0.9.0",
+  "homepage": "https://github.com/forbesmyester/SyncIt",
+  "authors": [
+    "Matthew Forrester <matt@keyboardwritescode.com>"
+  ],
+  "description": "SyncIt is a library to enable you to easily add synchronization to your (offline / phonegap) web Apps",
+  "main": "js/SyncIt.js",
+  "moduleType": [
+    "amd",
+    "node"
+  ],
+  "keywords": [
+    "synchronization",
+    "offline",
+    "phonegap"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
