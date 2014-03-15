@@ -6,7 +6,7 @@
   <link rel="stylesheet" media="all" href="../doc-style.css" />
   <script src="../doc-filelist.js"></script>
   <script>
-    var relativeDir = "../", thisFile = "home/fozz/Projects/syncit//Path/AsyncLocalStorage.js", defaultSidebar = true;
+    var relativeDir = "../", thisFile = "Path/AsyncLocalStorage.js", defaultSidebar = true;
   </script>
   <script src="../doc-script.js"></script>
 </head>
@@ -46,6 +46,12 @@
         <a href="#syncit_path_asynclocalstorage.changepath()">SyncIt_Path_AsyncLocalStorage.changePath()</a>
       </div>
       <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.promotepathtoorremove()">SyncIt_Path_AsyncLocalStorage.promotePathToOrRemove()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.removedatasetdatakey()">SyncIt_Path_AsyncLocalStorage.removeDatasetDatakey()</a>
+      </div>
+      <div class="heading h2">
         <a href="#syncit_path_asynclocalstorage.removepath()">SyncIt_Path_AsyncLocalStorage.removePath()</a>
       </div>
       <div class="heading h2">
@@ -62,6 +68,9 @@
       </div>
       <div class="heading h2">
         <a href="#syncit_path_asynclocalstorage.__setitem()">SyncIt_Path_AsyncLocalStorage.__setItem()</a>
+      </div>
+      <div class="heading h2">
+        <a href="#syncit_path_asynclocalstorage.__removeitem()">SyncIt_Path_AsyncLocalStorage.__removeItem()</a>
       </div>
       <div class="heading h2">
         <a href="#syncit_path_asynclocalstorage._getpathitem()">SyncIt_Path_AsyncLocalStorage._getPathItem()</a>
@@ -132,22 +141,15 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// UMD from https://github.com/umdjs/umd/blob/master/returnExports.js</span>
   <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-  <span class="cm">/* jshint strict: false */</span>
-  <span class="cm">/* globals module: false, require: false, define: true */</span>
   <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
       <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../Constant.js&#39;</span><span class="p">),</span>
-      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../addEvents.js&#39;</span><span class="p">)</span>
-    <span class="p">);</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">define</span><span class="p">(</span>
-      <span class="p">[</span><span class="s1">&#39;syncit/Constant&#39;</span><span class="p">,</span><span class="s1">&#39;syncit/addEvents&#39;</span><span class="p">],</span>
-      <span class="nx">factory</span>
+      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;add-events&#39;</span><span class="p">)</span>
     <span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Path_AsyncLocalStorage</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
-      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Constant</span><span class="p">,</span>
-      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_addEvents</span>
+    <span class="nx">define</span><span class="p">(</span>
+      <span class="p">[</span><span class="s1">&#39;../Constant&#39;</span><span class="p">,</span><span class="s1">&#39;add-events&#39;</span><span class="p">],</span>
+      <span class="nx">factory</span>
     <span class="p">);</span>
   <span class="p">}</span>
 <span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">,</span><span class="nx">addEvents</span><span class="p">)</span> <span class="p">{</span>
@@ -500,6 +502,27 @@ value that the new Pathroot will</li>
         <span class="nx">root</span><span class="p">[</span><span class="nx">path</span><span class="p">].</span><span class="nx">_n</span><span class="p">,</span>
         <span class="nx">item</span><span class="p">,</span>
         <span class="kd">function</span><span class="p">(</span><span class="nx">newRoot</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">newRoot</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>This is a request to delete the whole Path</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">removeDatasetDatakey</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+              <span class="nx">next</span><span class="p">(</span>
+                <span class="nx">err</span><span class="p">,</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_removePrivatePathStorageData</span><span class="p">(</span><span class="nx">item</span><span class="p">),</span>
+                <span class="kc">null</span>
+              <span class="p">);</span>
+            <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+          <span class="p">}</span>
           <span class="nx">newRoot</span><span class="p">.</span><span class="nx">_s</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
           <span class="k">if</span> <span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
             <span class="nx">newRoot</span><span class="p">.</span><span class="nx">_n</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">_n</span><span class="p">;</span>
@@ -647,6 +670,141 @@ removed, however this will be <strong>after</strong> <code>next()</code> is call
       <tr>
         <td class="docs"><div class="dox">
   <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.promotepathtoorremove()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.promotepathtoorremove()" name="syncit_path_asynclocalstorage.promotepathtoorremove()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.promotePathToOrRemove()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>When the server feeds a "remove" instruction it is still possible to pass in
+extra updates etc from the conflict resolution function. If we go and just
+delete the Root we will loose this extra information. This function will see
+if there are any conflict resolution updates (<code>pathToPromote</code> or "c") and if
+there are it will move them onto the normal data path (<code>promoteToWhere</code> or
+"a") but if there are none then it will just remove the root.</p>
+
+<ul>
+<li><strong>@param {Datakey} <code>dataset</code></strong> The dataset you want to purge</li>
+<li><strong>@param {Datakey} <code>datakey</code></strong> The datakey you want to purge</li>
+<li><strong>@param {Datakey} <code>pathToPromote</code></strong> If this exists it will be moved to <code>promoteToWhere</code></li>
+<li><strong>@param {Datakey} <code>promoteToWhere</code></strong> Where <code>pathToPromote</code> will be moved to</li>
+<li><strong>@param {Boolean} <code>delayTillComplete</code></strong> If you want to wait for all data to be cleaned</li>
+<li><strong>@param {Function} <code>next</code></strong> Callback when complete, Signature: Function(err, err)
+<ul><li><strong>@param {Errorcode} <code>errRootDeletion</code></strong> If the Root was successfully deleted</li>
+<li><strong>@param {Errorcode} <code>errPathDeletion</code></strong> Only supplied if <code>delayTillComplete</code> but will give you an indication on whether all the Pathitem were deleted.</li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">promotePathToOrRemove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">pathToPromote</span><span class="p">,</span><span class="nx">promoteToWhere</span><span class="p">,</span><span class="nx">delayTillComplete</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">oldTargetRef</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">promoteToWhere</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">root</span><span class="p">[</span><span class="nx">promoteToWhere</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">root</span><span class="p">[</span><span class="nx">promoteToWhere</span><span class="p">].</span><span class="nx">_n</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="p">}());</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">pathToPromote</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">removeDatasetDatakey</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">delayTillComplete</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">root</span><span class="p">[</span><span class="nx">promoteToWhere</span><span class="p">]</span> <span class="o">=</span> <span class="nx">root</span><span class="p">[</span><span class="nx">pathToPromote</span><span class="p">];</span>
+    <span class="k">delete</span> <span class="nx">root</span><span class="p">[</span><span class="nx">pathToPromote</span><span class="p">];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_setRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">root</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">oldTargetRef</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_removePathItems</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">oldTargetRef</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.removedatasetdatakey()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.removedatasetdatakey()" name="syncit_path_asynclocalstorage.removedatasetdatakey()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.removeDatasetDatakey()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Remove all data to do with a Dataset and Datakey</p>
+
+<ul>
+<li><strong>@param {Datakey} <code>dataset</code></strong> The dataset you want to purge</li>
+<li><strong>@param {Datakey} <code>datakey</code></strong> The datakey you want to purge</li>
+<li><strong>@param {Boolean} <code>delayTillComplete</code></strong> If you want to wait for all data to be cleaned</li>
+<li><strong>@param {Function} <code>next</code></strong> Callback when complete, Signature: Function(err, err)
+<ul><li><strong>@param {Errorcode} <code>errRootDeletion</code></strong> If the Root was successfully deleted</li>
+<li><strong>@param {Errorcode} <code>errPathDeletion</code></strong> Only supplied if <code>delayTillComplete</code> but will give you an indication on whether all the Pathitem were deleted.</li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">removeDatasetDatakey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">delayTillComplete</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="kd">var</span> <span class="nx">_getPathRefs</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="k">in</span> <span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">k</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">root</span><span class="p">[</span><span class="nx">k</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;_n&#39;</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">root</span><span class="p">[</span><span class="nx">k</span><span class="p">].</span><span class="nx">_n</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+  <span class="p">};</span>
+  
+  <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">pathRefs</span> <span class="o">=</span> <span class="nx">_getPathRefs</span><span class="p">(</span><span class="nx">root</span><span class="p">),</span>
+      <span class="nx">pathRefCount</span> <span class="o">=</span> <span class="nx">pathRefs</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    
+    <span class="kd">var</span> <span class="nx">trackPathItemDeletions</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">delayTillComplete</span><span class="p">)</span> <span class="p">{</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span> <span class="p">}</span>
+        <span class="nx">pathRefCount</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">--</span><span class="nx">pathRefCount</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">delayTillComplete</span><span class="p">)</span> <span class="p">{</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span> <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">__removeItem</span><span class="p">(</span><span class="nx">dataset</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">delayTillComplete</span> <span class="o">||</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">pathRefs</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_removePathItems</span><span class="p">(</span>
+          <span class="nx">dataset</span><span class="p">,</span>
+          <span class="nx">datakey</span><span class="p">,</span>
+          <span class="nx">pathRefs</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span>
+          <span class="nx">trackPathItemDeletions</span>
+        <span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
 <div class="pilwrap" id="syncit_path_asynclocalstorage.removepath()">
   <h2>
     <a href="#syncit_path_asynclocalstorage.removepath()" name="syncit_path_asynclocalstorage.removepath()" class="pilcrow">&#182;</a>
@@ -777,12 +935,15 @@ and then recursively remove all it's child Pathitem.</p>
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_removePathItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="p">[</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;remove-item&#39;</span><span class="p">,</span><span class="nx">k</span><span class="p">);</span>
-    <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
-  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">__removeItem</span><span class="p">(</span><span class="nx">k</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
 <span class="p">};</span>
 
+<span class="kd">var</span> <span class="nx">validateDatesetOrDatakey</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">str</span> <span class="o">!==</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">};</span>
 
 </pre></div>
         </td>
@@ -812,6 +973,12 @@ and then recursively remove all it's child Pathitem.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_setRoot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">validateDatesetOrDatakey</span><span class="p">(</span><span class="nx">dataset</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">INVALID_DATASET</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">validateDatesetOrDatakey</span><span class="p">(</span><span class="nx">datakey</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">INVALID_DATAKEY</span><span class="p">);</span>
+  <span class="p">}</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">__setItem</span><span class="p">([</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
 <span class="p">};</span>
 
@@ -845,6 +1012,12 @@ and then recursively remove all it's child Pathitem.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_setPathItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">validateDatesetOrDatakey</span><span class="p">(</span><span class="nx">dataset</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">INVALID_DATASET</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">validateDatesetOrDatakey</span><span class="p">(</span><span class="nx">datakey</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">INVALID_DATAKEY</span><span class="p">);</span>
+  <span class="p">}</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">__setItem</span><span class="p">([</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">),</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
 <span class="p">};</span>
 
@@ -878,6 +1051,39 @@ and then recursively remove all it's child Pathitem.</p>
 <span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">__setItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">storageKey</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="nx">storageKey</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;set-item&#39;</span><span class="p">,</span><span class="nx">storageKey</span><span class="p">,</span><span class="nx">value</span><span class="p">);</span>
+    <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit_path_asynclocalstorage.__removeitem()">
+  <h2>
+    <a href="#syncit_path_asynclocalstorage.__removeitem()" name="syncit_path_asynclocalstorage.__removeitem()" class="pilcrow">&#182;</a>
+    SyncIt_Path_AsyncLocalStorage.__removeItem()
+  </h2>
+</div>
+
+  </div>
+  <div class="body"><p>Low level function for removing data at a key within the underlying storage.</p>
+
+<ul>
+<li><strong>@param {String} <code>storageKey</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {Errorcode} <code>err</code></strong></li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">__removeItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">storageKey</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">removeItem</span><span class="p">(</span><span class="nx">storageKey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span><span class="s1">&#39;remove-item&#39;</span><span class="p">,</span><span class="nx">storageKey</span><span class="p">);</span>
     <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
   <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
 <span class="p">};</span>
@@ -1407,7 +1613,7 @@ See SyncIt_Path_AsyncLocalStorage.followPath() for further information.</li>
       <span class="p">);</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">doNext</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
-      <span class="p">};</span>
+      <span class="p">}</span>
       <span class="k">return</span> <span class="nx">follow</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">lastitem</span><span class="p">.</span><span class="nx">_n</span><span class="p">,</span> <span class="nx">item</span><span class="p">);</span>
     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
   <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
@@ -1674,8 +1880,12 @@ it was found at.</p>
         <span class="k">return</span> <span class="nx">processOne</span><span class="p">();</span>
       <span class="p">}</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_getRoot</span><span class="p">(</span><span class="nx">k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="nx">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">keys</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+          <span class="k">return</span> <span class="nx">processOne</span><span class="p">();</span>
+        <span class="p">}</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+          <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="p">(</span>
           <span class="nx">root</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span> <span class="o">&amp;&amp;</span> 
@@ -1689,6 +1899,29 @@ it was found at.</p>
     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
     <span class="nx">processOne</span><span class="p">();</span>
   <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">};</span>
+
+<span class="nx">Als</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">purge</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">findKeys</span><span class="p">(</span><span class="nx">dataset</span> <span class="o">+</span> <span class="s1">&#39;.*&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">rootKeys</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="k">this</span><span class="p">.</span><span class="nx">_ls</span><span class="p">.</span><span class="nx">findKeys</span><span class="p">(</span><span class="nx">dataset</span> <span class="o">+</span> <span class="s1">&#39;.*.*&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">pathKeys</span><span class="p">)</span> <span class="p">{</span>
+      
+      <span class="kd">var</span> <span class="nx">toProccess</span> <span class="o">=</span> <span class="nx">rootKeys</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">pathKeys</span><span class="p">);</span>
+      
+      <span class="kd">var</span> <span class="nx">removeOne</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">toProccess</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">__removeItem</span><span class="p">(</span><span class="nx">toProccess</span><span class="p">.</span><span class="nx">shift</span><span class="p">(),</span> <span class="nx">removeOne</span><span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+      
+      <span class="nx">removeOne</span><span class="p">();</span>
+      
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+      
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
 <span class="p">};</span>
 
 
@@ -1732,7 +1965,7 @@ a disconnected Pathitem.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
+  <a class="pilcrow" href="#section-38" id="section-38">&#182;</a>
 </div>
 <p>TODO This should be possible to do per Dataset / Datakey as aposed to
 for the whole database at once, this might give nicer code and lower
@@ -1747,7 +1980,7 @@ memory consumption.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-35" id="section-35">&#182;</a>
+  <a class="pilcrow" href="#section-39" id="section-39">&#182;</a>
 </div>
 <p>Get all non root data points</p>
         </td>
@@ -1772,21 +2005,20 @@ memory consumption.</p>
       <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">r</span><span class="p">);</span>
     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
   <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-
-  <span class="kd">var</span> <span class="nx">removeItems</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">notVisited</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="kd">var</span> <span class="nx">datasetK</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+  
+  <span class="kd">var</span> <span class="nx">flattenNotVisited</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">notVisited</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">[],</span>
+      <span class="nx">datasetK</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
       <span class="nx">datakeyK</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-      <span class="nx">refK</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-      <span class="nx">flattenedNotVisited</span> <span class="o">=</span> <span class="p">[];</span>
-
+      <span class="nx">refK</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+      
     <span class="k">for</span> <span class="p">(</span><span class="nx">datasetK</span> <span class="k">in</span> <span class="nx">notVisited</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">notVisited</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">datasetK</span><span class="p">))</span> <span class="p">{</span>
         <span class="k">for</span> <span class="p">(</span><span class="nx">datakeyK</span> <span class="k">in</span> <span class="nx">notVisited</span><span class="p">[</span><span class="nx">datasetK</span><span class="p">])</span> <span class="p">{</span>
           <span class="k">if</span> <span class="p">(</span><span class="nx">notVisited</span><span class="p">[</span><span class="nx">datasetK</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">datakeyK</span><span class="p">))</span> <span class="p">{</span>
             <span class="k">for</span> <span class="p">(</span><span class="nx">refK</span> <span class="k">in</span> <span class="nx">notVisited</span><span class="p">[</span><span class="nx">datasetK</span><span class="p">][</span><span class="nx">datakeyK</span><span class="p">])</span> <span class="p">{</span>
               <span class="k">if</span> <span class="p">(</span><span class="nx">notVisited</span><span class="p">[</span><span class="nx">datasetK</span><span class="p">][</span><span class="nx">datakeyK</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">refK</span><span class="p">))</span> <span class="p">{</span>
-                <span class="nx">flattenedNotVisited</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+                <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
                   <span class="p">{</span><span class="nx">dataset</span><span class="o">:</span> <span class="nx">datasetK</span><span class="p">,</span> <span class="nx">datakey</span><span class="o">:</span> <span class="nx">datakeyK</span><span class="p">,</span> <span class="nx">ref</span><span class="o">:</span> <span class="nx">refK</span><span class="p">}</span>
                 <span class="p">);</span>
               <span class="p">}</span>
@@ -1795,7 +2027,13 @@ memory consumption.</p>
         <span class="p">}</span>
       <span class="p">}</span>
     <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+  <span class="p">};</span>
 
+  <span class="kd">var</span> <span class="nx">removeItems</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">notVisited</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">flattenedNotVisited</span> <span class="o">=</span> <span class="nx">flattenNotVisited</span><span class="p">(</span><span class="nx">notVisited</span><span class="p">);</span>
+    
     <span class="kd">var</span> <span class="nx">doRemove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       
       <span class="kd">var</span> <span class="nx">keyInfo</span> <span class="o">=</span> <span class="p">{};</span>
@@ -1899,9 +2137,31 @@ memory consumption.</p>
       <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
     
+    <span class="kd">var</span> <span class="nx">cleanOrphaned</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">removeOne</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">item</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">__removeItem</span><span class="p">(</span>
+          <span class="p">[</span><span class="nx">item</span><span class="p">.</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">datakey</span><span class="p">,</span> <span class="nx">item</span><span class="p">.</span><span class="nx">ref</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+          <span class="nx">removeOne</span>
+        <span class="p">);</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+      <span class="nx">removeOne</span><span class="p">();</span>
+    <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+    
     <span class="k">this</span><span class="p">.</span><span class="nx">getDatasetNames</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">datasets</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span> 
         <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="nx">datasets</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">cleanOrphaned</span><span class="p">(</span>
+          <span class="nx">flattenNotVisited</span><span class="p">(</span><span class="nx">refsStillToBeVisited</span><span class="p">),</span>
+          <span class="nx">next</span>
+        <span class="p">);</span>
       <span class="p">}</span>
 
       <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -1918,7 +2178,16 @@ memory consumption.</p>
           <span class="k">if</span> <span class="p">(</span><span class="nx">mainErr</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">return</span> <span class="nx">next</span><span class="p">(</span><span class="nx">mainErr</span><span class="p">);</span>
           <span class="p">}</span>
-          <span class="nx">removeItems</span><span class="p">(</span><span class="nx">refsStillToBeVisited</span><span class="p">,</span><span class="nx">next</span><span class="p">);</span>
+          <span class="nx">removeItems</span><span class="p">(</span>
+            <span class="nx">refsStillToBeVisited</span><span class="p">,</span>
+            <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span> <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="p">}</span>
+              <span class="nx">cleanOrphaned</span><span class="p">(</span>
+                <span class="nx">flattenNotVisited</span><span class="p">(</span><span class="nx">refsStillToBeVisited</span><span class="p">),</span>
+                <span class="nx">next</span>
+              <span class="p">);</span>
+            <span class="p">}</span>
+          <span class="p">);</span>
         <span class="p">}</span>
       <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
 

@@ -6,7 +6,7 @@
   <link rel="stylesheet" media="all" href="doc-style.css" />
   <script src="doc-filelist.js"></script>
   <script>
-    var relativeDir = "", thisFile = "home/fozz/Projects/syncit//SyncIt.js", defaultSidebar = true;
+    var relativeDir = "", thisFile = "SyncIt.js", defaultSidebar = true;
   </script>
   <script src="doc-script.js"></script>
 </head>
@@ -97,6 +97,12 @@
         <a href="#parameters">Parameters</a>
       </div>
       <div class="heading h3">
+        <a href="#syncit.getversion()">SyncIt.getVersion()</a>
+      </div>
+      <div class="heading h4">
+        <a href="#parameters">Parameters</a>
+      </div>
+      <div class="heading h3">
         <a href="#syncit.getfirst()">SyncIt.getFirst()</a>
       </div>
       <div class="heading h4">
@@ -116,6 +122,12 @@
       </div>
       <div class="heading h3">
         <a href="#syncit.getdatakeysindataset()">SyncIt.getDatakeysInDataset()</a>
+      </div>
+      <div class="heading h4">
+        <a href="#parameters">Parameters</a>
+      </div>
+      <div class="heading h3">
+        <a href="#remove%20any%20outstanding%20uploads%20for%20a%20specific%20dataset%20%2F%20datakey.">Remove any outstanding uploads for a specific Dataset / Datakey.</a>
       </div>
       <div class="heading h4">
         <a href="#parameters">Parameters</a>
@@ -152,32 +164,22 @@
   <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">define</span><span class="p">(</span>
       <span class="p">[</span>
-        <span class="s1">&#39;syncit/Constant&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;syncit/addEvents&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;syncit/addLocking&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;syncit/getTLIdEncoderDecoder&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;syncit/updateResult&#39;</span>
+        <span class="s1">&#39;./Constant&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;add-events&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;./addLocking&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;./updateResult&#39;</span>
       <span class="p">],</span>
       <span class="nx">factory</span>
     <span class="p">);</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
       <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./Constant.js&#39;</span><span class="p">),</span>
-      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./addEvents.js&#39;</span><span class="p">),</span>
+      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;add-events&#39;</span><span class="p">),</span>
       <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./addLocking.js&#39;</span><span class="p">),</span>
-      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./getTLIdEncoderDecoder.js&#39;</span><span class="p">),</span>
       <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./updateResult.js&#39;</span><span class="p">)</span>
     <span class="p">);</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
-      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_Constant</span><span class="p">,</span>
-      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_addEvents</span><span class="p">,</span>
-      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_addLocking</span><span class="p">,</span>
-      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_getTLIdEncoderDecoder</span><span class="p">,</span>
-      <span class="nx">root</span><span class="p">.</span><span class="nx">SyncIt_updateResult</span>
-    <span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">,</span> <span class="nx">addEvents</span><span class="p">,</span> <span class="nx">addLocking</span><span class="p">,</span> <span class="nx">getTLIdEncoderDecoder</span><span class="p">,</span> <span class="nx">updateResult</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">,</span> <span class="nx">addEvents</span><span class="p">,</span> <span class="nx">addLocking</span><span class="p">,</span> <span class="nx">updateResult</span><span class="p">)</span> <span class="p">{</span>
 
 <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
 
@@ -210,6 +212,41 @@ License: MIT/BSD-style</p>
   <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
 <div class="dox">
+  <div class="summary"><p><strong>_map()</strong></p>
+  </div>
+  <div class="body"><p>Simple map function for when Array.map() is not available.</p>
+
+<ul>
+<li><strong>@param {Array} <code>arr</code></strong> The array to filter.</li>
+<li><strong>@param {Function} <code>filterFunc</code></strong> The function to use for filtering</li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="kd">var</span> <span class="nx">_map</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">func</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arr</span><span class="p">.</span><span class="nx">map</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">func</span><span class="p">);</span> <span class="p">}</span>
+  
+  <span class="kd">var</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">l</span><span class="p">,</span>
+    <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
+  
+  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">l</span><span class="o">=</span><span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">r</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">func</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<div class="dox">
   <div class="summary"><p><strong>_filter()</strong></p>
   </div>
   <div class="body"><p>Simple filter function for when Array.filter() is not available.</p>
@@ -223,6 +260,9 @@ License: MIT/BSD-style</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 <span class="kd">var</span> <span class="nx">_filter</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span><span class="nx">filterFunc</span><span class="p">)</span> <span class="p">{</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="nx">arr</span><span class="p">.</span><span class="nx">filter</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">filterFunc</span><span class="p">);</span> <span class="p">}</span>
+  
   <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">r</span> <span class="o">=</span> <span class="p">[];</span>
@@ -243,7 +283,7 @@ License: MIT/BSD-style</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p><strong>_shallowCopyKeys()</strong></p>
@@ -336,7 +376,7 @@ is true it will not copy <code>null</code> or <code>undefined</code> values.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p><strong>SyncIt._getPathWatcher()</strong></p>
@@ -359,7 +399,7 @@ values that are stored should all Pathitem be processed.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p><strong>getWatcher()</strong></p>
@@ -384,7 +424,7 @@ and collects information.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <p>Info stored at the root only exists once and can probably be
 seen as metadata, so just connect it.</p>
@@ -401,7 +441,7 @@ seen as metadata, so just connect it.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
 </div>
 <p>This is not infact the true root, but the root of the Path, if
 the <code>dataset</code>/<code>datakey</code> has never been <code>SyncIt.advance()</code>'d then
@@ -428,7 +468,7 @@ there will be no root so this will not be called.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 <p>getWatcher is always used for collecting information about one
 path inside a <code>dataset</code>/<code>datakey</code>, however there is an
@@ -446,7 +486,7 @@ exist or not. This will be an array of the non-follwed path.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
 </div>
 <p>For every Pathitem that is encounted, we will use updateResult
 to figure out the logical value should all the Pathitem be
@@ -485,7 +525,7 @@ applied.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p><strong>getReaditem</strong></p>
@@ -912,7 +952,7 @@ you to change what function does that deep copying.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
 </div>
 <p>Make a shallow copy of feedQueueitems so when we <code>shift()</code> we are not
 fiddling with users data.</p>
@@ -937,7 +977,7 @@ fiddling with users data.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
 </div>
 <p>If a conflict occurs we want to feed the resolutionFunction only items from
 the same dataset / datakey that are based on a version higher than the one
@@ -976,7 +1016,7 @@ currently in the Pathroot.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
+  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
 </div>
 <p>Simple helper function that will unlock SyncIt and call the feedDone callback.</p>
         </td>
@@ -996,7 +1036,7 @@ currently in the Pathroot.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
+  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
 </div>
 <p>This function is called from resolutionFunction.resolved and will check
 that resolutionFunction actually did resolve the conflict, if it did it
@@ -1006,6 +1046,30 @@ they conflict with the items sent from the server.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
   <span class="kd">var</span> <span class="nx">perhapsResolved</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">storedrecord</span><span class="p">,</span><span class="nx">fedForSameDatasetAndDatakey</span><span class="p">,</span><span class="nx">resolved</span><span class="p">,</span><span class="nx">mergePathitem</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="kd">var</span> <span class="nx">sanatizeMergeItem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="nx">copyKeys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">],</span>
+        <span class="nx">disallowedKeys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="s1">&#39;j&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">],</span>
+        <span class="nx">i</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">disallowedKeys</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">disallowedKeys</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span> <span class="p">{</span>
+          <span class="k">throw</span> <span class="s2">&quot;Merge queue cannot include any &quot;</span> <span class="o">+</span> <span class="nx">disallowedKeys</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">for</span> <span class="p">(</span><span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">copyKeys</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">copyKeys</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span> <span class="p">{</span>
+          <span class="nx">r</span><span class="p">[</span><span class="nx">copyKeys</span><span class="p">[</span><span class="nx">i</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">queueitem</span><span class="p">[</span><span class="nx">copyKeys</span><span class="p">[</span><span class="nx">i</span><span class="p">]];</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span> <span class="o">!=</span> <span class="nx">storedrecord</span><span class="p">.</span><span class="nx">s</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="s2">&quot;Merge queue cannot use different dataset to stored record&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">k</span> <span class="o">!=</span> <span class="nx">storedrecord</span><span class="p">.</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="s2">&quot;Merge queue cannot use different datakey to stored record&quot;</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+    <span class="p">};</span>
     
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">resolved</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">unlockAndError</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">NOT_RESOLVED</span><span class="p">);</span>
@@ -1022,7 +1086,7 @@ they conflict with the items sent from the server.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
+  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
 </div>
 <p>TODO: Sanitize the merge queue</p>
         </td>
@@ -1032,7 +1096,7 @@ they conflict with the items sent from the server.</p>
       <span class="nx">feedQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">s</span><span class="p">,</span>
       <span class="nx">feedQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">k</span><span class="p">,</span>
       <span class="s1">&#39;c&#39;</span><span class="p">,</span>
-      <span class="nx">mergePathitem</span><span class="p">,</span>
+      <span class="nx">_map</span><span class="p">(</span><span class="nx">mergePathitem</span><span class="p">,</span><span class="nx">sanatizeMergeItem</span><span class="p">),</span>
       <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
           <span class="k">return</span> <span class="nx">unlockAndError</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">feedQueue</span><span class="p">);</span>
@@ -1062,7 +1126,7 @@ they conflict with the items sent from the server.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
+  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
 </div>
 <p>One by one, process the Pathitem which have been fed.</p>
         </td>
@@ -1086,7 +1150,7 @@ they conflict with the items sent from the server.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
+  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
 </div>
 <p>Read the path, collecting information.</p>
         </td>
@@ -1123,7 +1187,7 @@ they conflict with the items sent from the server.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
+  <a class="pilcrow" href="#section-30" id="section-30">&#182;</a>
 </div>
 <p>It might be that we are trying to feed data which is 
 based on an old storerecord, if we are just skip over it</p>
@@ -1141,7 +1205,7 @@ based on an old storerecord, if we are just skip over it</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-30" id="section-30">&#182;</a>
+  <a class="pilcrow" href="#section-31" id="section-31">&#182;</a>
 </div>
 <p>If we have items in our local queue with a basedonversion which is
 lower than what we are being fed, it is likely that we have unadvanced
@@ -1162,7 +1226,7 @@ items which we have already uploaded.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-31" id="section-31">&#182;</a>
+  <a class="pilcrow" href="#section-32" id="section-32">&#182;</a>
 </div>
 <p>Continue with the Feed passing the information found from 
 this._ps.followPath();Continue with the Feed.</p>
@@ -1182,7 +1246,7 @@ this._ps.followPath();Continue with the Feed.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-32" id="section-32">&#182;</a>
+  <a class="pilcrow" href="#section-33" id="section-33">&#182;</a>
 </div>
 <p>All data is now collected about what is in the Path so we can go ahead and
 take appropriate action...</p>
@@ -1197,7 +1261,7 @@ take appropriate action...</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-33" id="section-33">&#182;</a>
+  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
 </div>
 <p>If there is items in the Path then feed them into resolutionFunction</p>
         </td>
@@ -1223,7 +1287,7 @@ take appropriate action...</p>
             <span class="nx">storerecord</span><span class="p">.</span><span class="nx">m</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getModifier</span><span class="p">();</span>
           <span class="p">}</span>
           <span class="k">return</span> <span class="nx">storerecord</span><span class="p">;</span>
-        <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))(),</span>
+        <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)()),</span>
         <span class="nx">queue</span><span class="p">,</span>
         <span class="nx">fedForSameDatasetAndDatakey</span><span class="p">,</span>
         <span class="kd">function</span><span class="p">(</span><span class="nx">resolved</span><span class="p">,</span><span class="nx">mergePathitem</span><span class="p">)</span> <span class="p">{</span>
@@ -1239,7 +1303,7 @@ take appropriate action...</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
+  <a class="pilcrow" href="#section-35" id="section-35">&#182;</a>
 </div>
 <p>Just make sure that the Pathitem is the correct version to apply.</p>
         </td>
@@ -1258,7 +1322,7 @@ take appropriate action...</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-35" id="section-35">&#182;</a>
+  <a class="pilcrow" href="#section-36" id="section-36">&#182;</a>
 </div>
 <p>This will basically apply the first Pathitem to the existing
 Pathroot, giving the new Pathroot</p>
@@ -1273,7 +1337,26 @@ Pathroot, giving the new Pathroot</p>
       <span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">,</span><span class="s1">&#39;m&#39;</span><span class="p">,</span><span class="s1">&#39;t&#39;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">]</span>
     <span class="p">);</span>
     
-    <span class="kd">var</span> <span class="nx">joinCPathToA</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">feedQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">o</span> <span class="o">==</span> <span class="s1">&#39;remove&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ps</span><span class="p">.</span><span class="nx">promotePathToOrRemove</span><span class="p">(</span><span class="nx">feedQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">s</span><span class="p">,</span><span class="nx">feedQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">k</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="kc">false</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">unlockAndError</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">dataset</span> <span class="o">=</span> <span class="nx">feedQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">s</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">datakey</span> <span class="o">=</span> <span class="nx">feedQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">k</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_emit</span><span class="p">(</span>
+          <span class="s1">&#39;fed&#39;</span><span class="p">,</span>
+          <span class="nx">dataset</span><span class="p">,</span>
+          <span class="nx">datakey</span><span class="p">,</span>
+          <span class="nx">feedQueue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+          <span class="kc">null</span>
+        <span class="p">);</span>
+        <span class="nx">feedQueue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+        <span class="nx">feedOne</span><span class="p">();</span>
+      <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+    <span class="p">}</span>
+    
+    <span class="kd">var</span> <span class="nx">joinCPathToA</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">baseV</span><span class="p">,</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ps</span><span class="p">.</span><span class="nx">changePath</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">_autoClean</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
           <span class="k">return</span> <span class="nx">unlockAndError</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">feedQueue</span><span class="p">);</span>
@@ -1294,7 +1377,8 @@ Pathroot, giving the new Pathroot</p>
                 <span class="nx">dataset</span><span class="p">,</span>
                 <span class="nx">datakey</span><span class="p">,</span>
                 <span class="nx">storagekey</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/.*\./</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
-                <span class="nx">item</span>
+                <span class="nx">item</span><span class="p">,</span>
+                <span class="p">{</span> <span class="nx">b</span><span class="o">:</span> <span class="nx">baseV</span><span class="o">++</span> <span class="p">}</span>
               <span class="p">)</span>
             <span class="p">);</span>
             <span class="k">return</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">;</span>
@@ -1316,7 +1400,7 @@ Pathroot, giving the new Pathroot</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-36" id="section-36">&#182;</a>
+  <a class="pilcrow" href="#section-37" id="section-37">&#182;</a>
 </div>
 <p>Set the new Pathroot, once this is done, emit the fact an item has
 been fed and check that if we should be applying the conflict path
@@ -1349,7 +1433,7 @@ been fed and check that if we should be applying the conflict path
         <span class="p">);</span>
         <span class="nx">feedQueue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">newRoot</span><span class="p">.</span><span class="nx">v</span> <span class="o">==</span> <span class="nx">info</span><span class="p">.</span><span class="nx">cv</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="nx">joinCPathToA</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">feedOne</span><span class="p">);</span>
+          <span class="k">return</span> <span class="nx">joinCPathToA</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">newRoot</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span><span class="nx">feedOne</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="nx">feedOne</span><span class="p">();</span>
       <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
@@ -1367,7 +1451,7 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-37" id="section-37">&#182;</a>
+  <a class="pilcrow" href="#section-38" id="section-38">&#182;</a>
 </div>
 <p>If locked, just exit.</p>
         </td>
@@ -1386,7 +1470,7 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-38" id="section-38">&#182;</a>
+  <a class="pilcrow" href="#section-39" id="section-39">&#182;</a>
 </div>
 <p>Perform basic validation.</p>
         </td>
@@ -1408,7 +1492,7 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-39" id="section-39">&#182;</a>
+  <a class="pilcrow" href="#section-40" id="section-40">&#182;</a>
 </div>
 <p>Then lock</p>
         </td>
@@ -1422,7 +1506,7 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-40" id="section-40">&#182;</a>
+  <a class="pilcrow" href="#section-41" id="section-41">&#182;</a>
 </div>
 <p>Process the first item.</p>
         </td>
@@ -1432,6 +1516,20 @@ been fed and check that if we should be applying the conflict path
 <span class="p">};</span>
 
 <span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_basicValidationForQueueitem</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">skips</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">k</span><span class="p">,</span>
+    <span class="nx">requiredFields</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">s</span><span class="o">:</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_DATASET</span><span class="p">,</span>
+      <span class="nx">k</span><span class="o">:</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_DATAKEY</span><span class="p">,</span>
+      <span class="nx">o</span><span class="o">:</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_OPERATION</span>
+    <span class="p">};</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">requiredFields</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span>
+      <span class="nx">requiredFields</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="o">&amp;&amp;</span> 
+      <span class="o">!</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">)</span>
+    <span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">requiredFields</span><span class="p">[</span><span class="nx">k</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">queueitem</span><span class="p">.</span><span class="nx">s</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nx">Validation</span><span class="p">.</span><span class="nx">DATASET_REGEXP</span><span class="p">)</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">INVALID_DATASET</span><span class="p">;</span>
   <span class="p">}</span>
@@ -1457,7 +1555,7 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-41" id="section-41">&#182;</a>
+  <a class="pilcrow" href="#section-42" id="section-42">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p><strong>SyncIt._addToQueue()</strong></p>
@@ -1493,7 +1591,7 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-42" id="section-42">&#182;</a>
+  <a class="pilcrow" href="#section-43" id="section-43">&#182;</a>
 </div>
 <p>If locked, exit.</p>
         </td>
@@ -1515,7 +1613,7 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-43" id="section-43">&#182;</a>
+  <a class="pilcrow" href="#section-44" id="section-44">&#182;</a>
 </div>
 <p>Adds information which is not necessary to store in the Pathitems itself.</p>
         </td>
@@ -1546,6 +1644,7 @@ been fed and check that if we should be applying the conflict path
     <span class="kc">true</span><span class="p">,</span>
     <span class="nx">pathWatcher</span><span class="p">.</span><span class="nx">getWatcher</span><span class="p">(),</span>
     <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">ref</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">pathWatchedItem</span> <span class="o">=</span> <span class="nx">pathWatcher</span><span class="p">.</span><span class="nx">getReaditem</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_unlockFor</span><span class="p">(</span><span class="nx">LOCKING</span><span class="p">.</span><span class="nx">ADDING_TO_QUEUE</span><span class="p">);</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">whenAddedToQueue</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
@@ -1554,14 +1653,14 @@ been fed and check that if we should be applying the conflict path
         <span class="s1">&#39;added_to_queue&#39;</span><span class="p">,</span>
         <span class="nx">dataset</span><span class="p">,</span>
         <span class="nx">datakey</span><span class="p">,</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">ref</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">)</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">ref</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">,</span><span class="nx">pathWatchedItem</span><span class="p">)</span>
       <span class="p">);</span>
       <span class="nx">whenAddedToQueue</span><span class="p">(</span>
         <span class="nx">err</span><span class="p">,</span>
         <span class="nx">dataset</span><span class="p">,</span>
         <span class="nx">datakey</span><span class="p">,</span>
         <span class="nx">queueitem</span><span class="p">,</span>
-        <span class="nx">_makeFullReaditem</span><span class="p">(</span><span class="nx">pathWatcher</span><span class="p">.</span><span class="nx">getReaditem</span><span class="p">())</span>
+        <span class="nx">_makeFullReaditem</span><span class="p">(</span><span class="nx">pathWatchedItem</span><span class="p">)</span>
       <span class="p">);</span>
     <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
   <span class="p">);</span>
@@ -1574,7 +1673,7 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-44" id="section-44">&#182;</a>
+  <a class="pilcrow" href="#section-45" id="section-45">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p><strong>SyncIt._getEmptyStorerecord()</strong></p>
@@ -1666,12 +1765,15 @@ been fed and check that if we should be applying the conflict path
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-46" id="section-46">&#182;</a>
+  <a class="pilcrow" href="#section-47" id="section-47">&#182;</a>
 </div>
 <p>Filter to just keys r, v, i and possibly t anything else can
 be recreated.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">item</span><span class="p">.</span><span class="nx">o</span> <span class="o">===</span> <span class="s1">&#39;remove&#39;</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">newRootCb</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
         <span class="nx">newRoot</span> <span class="o">=</span> <span class="nx">updateResult</span><span class="p">(</span><span class="nx">pathRoot</span><span class="p">,</span><span class="nx">item</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">_cloneObj</span><span class="p">);</span>
         <span class="nx">newRoot</span> <span class="o">=</span> <span class="nx">_shallowCopyKeys</span><span class="p">(</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">addedPathkey</span><span class="p">,</span><span class="nx">newRoot</span><span class="p">),</span>
@@ -1689,14 +1791,14 @@ be recreated.</p>
           <span class="s1">&#39;advanced&#39;</span><span class="p">,</span>
           <span class="nx">dataset</span><span class="p">,</span>
           <span class="nx">datakey</span><span class="p">,</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">addedPathkey</span><span class="p">,</span><span class="nx">item</span><span class="p">),</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">addedPathkey</span><span class="p">,</span><span class="nx">item</span><span class="p">,</span><span class="nx">newRoot</span><span class="p">),</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">addedPathkey</span><span class="p">,</span><span class="nx">newRoot</span><span class="p">)</span>
         <span class="p">);</span>
         <span class="k">return</span> <span class="nx">done</span><span class="p">(</span>
           <span class="nx">err</span><span class="p">,</span>
           <span class="nx">dataset</span><span class="p">,</span>
           <span class="nx">datakey</span><span class="p">,</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">addedPathkey</span><span class="p">,</span><span class="nx">item</span><span class="p">),</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">addedPathkey</span><span class="p">,</span><span class="nx">item</span><span class="p">,</span><span class="nx">newRoot</span><span class="p">),</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">addedPathkey</span><span class="p">,</span><span class="nx">newRoot</span><span class="p">)</span>
         <span class="p">);</span>
       <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
@@ -1712,7 +1814,7 @@ be recreated.</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-47" id="section-47">&#182;</a>
+  <a class="pilcrow" href="#section-48" id="section-48">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p><strong>SyncIt._addObviousInforation</strong></p>
@@ -1731,7 +1833,7 @@ can also be retrieved from the Pathitem reference.</p>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_addObviousInforation</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">ob</span><span class="p">)</span> <span class="p">{</span>
+<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_addObviousInforation</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">ob</span><span class="p">,</span><span class="nx">extra</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">r</span> <span class="o">=</span> <span class="nx">_shallowCopyKeys</span><span class="p">(</span><span class="nx">ob</span><span class="p">),</span>
     <span class="nx">k</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
   <span class="nx">r</span><span class="p">.</span><span class="nx">s</span> <span class="o">=</span> <span class="nx">dataset</span><span class="p">;</span>
@@ -1744,6 +1846,14 @@ can also be retrieved from the Pathitem reference.</p>
       <span class="k">throw</span> <span class="s2">&quot;No time and no time found in key&quot;</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="nx">r</span><span class="p">.</span><span class="nx">t</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_ps</span><span class="p">.</span><span class="nx">getKeyTimeDecoder</span><span class="p">())(</span><span class="nx">reference</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">extra</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">r</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">extra</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">r</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">extra</span><span class="p">.</span><span class="nx">b</span><span class="p">,</span><span class="mi">10</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">r</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">extra</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;v&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">r</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">extra</span><span class="p">.</span><span class="nx">v</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
   <span class="p">}</span>
   <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">r</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^_/</span><span class="p">))</span> <span class="p">{</span>
@@ -1792,9 +1902,65 @@ can also be retrieved from the Pathitem reference.</p>
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">whenDataRetrieved</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">getFull</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">whenDataRetrieved</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">i</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">DATA_ALREADY_REMOVED</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">whenDataRetrieved</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">whenDataRetrieved</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">i</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">whenDataRetrieved</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
   <span class="p">});</span>
 <span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="syncit.getversion()">
+  <h3>
+    <a href="#syncit.getversion()" name="syncit.getversion()" class="pilcrow">&#182;</a>
+    SyncIt.getVersion()
+  </h3>
+</div>
+
+  </div>
+  <div class="body"><p>Will retrieve information about the version in the store.</p>
+
+
+<div class="pilwrap" id="parameters">
+  <h4>
+    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
+    Parameters
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Function} <code>whenVersionFound</code></strong> Signature: <code>function(err, version)</code>
+<ul><li><strong>@param {ErrorCode} <code>whenDataRetrieved.err</code></strong> See SyncIt_Constant.Error.</li>
+<li><strong>@param {Number} <code>whenDataRetrieved.version</code></strong> The version of the data, 0 means no data found found, 1 is the first version.</li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getVersion</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">whenVersionFound</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getFull</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">r</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">whenVersionFound</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">([</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">,</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">DATA_ALREADY_REMOVED</span><span class="p">].</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">whenVersionFound</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">r</span><span class="p">.</span><span class="nx">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nx">whenVersionFound</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+
 
 
 </pre></div>
@@ -1839,6 +2005,9 @@ should <code>SyncIt.advance()</code> be called.</p>
     <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="nx">reference</span><span class="p">,</span><span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
 
       <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">===</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">PATH_EMPTY</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">NO_DATA_FOUND</span><span class="p">);</span>
+        <span class="p">}</span>
         <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
       <span class="p">}</span>
 
@@ -1905,13 +2074,18 @@ should <code>SyncIt.advance()</code> be called.</p>
   <span class="kd">var</span> <span class="nx">pathWatcher</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getPathWatcher</span><span class="p">();</span>
   
   <span class="k">this</span><span class="p">.</span><span class="nx">_ps</span><span class="p">.</span><span class="nx">followPath</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="nx">pathWatcher</span><span class="p">.</span><span class="nx">getWatcher</span><span class="p">(),</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="kd">var</span> <span class="nx">fullData</span><span class="p">;</span>
+    
     <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!==</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">whenDataRetrieved</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">whenDataRetrieved</span><span class="p">(</span>
-      <span class="nx">err</span><span class="p">,</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kc">null</span><span class="p">,</span><span class="nx">pathWatcher</span><span class="p">.</span><span class="nx">getReaditem</span><span class="p">())</span>
-    <span class="p">);</span>
+    
+    <span class="nx">fullData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_addObviousInforation</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kc">null</span><span class="p">,</span><span class="nx">pathWatcher</span><span class="p">.</span><span class="nx">getReaditem</span><span class="p">());</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">fullData</span><span class="p">.</span><span class="nx">r</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">err</span> <span class="o">=</span> <span class="nx">ERROR</span><span class="p">.</span><span class="nx">DATA_ALREADY_REMOVED</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">whenDataRetrieved</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">fullData</span><span class="p">);</span>
   <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
 <span class="p">};</span>
 
@@ -1996,6 +2170,52 @@ should <code>SyncIt.advance()</code> be called.</p>
   
   <span class="k">this</span><span class="p">.</span><span class="nx">_ps</span><span class="p">.</span><span class="nx">getDatakeysInDataset</span><span class="p">(</span><span class="nx">datasetName</span><span class="p">,</span> <span class="nx">whenDatakeysKnown</span><span class="p">);</span>
   
+<span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs"><div class="dox">
+  <div class="summary">
+<div class="pilwrap" id="remove%20any%20outstanding%20uploads%20for%20a%20specific%20dataset%20%2F%20datakey.">
+  <h3>
+    <a href="#remove%20any%20outstanding%20uploads%20for%20a%20specific%20dataset%20%2F%20datakey." name="remove%20any%20outstanding%20uploads%20for%20a%20specific%20dataset%20%2F%20datakey." class="pilcrow">&#182;</a>
+    Remove any outstanding uploads for a specific Dataset / Datakey.
+  </h3>
+</div>
+
+  </div>
+  <div class="body">
+<div class="pilwrap" id="parameters">
+  <h4>
+    <a href="#parameters" name="parameters" class="pilcrow">&#182;</a>
+    Parameters
+  </h4>
+</div>
+
+
+<ul>
+<li><strong>@param {Dataset} <code>dataset</code></strong></li>
+<li><strong>@param {Datakey} <code>datakey</code></strong></li>
+<li><strong>@param {Function} <code>next</code></strong> Signature: Function(err)
+<ul><li><strong>@param {ErrorCode} <code>next.err</code></strong> See SyncIt_Constant.Error.</li></ul></li>
+</ul>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">purge</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isLocked</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nx">next</span><span class="p">(</span><span class="nx">ERROR</span><span class="p">.</span><span class="nx">UNABLE_TO_PROCESS_BECAUSE_LOCKED</span><span class="p">);</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">_lockFor</span><span class="p">(</span><span class="nx">LOCKING</span><span class="p">.</span><span class="nx">CLEANING</span><span class="p">);</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_ps</span><span class="p">.</span><span class="nx">purge</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_unlockFor</span><span class="p">(</span><span class="nx">LOCKING</span><span class="p">.</span><span class="nx">CLEANING</span><span class="p">);</span>
+    <span class="nx">next</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+  <span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
 <span class="p">};</span>
 
 

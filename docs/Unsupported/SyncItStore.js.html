@@ -6,7 +6,7 @@
   <link rel="stylesheet" media="all" href="../doc-style.css" />
   <script src="../doc-filelist.js"></script>
   <script>
-    var relativeDir = "../", thisFile = "home/fozz/Projects/syncit//Unsupported/SyncItStore.js", defaultSidebar = true;
+    var relativeDir = "../", thisFile = "Unsupported/SyncItStore.js", defaultSidebar = true;
   </script>
   <script src="../doc-script.js"></script>
 </head>
@@ -39,7 +39,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre><span class="cm">/*jshint smarttabs:true */</span>
 <span class="nx">define</span><span class="p">(</span>
-<span class="p">[</span><span class="s1">&#39;syncit/SyncIt&#39;</span><span class="p">,</span><span class="s1">&#39;syncit/Constant&#39;</span><span class="p">,</span><span class="s1">&#39;dojo/_base/declare&#39;</span><span class="p">,</span><span class="s1">&#39;dojo/Deferred&#39;</span><span class="p">,</span><span class="s2">&quot;dojo/promise/all&quot;</span><span class="p">,</span>
+<span class="p">[</span><span class="s1">&#39;../SyncIt&#39;</span><span class="p">,</span><span class="s1">&#39;../Constant&#39;</span><span class="p">,</span><span class="s1">&#39;dojo/_base/declare&#39;</span><span class="p">,</span><span class="s1">&#39;dojo/Deferred&#39;</span><span class="p">,</span><span class="s2">&quot;dojo/promise/all&quot;</span><span class="p">,</span>
   <span class="s2">&quot;dojo/_base/array&quot;</span><span class="p">,</span><span class="s1">&#39;dojo/store/util/QueryResults&#39;</span><span class="p">],</span>
 <span class="kd">function</span><span class="p">(</span><span class="nx">SyncIt</span><span class="p">,</span><span class="nx">SyncIt_Constant</span><span class="p">,</span><span class="nx">declare</span><span class="p">,</span><span class="nx">Deferred</span><span class="p">,</span><span class="nx">promiseAll</span><span class="p">,</span><span class="nx">dojoBaseArray</span><span class="p">,</span><span class="nx">QueryResults</span><span class="p">)</span> <span class="p">{</span>
 
@@ -143,7 +143,10 @@ License: MIT/BSD-style</p>
       <span class="p">};</span>
       
       <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">getFull</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span><span class="nx">datakey</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">jread</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span>
+          <span class="p">(</span><span class="nx">err</span> <span class="o">!=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+          <span class="p">(</span><span class="nx">err</span> <span class="o">!=</span> <span class="nx">SyncIt_Constant</span><span class="p">.</span><span class="nb">Error</span><span class="p">.</span><span class="nx">DATA_ALREADY_REMOVED</span><span class="p">)</span>
+        <span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">var</span> <span class="nx">wasAlreadyThere</span> <span class="o">=</span> <span class="nx">inst</span><span class="p">.</span><span class="nx">_removeFromIndexes</span><span class="p">(</span><span class="nx">dataset</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nx">datakey</span><span class="p">);</span>
         <span class="nx">perform</span><span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">_makeFullStoreRecord</span><span class="p">(</span><span class="nx">jread</span><span class="p">,</span><span class="nx">dataset</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nx">datakey</span><span class="p">));</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">inst</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="s1">&#39;notify&#39;</span><span class="p">))</span> <span class="p">{</span>
@@ -161,11 +164,11 @@ License: MIT/BSD-style</p>
       <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
     <span class="p">});</span>
     
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForAdvanced</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForAdvanced</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
     <span class="p">});</span>
     
-    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForFed</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="nx">queueitem</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">inst</span><span class="p">.</span><span class="nx">_syncIt</span><span class="p">.</span><span class="nx">listenForFed</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">indexItem</span><span class="p">(</span><span class="nx">dataset</span><span class="p">,</span> <span class="nx">datakey</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{}</span> <span class="p">);</span>
     <span class="p">});</span>
     
@@ -180,8 +183,7 @@ License: MIT/BSD-style</p>
         <span class="p">}</span>
         
         <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-          <span class="nx">allKeyPromises</span> <span class="o">=</span> <span class="p">[];</span>
+          <span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         
 
 </pre></div>
@@ -353,8 +355,6 @@ for (var i=0;i<inst.</em>jreadCache.length;i++) {
         <td class="code highlight"><div class="highlight"><pre>
         <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
       <span class="p">};</span>
-    
-      <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
       
       <span class="kd">var</span> <span class="nx">sort</span> <span class="o">=</span> <span class="p">{</span><span class="nx">attribute</span><span class="o">:</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="nx">descending</span><span class="o">:</span><span class="kc">false</span><span class="p">},</span>
         <span class="nx">i</span><span class="p">,</span><span class="nx">j</span><span class="p">,</span><span class="nx">l</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -433,10 +433,16 @@ for (var i=0;i<inst.</em>jreadCache.length;i++) {
         
         <span class="k">return</span> <span class="nx">deferred</span><span class="p">;</span>
       <span class="p">};</span>
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">doingPromise</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">QueryResults</span><span class="p">(</span><span class="nx">getDataFromLastResultSet</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">));</span>
-      <span class="p">}</span>
-      <span class="k">return</span> <span class="nx">QueryResults</span><span class="p">(</span><span class="nx">getPromiseResultSet</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">));</span>
+      
+      <span class="kd">var</span> <span class="nx">getResult</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">doingPromise</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* jshint newcap: false */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">doingPromise</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="nx">QueryResults</span><span class="p">(</span><span class="nx">getDataFromLastResultSet</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">QueryResults</span><span class="p">(</span><span class="nx">getPromiseResultSet</span><span class="p">(</span><span class="nx">resultIds</span><span class="p">));</span>
+      <span class="p">};</span>
+      
+      <span class="k">return</span> <span class="nx">getResult</span><span class="p">(</span><span class="nx">doingPromise</span><span class="p">);</span>
     <span class="p">};</span>
   <span class="p">},</span>
   <span class="nx">query</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">query</span><span class="p">,</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
