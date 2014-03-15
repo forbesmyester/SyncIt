@@ -6,24 +6,17 @@
 		// like Node.
 		module.exports = factory(
 			require('expect.js'),
-			require('../js/FakeLocalStorage.js'),
-			require('../js/SyncLocalStorage.js')
+			require('../FakeLocalStorage.js'),
+			require('../SyncLocalStorage.js')
 		);
-	} else if (typeof define === 'function' && define.amd) {
+	} else {
 		// AMD. Register as an anonymous module.
 		define(
 			[
-				'../js/FakeLocalStorage',
-				'../js/SyncLocalStorage'
+				'../FakeLocalStorage',
+				'../SyncLocalStorage'
 			],
 			factory.bind(this, expect)
-		);
-	} else {
-		// Browser globals (root is window)
-		root.SyncIt_SyncLocalStorage = factory(
-			root.expect,
-			root.SyncIt_FakeLocalStorage,
-			root.SyncIt_FakeLocalStorage
 		);
 	}
 }(this, function (

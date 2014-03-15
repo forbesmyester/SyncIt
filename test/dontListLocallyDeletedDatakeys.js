@@ -8,45 +8,31 @@
 		// like Node.
 		module.exports = factory(
 			require('expect.js'),
-			require('../js/SyncIt.js'),
-			require('../js/AsyncLocalStorage.js'),
+			require('../SyncIt.js'),
+			require('../AsyncLocalStorage.js'),
 			require('get_tlid_encoder_decoder'),
-			require('../js/Path/AsyncLocalStorage.js'),
-			require('../js/FakeLocalStorage.js'),
-			require('../js/Constant.js'),
-			require('../js/updateResult.js'),
-			require('../js/Unsupported/PathStorageAnalysis'),
-			require('../js/dontListLocallyDeletedDatakeys')
+			require('../Path/AsyncLocalStorage.js'),
+			require('../FakeLocalStorage.js'),
+			require('../Constant.js'),
+			require('../updateResult.js'),
+			require('../Unsupported/PathStorageAnalysis'),
+			require('../dontListLocallyDeletedDatakeys')
 		);
-	} else if (typeof define === 'function' && define.amd) {
+	} else {
 		// AMD. Register as an anonymous module.
 		define(
 			[
-				'../js/SyncIt',
-				'../js/AsyncLocalStorage.js',
+				'../SyncIt',
+				'../AsyncLocalStorage.js',
 				'get_tlid_encoder_decoder',
-				'../js/Path/AsyncLocalStorage.js',
-				'../js/FakeLocalStorage',
-				'../js/Constant',
-				'../js/updateResult',
-				'../js/Unsupported/PathStorageAnalysis',
-				'../js/dontListLocallyDeletedDatakeys'
+				'../Path/AsyncLocalStorage.js',
+				'../FakeLocalStorage',
+				'../Constant',
+				'../updateResult',
+				'../Unsupported/PathStorageAnalysis',
+				'../dontListLocallyDeletedDatakeys'
 			],
 			factory.bind(this, expect)
-		);
-	} else {
-		// Browser globals (root is window)
-		root.returnExports = factory(
-			root.expect,
-			root.SyncIt,
-			root.SyncIt_AsyncLocalStorage,
-			root.get_tlid_encoder_decoder,
-			root.SyncIt_Path_AsyncLocalStorage,
-			root.SyncIt_FakeLocalStorage,
-			root.SyncIt_Constant,
-			root.SyncIt_updateResult,
-			root.SyncIt_Unsupported_PathStorageAnalysis,
-			root.SyncIt_dontListLocallyDeletedDatakeys
 		);
 	}
 })(this, function (

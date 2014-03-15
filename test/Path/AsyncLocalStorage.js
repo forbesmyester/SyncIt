@@ -9,36 +9,25 @@
 		// like Node.
 		module.exports = factory(
 			require('expect.js'),
-			require('../../js/Constant.js'),
-			require('../../js/FakeLocalStorage.js'),
-			require('../../js/AsyncLocalStorage.js'),
+			require('../../Constant.js'),
+			require('../../FakeLocalStorage.js'),
+			require('../../AsyncLocalStorage.js'),
 			require('get_tlid_encoder_decoder'),
-			require('../../js/Path/AsyncLocalStorage.js'),
-			require('../../js/Unsupported/PathStorageAnalysis.js')
+			require('../../Path/AsyncLocalStorage.js'),
+			require('../../Unsupported/PathStorageAnalysis.js')
 		);
-	} else if (typeof define === 'function' && define.amd) {
+	} else {
 		// AMD. Register as an anonymous module.
 		define(
 			[
-				'../../js/Constant',
-				'../../js/FakeLocalStorage.js',
-				'../../js/AsyncLocalStorage.js',
+				'../../Constant',
+				'../../FakeLocalStorage.js',
+				'../../AsyncLocalStorage.js',
 				'get_tlid_encoder_decoder',
-				'../../js/Path/AsyncLocalStorage.js',
-				'../../js/Unsupported/PathStorageAnalysis.js'
+				'../../Path/AsyncLocalStorage.js',
+				'../../Unsupported/PathStorageAnalysis.js'
 			],
 			factory.bind(this, expect)
-		);
-	} else {
-		// Browser globals (root is window)
-		root.returnExports = factory(
-			root.expect,
-			root.SyncIt_Constant,
-			root.SyncIt_FakeLocalStorage,
-			root.get_tlid_encoder_decoder,
-			root.SyncIt_getTLIdEncoderDecoder,
-			root.SyncIt_Path_AsyncLocalStorage,
-			root.SyncIt_Unsupported_PathStorageAnalysis
 		);
 	}
 })(this, function (

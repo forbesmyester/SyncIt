@@ -9,13 +9,13 @@
 		// like Node.
 		module.exports = factory(
 			require('expect.js'),
-			require('../js/updateResult.js')
+			require('../updateResult.js')
 		);
 	} else if (typeof define === 'function' && define.amd) {
 		// AMD. Register as an anonymous module.
 		define(
 			[
-				'../js/updateResult'
+				'../updateResult'
 			],
 			factory.bind(this, expect)
 		);

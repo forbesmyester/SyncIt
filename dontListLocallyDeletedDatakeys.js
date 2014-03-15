@@ -16,8 +16,12 @@
 /**
  * # dontListLocallyDeletedDatakeys()
  *
- * Adds a wrapper around some methods of SyncIt to make `getDatakeysInDataset()`
- * not list locally deleted Datakey
+ * Adds a wrapper around `SyncIt.getDatakeysInDataset()` to make it not list locally
+ * deleted Datakey.
+ *
+ * * **@param {SyncIt} `syncIt`** A full SyncIt instance.
+ * * **@return {SyncIt}** a SyncIt which will no longer list locally deleted datakeys.
+ * * **@todo** This could be more tightly coupled into SyncIt to dramatically increase performace.
  */
 return function(syncIt) { 
 	

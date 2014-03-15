@@ -265,22 +265,6 @@ There is a (reasonably) complete set of [API Docs](http://forbesmyester.github.i
 
 I want to thank Vivek Manoharan for giving me help with this README and my wife Rei Owada for her support.
 
-## Todo
-
-I need to do the following:
-
- * Public Facing
-    * Add a license to all files (It'll be MIT/BSD)
-    * Test demo (and everything else!) in IE
- * Client SyncIt
-	* Add Support for IndexedDb / WebSQL
- * Server SyncIt
-    * Create a real SyncItServer based on SyncItTestServer, it should be pretty easy, because SyncItTestServer is pretty abstracted.
-    * I want to make ServerPersist for both MongoDB and DynamoDB.
- * Next Steps
-    * Use this in a real project with a Browser and mobile (Phonegap based) clients.
-    * Add SyncIt.purge() methods to free space from SyncIt.
-
 ## Dictionary
 
 Below you will find a dictionary for words used in SyncIt.
