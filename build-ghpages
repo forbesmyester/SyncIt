@@ -3,6 +3,6 @@
 # First arg of cmd must be destination directory
 
 rm -rf docs
-docker -o docs/ *.js
+docker -o docs/ *.js Unsupported/*.js Path/*.js
 rm -rf $1/docs
 tar -c docs | tar -x -C $1
