@@ -255,7 +255,7 @@ syncIt.listenForAdvanced(
 
 ## Is there a demo
 
-There sure is. It's located [here](http://forbesmyester.github.io/SyncIt/demo/index.html).
+There sure is. It's located [here](http://forbesmyester.github.io/syncit-playground/public/).
 
 ## Have you got API Documentation?
 
