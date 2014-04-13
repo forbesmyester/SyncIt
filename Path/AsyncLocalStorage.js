@@ -430,7 +430,7 @@ Als.prototype.removeDatasetDatakey = function(dataset,datakey,next) {
 		};
 		
 		this.__removeItem(dataset + '.' + datakey, function(err) {
-			if (err !== ERROR.OK) {
+			if ((pathRefs.length === 0) || (err !== ERROR.OK)) {
 				return next(err);
 			}
 			for (var i=0, l=pathRefs.length; i<l; i++) {
