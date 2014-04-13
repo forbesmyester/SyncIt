@@ -635,7 +635,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 		);
 		
 		if (feedQueue[0].o == 'remove') {
-			return this._ps.promotePathToOrRemove(feedQueue[0].s,feedQueue[0].k,'c','a',false,function(err) {
+			return this._ps.promotePathToOrRemove(feedQueue[0].s,feedQueue[0].k,'c','a',function(err) {
 				if (err !== ERROR.OK) {
 					return unlockAndError(err);
 				}

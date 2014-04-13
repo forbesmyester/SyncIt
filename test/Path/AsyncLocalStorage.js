@@ -617,7 +617,6 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 							pathStore.removeDatasetDatakey(
 								'cars',
 								'subaru',
-								true,
 								function(err) {
 									expect(err).to.equal(ERROR.OK);
 									pathStore.getDatakeysInDataset(
@@ -672,7 +671,6 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 								'subaru',
 								'x',
 								'p',
-								true,
 								function(err) {
 									expect(err).to.equal(ERROR.OK);
 									pathStore.getDatakeysInDataset(
@@ -725,7 +723,6 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 								'subaru',
 								'q',
 								'p',
-								true,
 								function(err) {
 									expect(err).to.equal(ERROR.OK);
 									pathStore.getDatakeysInDataset(

@@ -66,7 +66,7 @@ var mapBuffered = function(k) {
 };
 
 var k,
-	bufferedFuncs = ['update', 'remove', 'set', 'purge', 'clean', 'feed', 'advance'];
+	bufferedFuncs = ['update', 'remove', 'set', 'purge', 'clean', 'feed', 'advance', 'getFirst'];
 for (k in SyncIt.prototype) {
 	if (SyncIt.prototype.hasOwnProperty(k)) {
 		if (k.match(/^_/)) { continue; }

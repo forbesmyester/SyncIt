@@ -233,7 +233,8 @@ Als.prototype.advance = function(dataset,datakey,removeOld,calcNewRootOfPath,nex
 				function(newRoot) {
 					if (newRoot === null) {
 						// This is a request to delete the whole Path
-						return this.removeDatasetDatakey(dataset, datakey, false, function() {
+						return this.removeDatasetDatakey(dataset, datakey, function(err) {
+							if (err) { return next(err); }
 							next(
 								err,
 								this._removePrivatePathStorageData(item),
@@ -361,12 +362,10 @@ Als.prototype.changePath = function(dataset,datakey,fromPath,toPath,removeOld,ne
  * * **@param {Datakey} `datakey`** The datakey you want to purge
  * * **@param {Datakey} `pathToPromote`** If this exists it will be moved to `promoteToWhere`
  * * **@param {Datakey} `promoteToWhere`** Where `pathToPromote` will be moved to
- * * **@param {Boolean} `delayTillComplete`** If you want to wait for all data to be cleaned
  * * **@param {Function} `next`** Callback when complete, Signature: Function(err, err)
  *   * **@param {Errorcode} `errRootDeletion`** If the Root was successfully deleted
- *   * **@param {Errorcode} `errPathDeletion`** Only supplied if `delayTillComplete` but will give you an indication on whether all the Pathitem were deleted.
  */
-Als.prototype.promotePathToOrRemove = function(dataset,datakey,pathToPromote,promoteToWhere,delayTillComplete,next) {
+Als.prototype.promotePathToOrRemove = function(dataset,datakey,pathToPromote,promoteToWhere,next) {
 	
 	this._getRoot(dataset,datakey,function(err,root) {
 		var oldTargetRef = (function() {
@@ -377,7 +376,7 @@ Als.prototype.promotePathToOrRemove = function(dataset,datakey,pathToPromote,pro
 			}());
 		
 		if (!root.hasOwnProperty(pathToPromote)) {
-			return this.removeDatasetDatakey(dataset,datakey,delayTillComplete,next);
+			return this.removeDatasetDatakey(dataset,datakey,next);
 		}
 		root[promoteToWhere] = root[pathToPromote];
 		delete root[pathToPromote];
@@ -399,12 +398,10 @@ Als.prototype.promotePathToOrRemove = function(dataset,datakey,pathToPromote,pro
  *
  * * **@param {Datakey} `dataset`** The dataset you want to purge
  * * **@param {Datakey} `datakey`** The datakey you want to purge
- * * **@param {Boolean} `delayTillComplete`** If you want to wait for all data to be cleaned
  * * **@param {Function} `next`** Callback when complete, Signature: Function(err, err)
  *   * **@param {Errorcode} `errRootDeletion`** If the Root was successfully deleted
- *   * **@param {Errorcode} `errPathDeletion`** Only supplied if `delayTillComplete` but will give you an indication on whether all the Pathitem were deleted.
  */
-Als.prototype.removeDatasetDatakey = function(dataset,datakey,delayTillComplete,next) {
+Als.prototype.removeDatasetDatakey = function(dataset,datakey,next) {
 	
 	var _getPathRefs = function(root) {
 		var r = [];
@@ -424,17 +421,17 @@ Als.prototype.removeDatasetDatakey = function(dataset,datakey,delayTillComplete,
 		
 		var trackPathItemDeletions = function(err) {
 			if (err !== ERROR.OK) {
-				if (delayTillComplete) { next(ERROR.OK, err); }
 				pathRefCount = -1;
+				return next(err);
 			}
 			if (--pathRefCount === 0) {
-				if (delayTillComplete) { next(ERROR.OK, ERROR.OK); }
+				return next(ERROR.OK);
 			}
 		};
 		
 		this.__removeItem(dataset + '.' + datakey, function(err) {
-			if (!delayTillComplete || (err !== ERROR.OK)) {
-				next(err);
+			if (err !== ERROR.OK) {
+				return next(err);
 			}
 			for (var i=0, l=pathRefs.length; i<l; i++) {
 				this._removePathItems(
