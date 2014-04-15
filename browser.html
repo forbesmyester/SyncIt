@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<title>SyncItBrowserTest</title>
+		<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+		<script src="./browser-lib.js" type="text/javascript"></script>
+	</head>
+<body>
+	<ul id="log"></id>
+</body>
+<script>
+
+$(document).ready(function() {
+
+	// SyncIt is made of many components, this makes it easier to test but right now it makes it a bit
+	// of ceremony to get going!
+	
+	// This __must__ be static, as PathStorage needs to have a sequential locally unique source of data.
+	var staticTimestamp = new Date(2014, 1, 1, 1, 1, 1).getTime();
+
+	// getTlIdEncoderDecoder will supply a sequential locally unique source of data.
+	var tLEncoderDecoder = SyncItLib.getTlIdEncoderDecoder(
+		staticTimestamp,
+		2
+	);
+
+	// This uniquely identifies a user on a specific device.
+	var modifier = 'aGuidGeneratedOnBacked';
+
+	// Wraps LocalStorage making it async with a namespace.
+	var asyncLocalStorage = new SyncItLib.AsyncLocalStorage(
+		window.localStorage,
+		'syncit-' + modifier,
+		JSON.stringify,
+		JSON.parse
+	);
+
+	// PathStorage is the main way SyncIt is able to identify what changes are needed, it is basically a multi-rooted linked list.
+	var pathstore = new SyncItLib.Path_AsyncLocalStorage(
+		asyncLocalStorage,
+		tLEncoderDecoder
+	);
+
+	// You can use syncIt to do all the operations listed below, but you are exposed to locking and it will also list datakeys you've already deleted.
+	var syncIt = new SyncItLib.SyncIt(pathstore, modifier);
+
+	// Wraps SyncIt giving an identical API but will filter out locally deleted keys (which is kinda expensive and inefficient currently).
+	var syncItDontListLocallyDeletedDatakeys = SyncItLib.dontListLocallyDeletedDatakeys(syncIt);
+
+	// This will buffer SyncIt operations while SyncIt is locked, again exposing an identical API.
+	var syncItBuffer = new SyncItLib.SyncItBuffer(syncItDontListLocallyDeletedDatakeys);
+
+	// Start the program... Sorry about the Christmas tree!!! Consider SyncItLib.syncItCallbackToPromise()
+	var dataset = 'cars';
+	var datakey = 'bmw';
+	var value = { wheels: 4, size: 'medium', drive: 'rear' };
+
+	$('#log').append($('<li/>').text('Attempting to add ' + JSON.stringify(value) + ' as ' + dataset + '.' + datakey));
+	syncItBuffer.set(dataset, datakey, value, function(err) {
+		if (err !== SyncItLib.Constant.Error.OK) { alert("ERROR " + err + ": Could not set " + dataset + "." + datakey); }
+		$('#log').append($('<li/>').text('Successful'));
+
+		$('#log').append($('<li/>').text('Lets get the value out again!'));
+		syncItBuffer.get(dataset, datakey, function(err, outValue) {
+			if (err !== SyncItLib.Constant.Error.OK) { alert("ERROR " + err + ": Could not get data from " + dataset + "." + datakey); }
+			$('#log').append($('<li/>').text('Retrieved the following data: ' + JSON.stringify(outValue)));
+
+			$('#log').append($('<li/>').text('Let\'s see what we still need to upload'));
+			syncItBuffer.getFirst(function(err, dataToUpload) {
+				if (err !== SyncItLib.Constant.Error.OK) { alert("ERROR " + err + ": Could not get data which needs uploading"); }
+				$('#log').append($('<li/>').text('I still need to upload the following data: ' + JSON.stringify(dataToUpload)));
+				$('#log').append($('<li/>').text('Note: o = operation, u = update, s = dataset, k = datakey, m = modifier (device/user), t = timestamp, o = version (that this modification is based upon)'));
+
+				$('#log').append($('<li/>').text('Once the update is pushed up to the server we would call SyncIt.advance()'));
+				syncItBuffer.advance(function(err) {
+					if (err !== SyncItLib.Constant.Error.OK) { alert("ERROR " + err + ": Could not advance data so it is still marked as requiring an upload"); }
+					syncItBuffer.getFirst(function(err) {
+						$('#log').append($('<li/>').text('Now SyncIt.getFirst will return SyncItLib.Constant.Error.NO_DATA_FOUND as the upload queue is empty'));
+						$('#log').append($('<li/>').text('(SyncItLib.Constant.Error.NO_DATA_FOUND == ' + SyncItLib.Constant.Error.NO_DATA_FOUND + ') && (err == ' + err + ')'));
+
+
+					});
+				});
+				
+			});
+		});
+
+	});
+});
+
+</script>
+</html>

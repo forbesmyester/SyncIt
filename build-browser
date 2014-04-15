@@ -1,0 +1,5 @@
+#!/bin/sh
+
+npm install browserify
+
+browserify -s SyncItLib -t deamdify -t uglifyify browser-lib.src.js -o browser-lib.js
