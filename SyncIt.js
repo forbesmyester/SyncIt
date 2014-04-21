@@ -461,7 +461,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 				i;
 			for (i=0; i<disallowedKeys.length; i++) {
 				if (queueitem.hasOwnProperty(disallowedKeys[i])) {
-					throw "Merge queue cannot include any " + disallowedKeys.join(', ');
+					throw new Error("Merge queue cannot include any " + disallowedKeys.join(', '));
 				}
 			}
 			for (i=0; i<copyKeys.length; i++) {
@@ -470,10 +470,10 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 				}
 			}
 			if (queueitem.hasOwnProperty('s') && (queueitem.s != storedrecord.s)) {
-				throw "Merge queue cannot use different dataset to stored record";
+				throw new Error("Merge queue cannot use different dataset to stored record");
 			}
 			if (queueitem.hasOwnProperty('k') && (queueitem.k != storedrecord.k)) {
-				throw "Merge queue cannot use different datakey to stored record";
+				throw new Error("Merge queue cannot use different datakey to stored record");
 			}
 			return r;
 		};
@@ -990,7 +990,7 @@ SyncIt.prototype._addObviousInforation = function(dataset,datakey,reference,ob,e
 	}
 	if (!r.hasOwnProperty('t')) {
 		if ((reference === undefined) || (reference === null)) {
-			throw "No time and no time found in key";
+			throw new Error("No time and no time found in key");
 		}
 		r.t = (this._ps.getKeyTimeDecoder())(reference);
 	}
@@ -1241,11 +1241,11 @@ SyncIt.prototype.clean = function(done) {
 				return next(err);
 			}
 			if (info.p.length > 1) {
-				throw "How did we end up with more than two paths?";
+				throw new Error("How did we end up with more than two paths?");
 			}
 			if (info.p.length) {
 				if (info.p[0] !== 'c') {
-					throw "How did we end up with paths other than 'c' and 'a'?";
+					throw new Error("How did we end up with paths other than 'c' and 'a'?");
 				}
 				return removeCPath();
 			}

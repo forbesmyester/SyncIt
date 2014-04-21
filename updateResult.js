@@ -28,8 +28,11 @@
  */
 var updateResult = function(obToApplyTo,pathitem,cloningFunction) {
 	if (!updateResult.hasOwnProperty('_op_'+pathitem.o)) {
-		throw 'SyncLib.updateResult No Operation: updateResult has no ' + 
-			'operation '+ pathitem.o;
+		throw new Error(
+			'SyncLib.updateResult No Operation: updateResult has no ' +
+			'operation '+
+			pathitem.o
+		);
 	}
 	var f = updateResult['_op_'+pathitem.o];
 	return f.call(this,obToApplyTo,pathitem,cloningFunction);

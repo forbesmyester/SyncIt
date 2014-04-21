@@ -73,6 +73,15 @@ describe('SyncLocalStorage might be useful if',function() {
 		expect(lls.findKeys('*')).to.eql([]);
 		expect(lls.findKeys('*.*')).to.eql(['bye.today','hi.there','hi.today']);
 	});
+	it('can find Keys that begin with upper space letters', function() {
+		var lls = getInstance();
+		lls.setItem('hi.there.james',{hi:{there:"james"}});
+		lls.setItem('Bye.today',1);
+		expect(lls.findKeys('hi.there.*')).to.eql(['hi.there.james']);
+		expect(lls.findKeys('Bye.today')).to.eql(['Bye.today']);
+		expect(lls.findKeys('*.today')).to.eql(['Bye.today']);
+		expect(lls.findKeys('Bye.*')).to.eql(['Bye.today']);
+	});
 });
 
 })();

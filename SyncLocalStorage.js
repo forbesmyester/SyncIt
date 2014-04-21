@@ -164,7 +164,7 @@ SyncLocalStorage.prototype.findKeys = function(pattern) {
 	buildRe = function(pattern) {
 		var mustBeDot = [],
 			j = 0;
-		if (!pattern.match(/^[a-z0-9_\.\*]/)) {
+		if (!pattern.match(/^[A-Za-z0-9_\.\*]/)) {
 			return false;
 		}
 		pattern = pattern.replace(/\./g,'\\.');
@@ -192,6 +192,12 @@ SyncLocalStorage.prototype.findKeys = function(pattern) {
 	};
 	
 	re = buildRe(pattern);
+
+	if (re === false) {
+		throw new Error(
+			"You cannot find keys from the pattern '" + pattern + "'"
+		);
+	}
 
 	for (i = 0, l = this._ls.length; i < l; i++) {
 		k = this._ls.key(i);
