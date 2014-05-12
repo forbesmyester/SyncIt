@@ -1077,7 +1077,7 @@ SyncIt.prototype.getVersion = function(dataset, datakey, whenVersionFound) {
 SyncIt.prototype.getFirstInDatasets = function(datasets, done) {
 	
 	this._ps.getFirstPathitem(
-		null,
+		datasets,
 		'a',
 		function(err,dataset,datakey,reference,queueitem) {
 
