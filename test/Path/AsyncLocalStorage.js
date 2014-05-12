@@ -394,8 +394,7 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 		});
 	});
 
-	it('can clean and get first queueitem',function(done) {
-		this.timeout(60000);
+	var setupForGetFirstTest = function(next) {
 		var localStorage = new SyncIt_FakeLocalStorage();
 		var asyncLocalStorage = new AsyncLocalStorage(
 			localStorage,
@@ -492,31 +491,53 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 											{from:'bikes.harley:p',to:'_4'},
 											{from:'bikes.kawasaki:p',to:'_6'}
 										]);
-										pathStore.findFirstDatasetDatakey('p',function(err,dataset,datakey) {
-											expect(err).to.equal(ERROR.OK);
-											expect([dataset,datakey]).to.eql(['cars','subaru']);
-											pathStore.clean(function(err) {
-												expect(err).to.equal(SyncIt_Constant.Error.OK);
-												expect(
-													getPaths(localStorage,'aa','p')
-												).to.eql([
-													{from:'cars.subaru._2',to:'_3'},
-													{from:'cars.subaru._3',to:null},
-													{from:'bikes.harley._4',to:'_5'},
-													{from:'bikes.harley._5',to:null},
-													{from:'bikes.kawasaki._6',to:null},
-													{from:'cars.subaru:p',to:'_2'},
-													{from:'bikes.harley:p',to:'_4'},
-													{from:'bikes.kawasaki:p',to:'_6'}
-												]);
-												done();
-											});
-										});
+										next(localStorage,pathStore);
 									});
 								});
 							});
 						});
 					});
+				});
+			});
+		});
+	};
+
+	it('can clean and get first queueitem in specific datasets', function(done) {
+		this.timeout(60000);
+		setupForGetFirstTest(function(localStorage,pathStore) {
+			pathStore.findFirstDatasetDatakey(['cars'],'p',function(err,dataset,datakey) {
+				expect(err).to.equal(ERROR.OK);
+				expect([dataset,datakey]).to.eql(['cars','subaru']);
+				pathStore.findFirstDatasetDatakey(['bikes'],'p',function(err,dataset,datakey) {
+					expect(err).to.equal(ERROR.OK);
+					expect([dataset,datakey]).to.eql(['bikes','harley']);
+					done();
+				});
+			});
+		});
+	});
+
+	it('can clean and get first queueitem', function(done) {
+		this.timeout(60000);
+		setupForGetFirstTest(function(localStorage,pathStore) {
+			pathStore.findFirstDatasetDatakey(null,'p',function(err,dataset,datakey) {
+				expect(err).to.equal(ERROR.OK);
+				expect([dataset,datakey]).to.eql(['cars','subaru']);
+				pathStore.clean(function(err) {
+					expect(err).to.equal(SyncIt_Constant.Error.OK);
+					expect(
+						getPaths(localStorage,'aa','p')
+						).to.eql([
+							{from:'cars.subaru._2',to:'_3'},
+							{from:'cars.subaru._3',to:null},
+							{from:'bikes.harley._4',to:'_5'},
+							{from:'bikes.harley._5',to:null},
+							{from:'bikes.kawasaki._6',to:null},
+							{from:'cars.subaru:p',to:'_2'},
+							{from:'bikes.harley:p',to:'_4'},
+							{from:'bikes.kawasaki:p',to:'_6'}
+							]);
+					done();
 				});
 			});
 		});

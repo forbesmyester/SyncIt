@@ -913,7 +913,7 @@ SyncIt.prototype.advance = function(done) {
 	this._lockFor(LOCKING.ADVANCING);
 	var addedPathkey = '';
 	
-	this._ps.findFirstDatasetDatakey('a',function(err,dataset,datakey) {
+	this._ps.findFirstDatasetDatakey(null,'a',function(err,dataset,datakey) {
 		if (err !== ERROR.OK) {
 			this._unlockFor(LOCKING.ADVANCING);
 			return done(err);
@@ -1062,20 +1062,22 @@ SyncIt.prototype.getVersion = function(dataset, datakey, whenVersionFound) {
 
 
 /**
- * ### SyncIt.getFirst()
+ * ### SyncIt.getFirstInDatasets()
  *
  * Gets the Pathitem which should be next uploaded to the server or will be advanced
  * should `SyncIt.advance()` be called.
  *
  * #### Parameters
  * 
+ * * **@param {Array|null} `datasets`** An array of datasets which are acceptable, or null for any
  * * **@param {Function} `done`** Callback. Signature: Function(err, pathitem)
  *   * **@param {ErrorCode} `done.err`** See SyncIt_Constant.Error.
  *   * **@param {Pathitem} `done.pathitem`** The Pathitem.
  */
-SyncIt.prototype.getFirst = function(done) {
+SyncIt.prototype.getFirstInDatasets = function(datasets, done) {
 	
 	this._ps.getFirstPathitem(
+		null,
 		'a',
 		function(err,dataset,datakey,reference,queueitem) {
 
@@ -1104,6 +1106,9 @@ SyncIt.prototype.getFirst = function(done) {
 	
 };
 
+SyncIt.prototype.getFirst = function(done) {
+	this.getFirstInDatasets(null, done);
+};
 
 /**
 

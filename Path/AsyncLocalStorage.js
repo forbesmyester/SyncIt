@@ -1095,8 +1095,8 @@ Als.prototype.getDatakeysInDataset = function(dataset,next) {
  *   * **@param {String} `dataset`**
  *   * **@param {String} `datakey`**
  */
-Als.prototype.findFirstDatasetDatakey = function(path,next) {
-	this._findFirstDatasetDatakeyReference(path,function(err,dataset,datakey) {
+Als.prototype.findFirstDatasetDatakey = function(datasets,path,next) {
+	this._findFirstDatasetDatakeyReference(datasets,path,function(err,dataset,datakey) {
 		if (err !== ERROR.OK) {
 			return next(err);
 		}
@@ -1105,11 +1105,12 @@ Als.prototype.findFirstDatasetDatakey = function(path,next) {
 };
 
 /**
- * ## SyncIt_Path_AsyncLocalStorage.getFirstPathitem()
+ * ## SyncIt_Path_AsyncLocalStorage.getFirstPathitemInDatasets()
  *
  * Will find the first Pathitem via the lowest Reference and return it along
  * with the Dataset, Datakey and Pathitem.
  *
+ * * **@param {Array|null} `datasets`** An array of datasets which are acceptable, or null for any.
  * * **@param {Path} `path`**
  * * **@param {Function} `next`** Signature: Function(err, dataset, datakey, reference, pathitem)
  *   * **@param {Errorcode} `err`**
@@ -1118,15 +1119,19 @@ Als.prototype.findFirstDatasetDatakey = function(path,next) {
  *   * **@param {String} `reference`**
  *   * **@param {Pathitem} `pathitem`**
  */
-Als.prototype.getFirstPathitem = function(path,next) {
-	this._findFirstDatasetDatakeyReference(path,function(err,dataset,datakey,reference) {
-		if (err !== ERROR.OK) {
-			return next(err);
-		}
-		return this._getPathItem(dataset,datakey,reference,function(err,pathitem) {
-			next(err,dataset,datakey,reference,pathitem);
-		});
-	}.bind(this));
+Als.prototype.getFirstPathitem = function(datasets,path,next) {
+	this._findFirstDatasetDatakeyReference(
+		datasets,
+		path,
+		function(err,dataset,datakey,reference) {
+			if (err !== ERROR.OK) {
+				return next(err);
+			}
+			return this._getPathItem(dataset,datakey,reference,function(err,pathitem) {
+				next(err,dataset,datakey,reference,pathitem);
+			});
+		}.bind(this)
+	);
 };
 
 /**
@@ -1135,11 +1140,12 @@ Als.prototype.getFirstPathitem = function(path,next) {
  * Will find the lowest Reference and return it along with the Dataset, Datakey
  * it was found at.
  *
+ * * **@param {Array|null} `datasets`** An array of datasets which are acceptable, or null for any
  * * **@param {Path} `path`**
  * * **@param {Function} `next`** Signature: Function(err)
  *   * **@param {Errorcode} `err`**
  */
-Als.prototype._findFirstDatasetDatakeyReference = function(path,next) {
+Als.prototype._findFirstDatasetDatakeyReference = function(datasets,path,next) {
 	this._ls.findKeys('*.*.*',function(keys) {
 		keys = keys.sort(this._ed.sort);
 		var processOne = function() {
@@ -1159,6 +1165,12 @@ Als.prototype._findFirstDatasetDatakeyReference = function(path,next) {
 				}
 				if (err !== ERROR.OK) {
 					return next(err);
+				}
+				if (
+					(datasets !== null) &&
+					(datasets.indexOf(k[0]) == -1)
+				) {
+					return processOne();
 				}
 				if (
 					root.hasOwnProperty(path) && 
