@@ -1,16 +1,4 @@
-// if the module has no dependencies, the above pattern can be simplified to
-(function (root, factory) {
-	"use strict";
-	if (typeof exports === 'object') {
-		// Node. Does not work with strict CommonJS, but
-		// only CommonJS-like enviroments that support module.exports,
-		// like Node.
-		module.exports = factory(require('when'));
-	} else {
-		// AMD. Register as an anonymous module.
-		define(['when'],factory);
-	}
-}(this, function (when) {
+module.exports = (function (when) {
 
 	"use strict";
 	
@@ -32,4 +20,4 @@
 		return deferred.promise;
 	};
 	
-}));
+}(require('when')));

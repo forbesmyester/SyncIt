@@ -2,4 +2,4 @@
 
 npm install browserify
 
-browserify -s SyncItLib -t deamdify -t uglifyify browser-lib.src.js -o browser-lib.js
+browserify -s SyncItLib browser-lib.js -o browser-lib.umd.js

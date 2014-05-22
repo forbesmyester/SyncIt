@@ -265,6 +265,10 @@ There is a (reasonably) complete set of [API Docs](http://forbesmyester.github.i
 
 I want to thank Vivek Manoharan for giving me help with this README and my wife Rei Owada for her support.
 
+## Source Code
+
+Source code is prepared using [Browserify](http://browserify.org/) which is also compatible with Node.JS. There is a UMD bundle in browser-lib.umd.js which can be used with AMD or a vanilla browser (where it will export a global called called SyncItLib.
+
 ## Dictionary
 
 Below you will find a dictionary for words used in SyncIt.

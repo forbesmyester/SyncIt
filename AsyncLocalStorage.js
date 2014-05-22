@@ -1,14 +1,4 @@
-(function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
-	"use strict";
-	if (typeof exports === 'object') {
-		module.exports = factory(
-			require('./SyncLocalStorage.js'),
-			require('./makeAsync.js')
-		);
-	} else {
-		define(['./SyncLocalStorage','./makeAsync'],factory);
-	}
-}(this, function (SyncLocalStorage,makeAsync) {
+module.exports = (function (SyncLocalStorage,makeAsync) {
 
 "use strict";
 
@@ -24,4 +14,4 @@
  */
 return  makeAsync(SyncLocalStorage,0);
 
-}));
+}(require('./SyncLocalStorage'), require('./makeAsync.js')));

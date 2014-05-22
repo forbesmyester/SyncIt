@@ -1,11 +1,4 @@
-(function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
-	"use strict";
-	if (typeof exports === 'object') {
-		module.exports = factory(require('./Constant.js'));
-	} else {
-		define(['./Constant'],factory);
-	}
-}(this, function (SyncIt_Constant) {
+module.exports = (function (SyncIt_Constant) {
 	
 "use strict";
 
@@ -83,4 +76,4 @@ return function(syncIt) {
 	
 };
 
-}));
+}(require('./Constant')));

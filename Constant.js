@@ -1,9 +1,4 @@
-// if the module has no dependencies, the above pattern can be simplified to
-(function (root, factory) {
-	"use strict";
-	if (typeof exports === 'object') { module.exports = factory(); }
-	else { define(factory); }
-}(this, function () {
+module.exports = (function () {
 
 "use strict";
 
@@ -193,4 +188,4 @@ return {
 	FollowInformationType: FollowInformationType
 };
 
-}));
+}());

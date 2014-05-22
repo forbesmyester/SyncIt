@@ -1,17 +1,4 @@
-(function(root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
-	"use strict";
-	if (typeof exports === 'object') {
-		module.exports = factory(
-			require('../Constant.js'),
-			require('add-events')
-		);
-	} else {
-		define(
-			['../Constant','add-events'],
-			factory
-		);
-	}
-})(this, function(SyncIt_Constant,addEvents) {
+module.exports = (function(SyncIt_Constant,addEvents) {
 
 "use strict";
 
@@ -1450,4 +1437,4 @@ addEvents(Als,['set-root','set-item','remove-item','advance','push','change-path
 
 return Als;
 
-});
+}(require('../Constant'), require('add-events')));

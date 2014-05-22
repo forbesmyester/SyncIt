@@ -1,14 +1,4 @@
-/*jshint smarttabs:true */
-(function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
-
-	"use strict";
-
-	if (typeof exports === 'object') {
-		module.exports = factory(require('manip'));
-	} else {
-		define(['manip'], factory);
-	}
-})(this, function (manip) {
+module.exports = (function (manip) {
 
 // Author: Matthew Forrester <matt_at_keyboardwritescode.com>
 // Copyright: Matthew Forrester
@@ -114,4 +104,4 @@ updateResult._op_set = function(ob,pathitem,cloningFunction) {
 
 return updateResult;
 
-});
+}(require('manip')));

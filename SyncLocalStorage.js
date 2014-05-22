@@ -1,11 +1,4 @@
-(function (root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
-	"use strict";
-	if (typeof exports === 'object') {
-		module.exports = factory();
-	} else{
-		define(factory);
-	}
-}(this, function () {
+module.exports = (function () {
 
 "use strict";
 	
@@ -217,4 +210,4 @@ SyncLocalStorage.prototype.findKeys = function(pattern) {
 
 return SyncLocalStorage;
 
-}));
+}());
