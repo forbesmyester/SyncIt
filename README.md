@@ -124,7 +124,7 @@ You may also choose to write data:
 syncIt.set(
     'cars',
     'Subaru',
-	{ "Seats": "Leather" },
+    { "Seats": "Leather" },
     function(err,result) {
         if (err) {
             // Something went wront... throw?
