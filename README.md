@@ -253,13 +253,27 @@ syncIt.listenForAdvanced(
 );
 ```
 
-## Is there a demo
+## Is there a demo?
 
 There sure is. It's located [here](http://forbesmyester.github.io/syncit-playground/public/).
 
 ## Have you got API Documentation?
 
 There is a (reasonably) complete set of [API Docs](http://forbesmyester.github.io/SyncIt/docs/SyncIt.js.html).
+
+## That's great, but how do I go about starting a project from this?
+
+I have worked really hard to keep this project seperate, which it still is but I have grown a small eco system around it. There is:
+
+ * [SyncItControl](https://github.com/forbesmyester/SyncItControl) which will use EventSource (Server Sent Events) and GET/POST requests to continually synchronize data back end forth between the web browser and the client.
+
+ * [SyncIt Server](https://github.com/forbesmyester/syncit-server) which is a server component which SyncItControl can talk to.
+
+ * [SyncItBootstrap](https://github.com/forbesmyester/SyncItBootstrap) is a fully working base project with minimal dependencies outside of the SyncIt eco system so you can use it to start a Angular / React / Backbone / jQuery project.
+
+ * [SyncItTodoMVC](https://github.com/forbesmyester/SyncItTodoMvc). Of course I wanted to do a [TodoMVC](http://todomvc.com/) project to prove the tech. The code in here was used as the basis for SyncItBootstrap.
+
+My advice would be to take SyncItBootstrap and customize it. It should be enough to get you going and it highlights really easily what you have to do to create a full application (or the dynamic offline part of a bigger project).
 
 ## Special Thanks
 
