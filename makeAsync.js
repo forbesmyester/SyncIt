@@ -9,9 +9,9 @@ module.exports = (function () {
 /**
  * # makeAsync(classFunc, asynchronousDelay)
  *
- * Takes a pseudo-classical Javascript class and converts that class into an 
+ * Takes a pseudo-classical Javascript class and converts that class into an
  * asynchronous version.
- * 
+ *
  * ## Example
  * ```javascript
  * var MyClass = function(property) {
@@ -35,7 +35,7 @@ module.exports = (function () {
  * * **@param {Number} `asynchronousDelay`**
  */
 return function(classFunc,asynchronousDelay) {
-	
+
 	// This will create the constructor
 	var constructorFunc  = function() {
 		var args = Array.prototype.slice.call(arguments);
@@ -48,17 +48,20 @@ return function(classFunc,asynchronousDelay) {
 	};
 
 	var k = '';
-	
-	// Takes a function and a factor and returns an asynchronous 
-	// (if factor != false) function which wraps the func and passes 
+
+	// Takes a function and a factor and returns an asynchronous
+	// (if factor != false) function which wraps the func and passes
 	// it's parameters through with the addition of a callback
 	var makeLaggy = function(func,factor) {
 		return function() {
-			
+
 			/* globals setTimeout: false */
 
-			var args = Array.prototype.slice.call(arguments);
-			var cb = args.pop();
+			var args = Array.prototype.slice.call(arguments),
+				cb;
+			while (typeof args.slice(-1)[0] === 'function') {
+				cb = args.pop();
+			}
 			if (factor === false) {
 				return cb(func.apply(this._inst,args));
 			}
@@ -81,9 +84,9 @@ return function(classFunc,asynchronousDelay) {
 			proc(k);
 		}
 	}
-	
+
 	return constructorFunc;
-	
+
 };
 
 }());
