@@ -617,6 +617,13 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 
 		// Just make sure that the Pathitem is the correct version to apply.
 		if (storerecord.v != feedQueue[0].b) {
+			if ((storerecord.v === 0) && (feedQueue[0].o == 'remove')) {
+				// Requests to remove data which is not there... this is probably seeing
+				// a refeed of the delete of queue data which __was__ there, but has been
+				// deleted. In this situation just continue.
+				feedQueue.shift();
+				return feedOne();
+			}
 			return unlockAndError(
 				ERROR.FEED_VERSION_ERROR,
 				feedQueue
