@@ -341,7 +341,7 @@ describe('Deleted data',function() {
 		});
 	});
 
-	it('is not there when a remove has been advanced, can also be re-wrote',function(done) {
+	it('cannot be added to while in a Pathitem2',function(done) {
 		var syncIt = getFreshSyncIt();
 		runSequence(syncIt,multiData,function(err) {
 			expect(err).to.equal(ERROR.OK);
@@ -349,202 +349,15 @@ describe('Deleted data',function() {
 				expect(err).to.equal(ERROR.OK);
 				syncIt.advance(function(err) {
 					expect(err).to.equal(ERROR.OK);
-					syncIt.getDatakeysInDataset('cars', function(err, datakeys) {
-						expect(err).to.equal(ERROR.OK);
-						expect(datakeys.length).to.equal(0);
-						syncIt.set('cars','bmw',{'a':'b'},function(err) {
-							expect(err).to.equal(ERROR.OK);
-							done();
-						});
+					syncIt.set('cars','bmw',{'a':'b'},function(err) {
+						expect(err).to.equal(ERROR.DATA_ALREADY_REMOVED);
+						done();
 					});
 				});
 			});
 		});
 	});
-	
-	it('is listed in getDatakeysInDataset', function(done) {
-		var syncIt = getFreshSyncIt();
-		runSequence(syncIt,multiData,function(err) {
-			expect(err).to.equal(ERROR.OK);
-			syncIt.getDatakeysInDataset('cars',function(err, datakeys) {
-				expect(err).to.equal(ERROR.OK);
-				expect(datakeys).to.eql(['bmw']);
-				done();
-			});
-		});
-	});
-	
-	it('has the r flag and DATA_ALREADY_REMOVED when getFull is called', function(done) {
-		var syncIt = getFreshSyncIt();
-		runSequence(syncIt,multiData,function(err) {
-			expect(err).to.equal(ERROR.OK);
-			syncIt.getFull('cars','bmw',function(err, data) {
-				expect(err).to.equal(ERROR.DATA_ALREADY_REMOVED);
-				expect(data.r).to.equal(true);
-				done();
-			});
-		});
-	});
-	
-	it('has null result and DATA_ALREADY_REMOVED when get is called', function(done) {
-		var syncIt = getFreshSyncIt();
-		runSequence(syncIt,multiData,function(err) {
-			expect(err).to.equal(ERROR.OK);
-			syncIt.get('cars','bmw',function(err, data) {
-				expect(err).to.equal(ERROR.DATA_ALREADY_REMOVED);
-				expect(data).to.equal(null);
-				done();
-			});
-		});
-	});
-	
-	it('will remove the key on a conflicting feed', function(done) {
-		var syncIt = getFreshSyncIt();
-		syncIt.feed(
-			[{
-				s: 'cars',
-				k: 'bmw',
-				o: 'set',
-				u: { price:'medium', size:'mixed', speed: 'medium', drive: 'rear' },
-				m: 'ben',
-				b: 0,
-				t: new Date().getTime() - 1000
-			}],
-			function() { expect().fail("This should not have been called"); },
-			function(err) {
-				expect(err).to.equal(ERROR.OK);
-				syncIt.set('cars', 'bmw', { price:'high' }, function(err) {
-					expect(err).to.equal(ERROR.OK);
-					syncIt.getDatakeysInDataset('cars', function(err, datakeys) {
-						expect(err).to.equal(ERROR.OK);
-						expect(datakeys).to.eql(['bmw']);
-						syncIt.feed(
-							[{
-								s: 'cars',
-								k: 'bmw',
-								o: 'remove',
-								u: {},
-								m: 'ben',
-								b: 1,
-								t: new Date().getTime()
-							}],
-							function(dataset,datakey,storerecord,localQueueitems,fedQueueitems,resolved) {
-								resolved(true,[]);
-							},
-							function(err) {
-								expect(err).to.equal(ERROR.OK);
-								syncIt.getDatakeysInDataset('cars', function(err, datakeys) {
-									expect(err).to.equal(ERROR.OK);
-									expect(datakeys).to.eql([]);
-									done();
-								});
-							}
-						);
-					});
-				});
-			}
-		);
-	});
-
-	it('will remove the key on a conflicting feed with new mods...', function(done) {
-		var syncIt = getFreshSyncIt();
-		syncIt.feed(
-			[{
-				s: 'cars',
-				k: 'bmw',
-				o: 'set',
-				u: { price:'medium', size:'mixed', speed: 'medium', drive: 'rear' },
-				m: 'ben',
-				b: 0,
-				t: new Date().getTime() - 1000
-			}],
-			function() { expect().fail("This should not have been called"); },
-			function(err) {
-				expect(err).to.equal(ERROR.OK);
-				syncIt.set('cars', 'bmw', { price:'high' }, function(err) {
-					expect(err).to.equal(ERROR.OK);
-					syncIt.getDatakeysInDataset('cars', function(err, datakeys) {
-						expect(err).to.equal(ERROR.OK);
-						expect(datakeys).to.eql(['bmw']);
-						syncIt.feed(
-							[{
-								s: 'cars',
-								k: 'bmw',
-								o: 'remove',
-								u: {},
-								m: 'ben',
-								b: 1,
-								t: new Date().getTime()
-							}],
-							function(dataset,datakey,storerecord,localQueueitems,fedQueueitems,resolved) {
-								resolved(true,[{o:'update',u:{$set:{'dice':'fluffy'}}}]);
-							},
-							function(err) {
-								expect(err).to.equal(ERROR.OK);
-								syncIt.getDatakeysInDataset('cars', function(err, datakeys) {
-									expect(err).to.equal(ERROR.OK);
-									expect(datakeys).to.eql(['bmw']);
-									syncIt.getFull('cars', 'bmw', function(err, data) {
-										expect(data.v).to.equal(1);
-										expect(data.i.dice).to.equal('fluffy');
-									});
-									done();
-								});
-							}
-						);
-					});
-				});
-			}
-		);
-	});
-	
-	it('will remove the key when resolving a non conflicted feed', function(done) {
-		var syncIt = getFreshSyncIt();
-		syncIt.feed(
-			[{
-				s: 'cars',
-				k: 'bmw',
-				o: 'set',
-				u: { price:'medium', size:'mixed', speed: 'medium', drive: 'rear' },
-				m: 'ben',
-				b: 0,
-				t: new Date().getTime() - 1000
-			}],
-			function() { expect().fail("This should not have been called"); },
-			function(err) {
-				expect(err).to.equal(ERROR.OK);
-				syncIt.getDatakeysInDataset('cars', function(err, datakeys) {
-					expect(err).to.equal(ERROR.OK);
-					expect(datakeys).to.eql(['bmw']);
-					syncIt.feed(
-						[{
-							s: 'cars',
-							k: 'bmw',
-							o: 'remove',
-							u: {},
-							m: 'ben',
-							b: 1,
-							t: new Date().getTime()
-						}],
-						function() { expect().fail("This should not have been called"); },
-						function(err) {
-							expect(err).to.equal(ERROR.OK);
-							syncIt.getDatakeysInDataset('cars', function(err, datakeys) {
-								expect(err).to.equal(ERROR.OK);
-								expect(datakeys).to.eql([]);
-								done();
-							});
-						}
-					);
-				});
-			}
-		);
-	});
-	
 });
-
-
-
 describe('when feeding',function() {
 	this.timeout(60000);
 	var feedData = [

@@ -12,6 +12,6 @@ module.exports = (function (SyncLocalStorage,makeAsync) {
  * An Asynchronous version of SyncLocalStorage, this is the base storage driver
  * for SyncIt.
  */
-return  makeAsync(SyncLocalStorage,0);
+return  makeAsync(SyncLocalStorage,1);
 
 }(require('./SyncLocalStorage'), require('./makeAsync.js')));

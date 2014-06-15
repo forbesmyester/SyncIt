@@ -218,17 +218,6 @@ Als.prototype.advance = function(dataset,datakey,removeOld,calcNewRootOfPath,nex
 				root[path]._n,
 				item,
 				function(newRoot) {
-					if (newRoot === null) {
-						// This is a request to delete the whole Path
-						return this.removeDatasetDatakey(dataset, datakey, function(err) {
-							if (err) { return next(err); }
-							next(
-								err,
-								this._removePrivatePathStorageData(item),
-								null
-							);
-						}.bind(this));
-					}
 					newRoot._s = true;
 					if (item.hasOwnProperty('_n')) {
 						newRoot._n = item._n;
@@ -330,103 +319,6 @@ Als.prototype.changePath = function(dataset,datakey,fromPath,toPath,removeOld,ne
 			next(ERROR.OK);
 			if (toRemove) {
 				this._removePathItems(dataset,datakey,toRemove,function() {});
-			}
-		}.bind(this));
-	}.bind(this));
-};
-
-/**
- * ## SyncIt_Path_AsyncLocalStorage.promotePathToOrRemove()
- * 
- * When the server feeds a "remove" instruction it is still possible to pass in
- * extra updates etc from the conflict resolution function. If we go and just
- * delete the Root we will loose this extra information. This function will see
- * if there are any conflict resolution updates (`pathToPromote` or "c") and if
- * there are it will move them onto the normal data path (`promoteToWhere` or
- * "a") but if there are none then it will just remove the root.
- *
- * * **@param {Datakey} `dataset`** The dataset you want to purge
- * * **@param {Datakey} `datakey`** The datakey you want to purge
- * * **@param {Datakey} `pathToPromote`** If this exists it will be moved to `promoteToWhere`
- * * **@param {Datakey} `promoteToWhere`** Where `pathToPromote` will be moved to
- * * **@param {Function} `next`** Callback when complete, Signature: Function(err, err)
- *   * **@param {Errorcode} `errRootDeletion`** If the Root was successfully deleted
- */
-Als.prototype.promotePathToOrRemove = function(dataset,datakey,pathToPromote,promoteToWhere,next) {
-	
-	this._getRoot(dataset,datakey,function(err,root) {
-		var oldTargetRef = (function() {
-				if (root.hasOwnProperty(promoteToWhere) && root[promoteToWhere].hasOwnProperty('_n')) {
-					return root[promoteToWhere]._n;
-				}
-				return null;
-			}());
-		
-		if (!root.hasOwnProperty(pathToPromote)) {
-			return this.removeDatasetDatakey(dataset,datakey,next);
-		}
-		root[promoteToWhere] = root[pathToPromote];
-		delete root[pathToPromote];
-		this._setRoot(dataset,datakey,root,function() {
-			if (oldTargetRef === null) {
-				return next(ERROR.OK,ERROR.OK);
-			}
-			this._removePathItems(dataset,datakey,oldTargetRef,function(err) {
-				return next(ERROR.OK,err);
-			});
-		}.bind(this));
-	}.bind(this));
-};
-
-/**
- * ## SyncIt_Path_AsyncLocalStorage.removeDatasetDatakey()
- *
- * Remove all data to do with a Dataset and Datakey
- *
- * * **@param {Datakey} `dataset`** The dataset you want to purge
- * * **@param {Datakey} `datakey`** The datakey you want to purge
- * * **@param {Function} `next`** Callback when complete, Signature: Function(err, err)
- *   * **@param {Errorcode} `errRootDeletion`** If the Root was successfully deleted
- */
-Als.prototype.removeDatasetDatakey = function(dataset,datakey,next) {
-	
-	var _getPathRefs = function(root) {
-		var r = [];
-		for (var k in root) {
-			if (root.hasOwnProperty(k) && k.length == 1) {
-				if (root[k].hasOwnProperty('_n')) {
-					r.push(root[k]._n);
-				}
-			}
-		}
-		return r;
-	};
-	
-	this._getRoot(dataset,datakey,function(err,root) {
-		var pathRefs = _getPathRefs(root),
-			pathRefCount = pathRefs.length;
-		
-		var trackPathItemDeletions = function(err) {
-			if (err !== ERROR.OK) {
-				pathRefCount = -1;
-				return next(err);
-			}
-			if (--pathRefCount === 0) {
-				return next(ERROR.OK);
-			}
-		};
-		
-		this.__removeItem(dataset + '.' + datakey, function(err) {
-			if ((pathRefs.length === 0) || (err !== ERROR.OK)) {
-				return next(err);
-			}
-			for (var i=0, l=pathRefs.length; i<l; i++) {
-				this._removePathItems(
-					dataset,
-					datakey,
-					pathRefs[i],
-					trackPathItemDeletions
-				);
 			}
 		}.bind(this));
 	}.bind(this));
