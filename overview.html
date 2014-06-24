@@ -1,0 +1,51 @@
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"/><link href="https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css" rel="stylesheet"/><link href="./site.css" rel="stylesheet"/><h1>SyncIt... The Offline Web App Enabler</h1><ul id="menu"><li><a href="index.html"><i class="fa fa-home">&nbsp; Homepage</i></a></li><li><a href="overview.html"><i class="fa fa-clipboard">&nbsp; Overview</i></a></li><li><a href="repositories.html"><i class="fa fa-github">&nbsp; GitHub Repositories</i></a></li></ul><div class="block"><h2>Version Tracking</h2><p>SyncIt breaks data into Datasets and Datakeys, these are like Tables and Rows in SQL or Collections and Documents in MongoDB.</p><p>As you make changes to the data stored within a Datakey it will maintain a list a list of the changes that have occurred. So you can make a function call like this...</p><pre><code>// In this case, 'cars' is the Dataset and 'BMW' is the Datakey the last
+// parameter is what to set that Dataset / Datakey to. The last parameter
+// is a callback when the update is complete.
+syncIt.set(
+  'cars',
+  'BMW',
+  { color: "white" },
+  function(status) { ... }
+);
+</code></pre><p>And SyncIt's data would look something like the following:</p><img src="bin/site/img/overview_set.png" alt="Diagram showing how some of the data looks after a set operation"/><p>As more changes occur they build up in the form of a linked list:</p><img src="bin/site/img/overview_update.png" alt="Diagram showing how extra changes join the list"/></div><div class="block alt"><h2>Downloads</h2><p>Eventually you will want to synchronize your data with what is on the server. SyncItControl can do this for you. It will:</p><ol><li>Download the remote changes using a URL you can specify</li><li>Call `SyncIt.feed()` so the changes are available to use.</li><li>If it has been modified both locally and remotely it will call a developer defined function so the conflict can be resolved.</li><pre><code>// A simple function which applies local changes to a Dataset / Datakey if the
+// last local change is after the last remote (server supplied) change.
+function(
+  dataset, // The dataset where the conflict has occurred
+  datakey, // The datakey where the conflict has occurred
+  storedrecord, // Data/version common to local and the server
+  localChanges, // The local changes that have been made since
+  remoteChanges, // Server supplied changes from other users / devices
+  resolved // A callback function for when the conflict is resolved
+) {
+  "use strict";
+  
+  var lastRemoteTs = null, lastLocalTs = null;
+  
+  // Get the timestamps of the local and remote changes
+  remoteChanges.map(function(c) { lastRemoteTs = c.t; });
+  localChanges.map(function(c) { lastLocalTs = c.t; });
+  
+  // If the last local is later than the remote, apply the local
+  // changes on top.
+  if (lastLocalTs > lastRemoteTs) {
+    return resolved(true, localChanges);
+  }
+  
+  // Otherwise leave the remote changes
+  return resolved(true,[]);
+};
+</code></pre></ol></div><div class="block"><h2>Uploads</h2><p>It will then upload the local changes sequentially using your function, after which SyncItControl enters a "synchronized state".</p><div><img style="vertical-align: middle" src="./bin/site/img/basic_states.png" alt="SyncItControl state diagram"/><pre style="vertical-align: middle; display:inline-block; padding: 0 0 0 1em; margin: 0"><code>// Standard familiar AJAX code...
+uploadChangeFunction = function(queueitem, next) {
+  $.ajax({
+    url: '/syncit/' + deviceId,
+    data: queueitem,
+    type: 'POST',
+    error: function(xmlHttpRequest) {
+      next(xmlHttpRequest);
+    },
+    success: function(resp) {
+      next(null);
+    }
+  });
+};
+</code></pre></div></div><div class="block alt"><h2>Ongoing Monitoring</h2><p><span>During the "Downloading" phase the connection which was actually established was an </span><a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource">EventSource</a><span>&nbsp;and it also hooked into some SyncIt callbacks. This means that:</span></p><ol><li>It can monitor the internet connection.</li><li>Can process changes from other devices / users nearly immediately.</li><li>Changes that happen locally can be pushed to the server as soon as they happenj</li></ol><img src="./bin/site/img/ongoing_monitoring.png"/></div><script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script>

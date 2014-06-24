@@ -1,0 +1,51 @@
+body {
+  font-size: 14pt;
+  background-color: #DDD;
+  line-height: 1;
+}
+code { font-size: 12pt; }
+div.block { padding: 2em 4em; }
+body.homepage div.block { padding: 4em; }
+div.block.alt {
+  background-color: #FFF;
+}
+div.block div {
+  padding-top: 1em;
+  display: inline-block;
+  box-sizing: border-box;
+}
+div.side {
+  width: 40%;
+  padding-right: 2em;
+  text-align: center;
+}
+div.side * { font-size: 5em; }
+div.points {
+  width: 60%;
+  line-height: 1.5em;
+}
+div.repositories ul {
+  line-height: 1.5em;
+}
+div.repositories li {
+	margin-bottom: 1em;
+}
+h1 {
+  background-color: black;
+  color: white;
+  padding: 0.5em;
+  margin: 0;
+  padding-left: 24pt;
+}
+ul#menu li {
+  display: inline-block;
+  padding: 0.5em 2.5em 0.5em 0;
+  margin: 0;
+}
+ul#menu {
+  border-bottom: 1px solid black;
+  padding: 0;
+  padding-left: 24pt;
+  margin: 0;
+  background-color: white;
+}

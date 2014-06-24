@@ -1,0 +1,57 @@
+include header
+
+div.block
+  h3 You're designing an App.
+  div.side
+    i.fa.fa-mobile
+    span &middot;
+    span &middot;
+    span &middot;
+    i.fa.fa-cloud
+  div.points
+    ol
+      li It should work offline and online.
+      li How to keep track of changes made offline?
+      li What happens if two people/devices edit the same thing?
+
+div.block.alt
+  h3 SyncIt records all changes to data.
+  div.side
+    i.fa.fa-code-fork
+  div.points
+    ol
+      li Every change needs versioning
+      li SyncIt knows what has changed locally
+      li So we can find what to upload / download
+
+div.block
+  h3 How do we communicate between clients?
+  div.side
+    i.fa.fa-database &nbsp;
+    i.fa.fa-download
+  div.points
+    ol
+      li SyncIt can monitor the network connection
+      li Will then download changes from the server
+      li Then upload changes back to the server
+
+div.block.alt
+  h3 What if it's been changed by two people?
+  div.side
+    i.fa.fa-history &nbsp;
+    i.fa.fa-code
+  div.points
+    ol
+      li All changes are versioned, so we know when
+      li You supply a function to resolve conflicts
+      li SyncIt will fire it when we need to know what to do
+
+div.block
+  h3 Where do I start?
+  div.side
+    i.fa.fa-github &nbsp;
+  div.points
+    ol
+      li Download the Bootstrap
+      li type <code>node app.js</code>
+      li Customise
