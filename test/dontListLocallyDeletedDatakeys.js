@@ -1,41 +1,4 @@
-(function (root, factory) {
-	
-	"use strict";
-
-	if (typeof exports === 'object') {
-		// Node. Does not work with strict CommonJS, but
-		// only CommonJS-like enviroments that support module.exports,
-		// like Node.
-		module.exports = factory(
-			require('expect.js'),
-			require('../SyncIt.js'),
-			require('../AsyncLocalStorage.js'),
-			require('get_tlid_encoder_decoder'),
-			require('../Path/AsyncLocalStorage.js'),
-			require('../FakeLocalStorage.js'),
-			require('../Constant.js'),
-			require('../updateResult.js'),
-			require('../Unsupported/PathStorageAnalysis'),
-			require('../dontListLocallyDeletedDatakeys')
-		);
-	} else {
-		// AMD. Register as an anonymous module.
-		define(
-			[
-				'../SyncIt',
-				'../AsyncLocalStorage.js',
-				'get_tlid_encoder_decoder',
-				'../Path/AsyncLocalStorage.js',
-				'../FakeLocalStorage',
-				'../Constant',
-				'../updateResult',
-				'../Unsupported/PathStorageAnalysis',
-				'../dontListLocallyDeletedDatakeys'
-			],
-			factory.bind(this, expect)
-		);
-	}
-})(this, function (
+(function (
 	expect,
 	SyncIt,
 	SyncIt_AsyncLocalStorage,
@@ -113,4 +76,15 @@ describe('dontListLocallyDeletedDatakeys',function() {
 	});
 });
 
-});
+}(
+	require('expect.js'),
+	require('../SyncIt.js'),
+	require('../AsyncLocalStorage.js'),
+	require('get_tlid_encoder_decoder'),
+	require('../Path/AsyncLocalStorage.js'),
+	require('../FakeLocalStorage.js'),
+	require('../Constant.js'),
+	require('../updateResult.js'),
+	require('../Unsupported/PathStorageAnalysis'),
+	require('../dontListLocallyDeletedDatakeys')
+));

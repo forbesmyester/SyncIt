@@ -1,26 +1,4 @@
-(function(root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
-	"use strict";
-	/* jshint strict: false */
-	/* globals module: false, require: false, define: true */
-	if (typeof define === 'function' && define.amd) {
-		define(
-			[
-				'./Constant',
-				'add-events',
-				'./addLocking',
-				'./updateResult'
-			],
-			factory
-		);
-	} else {
-		module.exports = factory(
-			require('./Constant.js'),
-			require('add-events'),
-			require('./addLocking.js'),
-			require('./updateResult.js')
-		);
-	}
-}(this, function(SyncIt_Constant, addEvents, addLocking, updateResult) {
+module.exports = (function(SyncIt_Constant, addEvents, addLocking, updateResult) {
 
 "use strict";
 
@@ -1307,4 +1285,9 @@ addLocking(SyncIt,LOCKING.MAXIMUM_BIT_PATTERN);
 
 return SyncIt;
 
-}));
+}(
+	require('./Constant.js'),
+	require('add-events'),
+	require('./addLocking.js'),
+	require('./updateResult.js')
+));
