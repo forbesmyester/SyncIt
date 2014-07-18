@@ -4,6 +4,8 @@
 
 For an overview of the entire SyncIt project which comporises of this local versioning solution, a [server component](https://github.com/forbesmyester/syncit-server), a library to [monitor the internet connection and transfer data](https://github.com/forbesmyester/SyncItControl) and a [super stripped down bootstrap project](https://github.com/forbesmyester/SyncItBootstrap) you should [go here](http://forbesmyester.github.io/SyncIt/index.html).
 
+Even if you do intend to use this project by itself I suggest you take a look at the [Factory class in SyncItBootstrap](https://github.com/forbesmyester/SyncItBootstrap/blob/master/public/js/SyncItFactory.js)
+
 ## What is it for? 
 
 SyncIt is a library to enable you to easily add synchronization to your (offline / phonegap or live) web Apps. This may be for allowing multiple users / devices to work offline or because the app has a live editing session with other users. 
