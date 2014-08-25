@@ -546,9 +546,14 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 					otherpaths = item;
 				}
 				if (inWhere == FOLLOW_INFORMATION_TYPE.PATHITEM) {
-					queue.push(item);
+					queue.push(this._addObviousInforation(
+						feedQueue[0].s,
+						feedQueue[0].k,
+						key.replace(/.*\./,''),
+						item
+					));
 				}
-			},
+			}.bind(this),
 			function(err) {
 				if ((err !== ERROR.NO_DATA_FOUND) && (err !== ERROR.OK)) {
 					unlockAndError(err);
