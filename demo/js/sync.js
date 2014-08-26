@@ -102,7 +102,7 @@ var conflictResolutionFunc = function(dataset ,datakey ,jrec ,localQueueItems, s
 			domClass.add(d,'null');
 			return d;
 		}
-		var processOrder = ['m','o','b','u','t','r'],
+		var processOrder = ['m','o','b','i','u','t','r'],
 			i = 0,
 			dl = domConstruct.create('dl');
 		for (i=0; i<processOrder.length;i++) {
@@ -115,7 +115,7 @@ var conflictResolutionFunc = function(dataset ,datakey ,jrec ,localQueueItems, s
 				domConstruct.create(
 					'dd',
 					{
-						innerHTML: (processOrder[i] === 'u') ?
+						innerHTML: (['u','i'].indexOf(processOrder[i]) > -1) ?
 							JSON.stringify(jread[processOrder[i]]) :
 							jread[processOrder[i]] 
 					},
