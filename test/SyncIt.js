@@ -160,10 +160,13 @@ describe('When I want to add data to SyncIt I can call set and',function() {
 	it('will add the data',function(done) {
 		var syncIt = getFreshSyncIt();
 		var eventOccured = false;
-		syncIt.listenForAddedToPath(function(dataset,datakey,queueitem) {
+		syncIt.listenForAddedToPath(function(dataset,datakey,queueitem,storerecord) {
 			expect(dataset).to.equal('cars');
 			expect(datakey).to.equal('bmw');
 			expect(queueitem.b).to.equal(0);
+			expect(storerecord.v).to.equal(1);
+			expect(queueitem.u.status).to.equal('high');
+			expect(storerecord.i.status).to.equal('high');
 			checkQueueitemRead(queueitem);
 			eventOccured = true;
 		});
@@ -566,8 +569,19 @@ describe('when feeding',function() {
 	it('On feed can resolve conflicts',function(done) {
 		var syncIt = getFreshSyncIt();
 		var eventOccuredCount = 0;
+		var expectedDataAt = [
+			{ wheels: 'black' },
+			{ wheels: 'black', dice: 'fluffy' },
+			{ wheels: 'black', seats: 'leather' },
+			{ wheels: 'black', seats: 'leather', dice: 'fluffy' }
+		];
+		var dataChange = 0;
 		syncIt.listenForFed(function() {
 			eventOccuredCount = eventOccuredCount + 1;
+		});
+		syncIt.listenForDataChange(function(storerecord) {
+			if (storerecord.k !== 'bmw') { return; }
+			expect(storerecord.i).to.eql(expectedDataAt[dataChange++]);
 		});
 		runSequence(
 			syncIt,
@@ -577,7 +591,7 @@ describe('when feeding',function() {
 			],function(err) {
 				expect(err).to.equal(ERROR.OK);
 				var addedEventFired = false;
-				syncIt.listenForAddedToPath(function(dataset,datakey) {
+				syncIt.listenForConflictResolutionAddedToPath(function(dataset,datakey) {
 					expect(dataset).to.equal('cars');
 					expect(datakey).to.equal('bmw');
 					addedEventFired = true;
@@ -597,6 +611,7 @@ describe('when feeding',function() {
 					function(err) {
 						expect(err).to.equal(ERROR.OK);
 						expect(addedEventFired).to.equal(true);
+						expect(dataChange).to.equal(4);
 						syncIt.getFull('cars','bmw',function(err,jread) {
 							expect(err).to.equal(ERROR.OK);
 							checkIsFullRead(jread);
