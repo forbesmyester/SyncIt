@@ -1,36 +1,4 @@
-/*jshint smarttabs:true */
-(function (root, factory) {
-	
-	"use strict";
-
-	if (typeof exports === 'object') {
-		// Node. Does not work with strict CommonJS, but
-		// only CommonJS-like enviroments that support module.exports,
-		// like Node.
-		module.exports = factory(
-			require('expect.js'),
-			require('../../Constant.js'),
-			require('../../FakeLocalStorage.js'),
-			require('../../AsyncLocalStorage.js'),
-			require('get_tlid_encoder_decoder'),
-			require('../../Path/AsyncLocalStorage.js'),
-			require('../../Unsupported/PathStorageAnalysis.js')
-		);
-	} else {
-		// AMD. Register as an anonymous module.
-		define(
-			[
-				'../../Constant',
-				'../../FakeLocalStorage.js',
-				'../../AsyncLocalStorage.js',
-				'get_tlid_encoder_decoder',
-				'../../Path/AsyncLocalStorage.js',
-				'../../Unsupported/PathStorageAnalysis.js'
-			],
-			factory.bind(this, expect)
-		);
-	}
-})(this, function (
+(function (
 	expect,
 	SyncIt_Constant,
 	SyncIt_FakeLocalStorage,
@@ -610,4 +578,12 @@ describe('SyncIt_Path_AsyncLocalStorage',function() {
 
 
 
-});
+}(
+	require('expect.js'),
+	require('../../Constant.js'),
+	require('../../FakeLocalStorage.js'),
+	require('../../AsyncLocalStorage.js'),
+	require('get_tlid_encoder_decoder'),
+	require('../../Path/AsyncLocalStorage.js'),
+	require('../../Unsupported/PathStorageAnalysis.js')
+));

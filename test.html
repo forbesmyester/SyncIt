@@ -10,8 +10,16 @@
 </body>
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/mocha/mocha.js"></script>
-    <script src="node_modules/requirejs/require.js"></script>
-    <script src="node_modules/expect.js/index.js"></script>
+	<script>
+		mocha.setup('bdd')
+		mocha.globals(['Module']);
+	</script>
+	<script src="./test/updateResult.js"></script>
+	<script src="./test/SyncLocalStorage.js"></script>
+	<script src="./test/Path/AsyncLocalStorage.js"></script>
+	<script src="./test/SyncIt.js"></script>
+	<script src="./test/dontListLocallyDeletedDatakeys.js"></script>
+
 	<!--
 	uncomment to enable visualization of internal data
 	<script type="text/javascript" src="http://mdaines.github.io/viz.js/viz.js"></script>
@@ -19,51 +27,12 @@
     
     <script>
     	
-		require.config({
-			baseUrl: '.',
-			packages: [
-				{
-					name: 'add-events',
-					location: 'node_modules/add-events',
-					main: 'index.umd'
-				},
-				{
-					name: 'manip',
-					location: 'node_modules/manip',
-					main: 'index.umd'
-				},
-				{
-					name: 'get_tlid_encoder_decoder',
-					location: 'node_modules/get_tlid_encoder_decoder',
-					main: 'index.umd'
-				}
-			]
-		});
-    	
         $(document).ready(function() {
-            function assert(expr, msg) {
-                if (!expr) throw new Error(msg || 'failed');
-            }
-            require.config({
-                baseUrl: '.',
-            });
-                
-            mocha.setup('bdd')
-            mocha.globals(['Module']);
-            require(
-            	[
-            		'./test/Path/AsyncLocalStorage',
-            		'./test/updateResult.js',
-            		'./test/SyncLocalStorage.js',
-            		'./test/SyncIt.js',
-            		'./test/dontListLocallyDeletedDatakeys.js'
-            	],
-            	function(index) {
-					mocha.run();
-            	}
-            );
+			mocha.run();
         });
     </script>
+
+	<p>to run tests in a web page install beefy and run "beefy test/*.js test/Path/*.js"</p>
 
 </html>
 

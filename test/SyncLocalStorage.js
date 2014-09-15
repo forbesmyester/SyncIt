@@ -1,25 +1,4 @@
-(function (root, factory) {
-	"use strict";
-	if (typeof exports === 'object') {
-		// Node. Does not work with strict CommonJS, but
-		// only CommonJS-like enviroments that support module.exports,
-		// like Node.
-		module.exports = factory(
-			require('expect.js'),
-			require('../FakeLocalStorage.js'),
-			require('../SyncLocalStorage.js')
-		);
-	} else {
-		// AMD. Register as an anonymous module.
-		define(
-			[
-				'../FakeLocalStorage',
-				'../SyncLocalStorage'
-			],
-			factory.bind(this, expect)
-		);
-	}
-}(this, function (
+(function (
 	expect,
 	FakeLocalStorage,
 	SyncLocalStorage
@@ -41,7 +20,6 @@ var getInstance = function() {
 	);
 };
 
-(function() {
 /* global describe: false, it: false */
 
 describe('SyncLocalStorage might be useful if',function() {
@@ -84,6 +62,8 @@ describe('SyncLocalStorage might be useful if',function() {
 	});
 });
 
-})();
-
-}));
+}(
+	require('expect.js'),
+	require('../FakeLocalStorage.js'),
+	require('../SyncLocalStorage.js')
+));

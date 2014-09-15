@@ -13,7 +13,7 @@ module.exports = (function (SyncLocalStorage,makeAsync) {
  * An Asynchronous version of SyncLocalStorage, this is the base storage driver
  * for SyncIt.
  */
-return  makeAsync(SyncLocalStorage,0);
+return  makeAsync(SyncLocalStorage, 1);
 
 }(_dereq_('./SyncLocalStorage'), _dereq_('./makeAsync.js')));
 
@@ -441,17 +441,6 @@ Als.prototype.advance = function(dataset,datakey,removeOld,calcNewRootOfPath,nex
 				root[path]._n,
 				item,
 				function(newRoot) {
-					if (newRoot === null) {
-						// This is a request to delete the whole Path
-						return this.removeDatasetDatakey(dataset, datakey, function(err) {
-							if (err) { return next(err); }
-							next(
-								err,
-								this._removePrivatePathStorageData(item),
-								null
-							);
-						}.bind(this));
-					}
 					newRoot._s = true;
 					if (item.hasOwnProperty('_n')) {
 						newRoot._n = item._n;
@@ -553,103 +542,6 @@ Als.prototype.changePath = function(dataset,datakey,fromPath,toPath,removeOld,ne
 			next(ERROR.OK);
 			if (toRemove) {
 				this._removePathItems(dataset,datakey,toRemove,function() {});
-			}
-		}.bind(this));
-	}.bind(this));
-};
-
-/**
- * ## SyncIt_Path_AsyncLocalStorage.promotePathToOrRemove()
- * 
- * When the server feeds a "remove" instruction it is still possible to pass in
- * extra updates etc from the conflict resolution function. If we go and just
- * delete the Root we will loose this extra information. This function will see
- * if there are any conflict resolution updates (`pathToPromote` or "c") and if
- * there are it will move them onto the normal data path (`promoteToWhere` or
- * "a") but if there are none then it will just remove the root.
- *
- * * **@param {Datakey} `dataset`** The dataset you want to purge
- * * **@param {Datakey} `datakey`** The datakey you want to purge
- * * **@param {Datakey} `pathToPromote`** If this exists it will be moved to `promoteToWhere`
- * * **@param {Datakey} `promoteToWhere`** Where `pathToPromote` will be moved to
- * * **@param {Function} `next`** Callback when complete, Signature: Function(err, err)
- *   * **@param {Errorcode} `errRootDeletion`** If the Root was successfully deleted
- */
-Als.prototype.promotePathToOrRemove = function(dataset,datakey,pathToPromote,promoteToWhere,next) {
-	
-	this._getRoot(dataset,datakey,function(err,root) {
-		var oldTargetRef = (function() {
-				if (root.hasOwnProperty(promoteToWhere) && root[promoteToWhere].hasOwnProperty('_n')) {
-					return root[promoteToWhere]._n;
-				}
-				return null;
-			}());
-		
-		if (!root.hasOwnProperty(pathToPromote)) {
-			return this.removeDatasetDatakey(dataset,datakey,next);
-		}
-		root[promoteToWhere] = root[pathToPromote];
-		delete root[pathToPromote];
-		this._setRoot(dataset,datakey,root,function() {
-			if (oldTargetRef === null) {
-				return next(ERROR.OK,ERROR.OK);
-			}
-			this._removePathItems(dataset,datakey,oldTargetRef,function(err) {
-				return next(ERROR.OK,err);
-			});
-		}.bind(this));
-	}.bind(this));
-};
-
-/**
- * ## SyncIt_Path_AsyncLocalStorage.removeDatasetDatakey()
- *
- * Remove all data to do with a Dataset and Datakey
- *
- * * **@param {Datakey} `dataset`** The dataset you want to purge
- * * **@param {Datakey} `datakey`** The datakey you want to purge
- * * **@param {Function} `next`** Callback when complete, Signature: Function(err, err)
- *   * **@param {Errorcode} `errRootDeletion`** If the Root was successfully deleted
- */
-Als.prototype.removeDatasetDatakey = function(dataset,datakey,next) {
-	
-	var _getPathRefs = function(root) {
-		var r = [];
-		for (var k in root) {
-			if (root.hasOwnProperty(k) && k.length == 1) {
-				if (root[k].hasOwnProperty('_n')) {
-					r.push(root[k]._n);
-				}
-			}
-		}
-		return r;
-	};
-	
-	this._getRoot(dataset,datakey,function(err,root) {
-		var pathRefs = _getPathRefs(root),
-			pathRefCount = pathRefs.length;
-		
-		var trackPathItemDeletions = function(err) {
-			if (err !== ERROR.OK) {
-				pathRefCount = -1;
-				return next(err);
-			}
-			if (--pathRefCount === 0) {
-				return next(ERROR.OK);
-			}
-		};
-		
-		this.__removeItem(dataset + '.' + datakey, function(err) {
-			if ((pathRefs.length === 0) || (err !== ERROR.OK)) {
-				return next(err);
-			}
-			for (var i=0, l=pathRefs.length; i<l; i++) {
-				this._removePathItems(
-					dataset,
-					datakey,
-					pathRefs[i],
-					trackPathItemDeletions
-				);
 			}
 		}.bind(this));
 	}.bind(this));
@@ -1663,29 +1555,7 @@ return Als;
 }(_dereq_('../Constant'), _dereq_('add-events')));
 
 },{"../Constant":2,"add-events":12}],5:[function(_dereq_,module,exports){
-(function(root, factory) { // UMD from https://github.com/umdjs/umd/blob/master/returnExports.js
-	"use strict";
-	/* jshint strict: false */
-	/* globals module: false, require: false, define: true */
-	if (typeof define === 'function' && define.amd) {
-		define(
-			[
-				'./Constant',
-				'add-events',
-				'./addLocking',
-				'./updateResult'
-			],
-			factory
-		);
-	} else {
-		module.exports = factory(
-			_dereq_('./Constant.js'),
-			_dereq_('add-events'),
-			_dereq_('./addLocking.js'),
-			_dereq_('./updateResult.js')
-		);
-	}
-}(this, function(SyncIt_Constant, addEvents, addLocking, updateResult) {
+module.exports = (function(SyncIt_Constant, addEvents, addLocking, updateResult) {
 
 "use strict";
 
@@ -1706,12 +1576,12 @@ var FOLLOW_INFORMATION_TYPE = SyncIt_Constant.FollowInformationType;
  * * **@param {Function} `filterFunc`** The function to use for filtering
  */
 var _map = function(arr, func) {
-
+	
 	if (arr.map) { return arr.map(func); }
-
+	
 	var i, l,
 		r = [];
-
+	
 	for (i=0, l=arr.length; i<l; i++) {
 		r.push(func(arr[i]));
 	}
@@ -1727,19 +1597,19 @@ var _map = function(arr, func) {
  * * **@param {Function} `filterFunc`** The function to use for filtering
  */
 var _filter = function(arr,filterFunc) {
-
+	
 	if (arr.filter) { return arr.filter(filterFunc); }
-
+	
 	var i = 0,
 		l = 0,
 		r = [];
-
+	
 	for (i = 0, l = arr.length; i < l; i++) {
 		if (filterFunc(arr[i])) {
 			r.push(arr[i]);
 		}
 	}
-
+	
 	return r;
 };
 
@@ -1774,13 +1644,13 @@ var _shallowCopyKeys = function(ob,keysToCopy,copyNullEtc) {
 
 /**
  * ## SyncIt
- *
+ * 
  * ### new SyncIt()
- *
+ * 
  * Constructor
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {SyncIt_Path_AsyncLocalStorage} `pathstore`** The instance to use for storage.
  * * **@param {Modifier} `modifier`** The UNIQUE User/Device which is using the instance of SyncIt.
  */
@@ -1885,12 +1755,12 @@ SyncIt.prototype._getPathWatcher = function() {
 
 /**
  * ### SyncIt.setCloneFunction()
- *
- * Sometimes, SyncIt wants a deep copy of an Object, this function will allow
+ * 
+ * Sometimes, SyncIt wants a deep copy of an Object, this function will allow 
  * you to change what function does that deep copying.
- *
+ * 
  * #### Parameters
- *
+ * 
  * @param {Function} cloneFunction
  */
 SyncIt.prototype.setCloneFunction = function(cloneFunction) {
@@ -1899,9 +1769,9 @@ SyncIt.prototype.setCloneFunction = function(cloneFunction) {
 
 /**
  * ### SyncIt.getModifier()
- *
+ * 
  * #### Returns
- *
+ * 
  * * **@return {Modifier}** The User/Device which is using the instance of SyncIt.
  */
 SyncIt.prototype.getModifier = function() {
@@ -1910,11 +1780,11 @@ SyncIt.prototype.getModifier = function() {
 
 /**
  * ### SyncIt.listenForAddedToPath()
- *
+ * 
  * Adds a listener for when data is added to the *Queue*.
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Function} `listener`** Signature: `function(operation, dataset, datakey)`.
  *   * **@param {Dataset} `listener.dataset`** The *dataset* of the updated.
  *   * **@param {Datakey} `listener.datakey`** The *datakey* that was updated.
@@ -1926,11 +1796,11 @@ SyncIt.prototype.listenForAddedToPath = function(listener) {
 
 /**
  * ### SyncIt.listenForAdvanced()
- *
+ * 
  * Adds a listener for when data is advanced to the *Store*.
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Function} `listener`** Signature: `function(queueitem, newStorerecord)`.
  *   * **@param {Dataset} `listener.dataset`** The *dataset* of the advanced.
  *   * **@param {Datakey} `listener.datakey`** The *datakey* that was advanced.
@@ -1944,11 +1814,11 @@ SyncIt.prototype.listenForAdvanced = function(listener) {
 
 /**
  * ### SyncIt.listenForFed()
- *
+ * 
  * Adds a listener for when data is fed using [SyncIt.feed()](#syncit.feed--)
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Function} `listener`** Signature: `function(queueitem, newStorerecord)`.
  *   * **@param {String} `listener.dataset`** The dataset of the just fed Queueitem.
  *   * **@param {String} `listener.datakey`** The datakey of the just fed Queueitem.
@@ -1961,11 +1831,11 @@ SyncIt.prototype.listenForFed = function(listener) {
 
 /**
  * ### SyncIt.set()
- *
+ * 
  * Will add a *Pathitem* that represents a complete overwrite of any existing data.
  *
  * #### Parameters
- *
+ * 
  * * **@param {Dataset} `dataset`**
  * * **@param {Datakey} `datakey`**
  * * **@param {Update} `update`**
@@ -1983,11 +1853,11 @@ SyncIt.prototype.set = function(dataset, datakey, update, whenAddedToQueue) {
 
 /**
  * ### SyncIt.remove()
- *
+ * 
  * This will add a Pathitem to the Queue that represents the removal of data stored at a Dataset/Datakey.
  *
  * #### Parameters
- *
+ * 
  * * **@param {Dataset} `dataset`**
  * * **@param {Datakey} `datakey`**
  * * **@param {Function} `whenAddedToQueue`** Fired after the *Queue* has been updated. See [SyncIt._addToQueue()](#syncit._addtoqueue--)** for documentation.
@@ -2004,11 +1874,11 @@ SyncIt.prototype.remove = function(dataset, datakey, whenAddedToQueue) {
 
 /**
  * ### SyncIt.update()
- *
+ * 
  * This can update one or more parts of the the data at a single *dataset* / *datakey* using something similar to the MongoDB update syntax.
- *
+ * 
  * #### Example
- *
+ * 
  * ```
  * syncIt.update(
  *     'user',
@@ -2020,9 +1890,9 @@ SyncIt.prototype.remove = function(dataset, datakey, whenAddedToQueue) {
  *     }
  * );
  * ```
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Dataset} `dataset`**
  * * **@param {Datakey} `datakey`**
  * * **@param {Update} `update`**
@@ -2040,11 +1910,11 @@ SyncIt.prototype.update = function(dataset, datakey, update, whenAddedToQueue) {
 
 /**
  * ### SyncIt.feed()
- *
+ * 
  * This function is for feeding in external Queueitem from the *Respository*.
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Array} `feedQueueitems`** These are the items which are being fed from the *Server*.
  * * **@param {Function} `resolutionFunction`** Called when conflict occurs, Signature: `function(dataset, datakey, storerecord, serverQueueitems, localPathitems, resolved)`.
  *   * **@param {Array} `resolutionFunction.dataset`** The *Dataset* of the conflict.
@@ -2060,7 +1930,7 @@ SyncIt.prototype.update = function(dataset, datakey, update, whenAddedToQueue) {
  *   * **@param {Array} `feedDone.fedItemsFailed`** Array of items fed from the *Server* which could not be processed.
  */
 SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
-
+	
 	// Make a shallow copy of feedQueueitems so when we `shift()` we are not
 	// fiddling with users data.
 	var feedQueue = (function(items) {
@@ -2083,14 +1953,14 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			i = 0,
 			l = 0,
 			firstQueueitem = feedQueue[0];
-
+		
 		var filterFunc = function(elem) {
 			if (storerecord === null) {
 				return true;
 			}
 			return (elem.b >= storerecord.v);
 		};
-
+		
 		for (i=0, l=feedQueue.length; i<l; i++) {
 			if (
 				(feedQueue[i].s != firstQueueitem.s) ||
@@ -2102,7 +1972,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 		}
 		return _filter(r,filterFunc);
 	};
-
+	
 	// Simple helper function that will unlock SyncIt and call the feedDone callback.
 	var unlockAndError = function(err) {
 		this._unlockFor(LOCKING.FEEDING);
@@ -2111,14 +1981,14 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			feedQueue
 		);
 	}.bind(this);
-
+	
 	// This function is called from resolutionFunction.resolved and will check
 	// that resolutionFunction actually did resolve the conflict, if it did it
 	// will add any resolving PathItem to the "c" (conflict) branch so they can
-	// be applied later and remove all local Pathitem from the "a" branch as
+	// be applied later and remove all local Pathitem from the "a" branch as 
 	// they conflict with the items sent from the server.
 	var perhapsResolved = function(storedrecord,fedForSameDatasetAndDatakey,resolved,mergePathitem,next) {
-
+		
 		var sanatizeMergeItem = function(queueitem) {
 			var r = {},
 				copyKeys = ['o','u','t'],
@@ -2142,7 +2012,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			}
 			return r;
 		};
-
+		
 		if (!resolved) {
 			unlockAndError(ERROR.NOT_RESOLVED);
 		}
@@ -2177,12 +2047,12 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 				}.bind(this));
 			}.bind(this)
 		);
-
+		
 	}.bind(this);
 
 	// One by one, process the Pathitem which have been fed.
 	var feedOne = function() {
-
+		
 		if (feedQueue.length === 0) {
 			this._unlockFor(LOCKING.FEEDING);
 			return feedDone(ERROR.OK,[]);
@@ -2219,7 +2089,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 					unlockAndError(err);
 				}
 
-				// It might be that we are trying to feed data which is
+				// It might be that we are trying to feed data which is 
 				// based on an old storerecord, if we are just skip over it
 				if (feedQueue[0].b < storerecord.v) {
 					feedQueue.shift();
@@ -2236,15 +2106,15 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 					);
 				}
 
-				// Continue with the Feed passing the information found from
+				// Continue with the Feed passing the information found from 
 				// this._ps.followPath();Continue with the Feed.
 				return feedOneWorker(storerecord,queue,info,otherpaths);
 
 			}.bind(this)
 		);
-
+		
 	}.bind(this);
-
+	
 	// All data is now collected about what is in the Path so we can go ahead and
 	// take appropriate action...
 	var feedOneWorker = function(storerecord,queue,info) {
@@ -2305,26 +2175,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			),
 			['i','v','m','t','r']
 		);
-
-		if (feedQueue[0].o == 'remove') {
-			return this._ps.promotePathToOrRemove(feedQueue[0].s,feedQueue[0].k,'c','a',function(err) {
-				if (err !== ERROR.OK) {
-					return unlockAndError(err);
-				}
-				var dataset = feedQueue[0].s;
-				var datakey = feedQueue[0].k;
-				this._emit(
-					'fed',
-					dataset,
-					datakey,
-					feedQueue[0],
-					null
-				);
-				feedQueue.shift();
-				feedOne();
-			}.bind(this));
-		}
-
+		
 		var joinCPathToA = function(dataset,datakey,baseV,next) {
 			return this._ps.changePath(dataset,datakey,'c','a',this._autoClean,function(err) {
 				if (err) {
@@ -2361,7 +2212,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 				);
 			}.bind(this));
 		}.bind(this);
-
+		
 		// Set the new Pathroot, once this is done, emit the fact an item has
 		// been fed and check that if we should be applying the conflict path
 		// (c), if we should, do so. Once all this is done, go back and call
@@ -2397,11 +2248,11 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			}.bind(this)
 		);
 	}.bind(this);
-
+	
 	var i=0,
 		l=0,
 		queueitemValidationError = 0;
-
+	
 	// If locked, just exit.
 	if (this.isLocked()) {
 		return feedDone(
@@ -2409,7 +2260,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			feedQueueitems
 		);
 	}
-
+	
 	// Perform basic validation.
 	for (i=0, l=feedQueueitems.length;i<l;i++) {
 		queueitemValidationError = this._basicValidationForQueueitem(feedQueueitems[i]);
@@ -2420,13 +2271,13 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 			);
 		}
 	}
-
+	
 	// Then lock
 	this._lockFor(LOCKING.FEEDING);
-
+	
 	// Process the first item.
 	feedOne();
-
+	
 };
 
 SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
@@ -2438,7 +2289,7 @@ SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
 		};
 	for (k in requiredFields) {
 		if (
-			requiredFields.hasOwnProperty(k) &&
+			requiredFields.hasOwnProperty(k) && 
 			!queueitem.hasOwnProperty(k)
 		) {
 			return requiredFields[k];
@@ -2464,11 +2315,11 @@ SyncIt.prototype._basicValidationForQueueitem = function(queueitem,skips) {
 
 /**
  * **SyncIt._addToQueue()**
- *
+ * 
  * Adds a Pathitem to the Queue.
- *
+ * 
  * **Parameters**
- *
+ * 
  * * **@param {Operation} `operation`**
  * * **@param {Dataset} `dataset`**
  * * **@param {Datakey} `datakey`**
@@ -2489,9 +2340,9 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, whe
 		whenAddedToQueue(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
 		return false;
 	}
-
+	
 	var queueitem = {
-		o: operation,
+		o: operation, 
 		u: update
 	};
 
@@ -2511,7 +2362,7 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, whe
 	}.bind(this);
 
 	var pathWatcher = this._getPathWatcher();
-
+	
 	this._lockFor(LOCKING.ADDING_TO_QUEUE);
 
 	this._ps.push(
@@ -2567,7 +2418,7 @@ SyncIt.prototype._getEmptyStorerecord = function() {
  * Applies the very first *Pathitem* in the *Queue* onto the data already in the *Store* for that *Dataset* / *Datakey*.
  *
  * #### Parameters
- *
+ * 
  * * **@param {Function} `done`** Callback when the operation is complete (or not). Signature: `function(errorCode, queueitem, storerecord)`
  *   * **@param {ErrorCode} `done.errorCode`** See SyncIt_Constant.Error.
  *   * **@param {Dataset} `done.dataset`**
@@ -2576,15 +2427,15 @@ SyncIt.prototype._getEmptyStorerecord = function() {
  *   * **@param {Storerecord} `done.storerecord`** The new *Storerecord*
  */
 SyncIt.prototype.advance = function(done) {
-
+	
 	if (this.isLocked()) {
 		done(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
 		return false;
 	}
-
+	
 	this._lockFor(LOCKING.ADVANCING);
 	var addedPathkey = '';
-
+	
 	this._ps.findFirstDatasetDatakey(null,'a',function(err,dataset,datakey) {
 		if (err !== ERROR.OK) {
 			this._unlockFor(LOCKING.ADVANCING);
@@ -2592,7 +2443,7 @@ SyncIt.prototype.advance = function(done) {
 		}
 		var newRoot = {};
 		this._ps.advance(
-			dataset,
+			dataset, 
 			datakey,
 			this._autoClean,
 			function(pathRoot,key,item,newRootCb) {
@@ -2602,9 +2453,6 @@ SyncIt.prototype.advance = function(done) {
 				addedPathkey = key;
 				// Filter to just keys r, v, i and possibly t anything else can
 				// be recreated.
-				if (item.o === 'remove') {
-					return newRootCb(null);
-				}
 				newRoot = updateResult(pathRoot,item,this._cloneObj);
 				newRoot = _shallowCopyKeys(
 					this._addObviousInforation(dataset,datakey,addedPathkey,newRoot),
@@ -2635,7 +2483,7 @@ SyncIt.prototype.advance = function(done) {
 			}.bind(this)
 		);
 	}.bind(this));
-
+	
 };
 
 /**
@@ -2643,7 +2491,7 @@ SyncIt.prototype.advance = function(done) {
  *
  * Maybe, all the information got here is not obvious, but it can be calculated
  * from other information... Every Pathitem must have been created locally so
- * we must be the modifier, so we don't store that. The modificationtime is
+ * we must be the modifier, so we don't store that. The modificationtime is 
  * can also be retrieved from the Pathitem reference.
  *
  * **@param {Dataset} `dataset`**
@@ -2684,11 +2532,11 @@ SyncIt.prototype._addObviousInforation = function(dataset,datakey,reference,ob,e
 
 /**
  * ### SyncIt.get()
- *
+ * 
  * Will retrieve information from SyncIt by reading what is first in the *Store* and then every *Pathitem* for the same Dataset / Datakey.
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Dataset} `dataset`**
  * * **@param {Datakey} `datakey`**
  * * **@param {Function} `whenDataRetrieved`** Signature: `function(err, jreadInfo)`
@@ -2709,11 +2557,11 @@ SyncIt.prototype.get = function(dataset, datakey, whenDataRetrieved) {
 
 /**
  * ### SyncIt.getVersion()
- *
+ * 
  * Will retrieve information about the version in the store.
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Dataset} `dataset`**
  * * **@param {Datakey} `datakey`**
  * * **@param {Function} `whenVersionFound`** Signature: `function(err, version)`
@@ -2740,14 +2588,14 @@ SyncIt.prototype.getVersion = function(dataset, datakey, whenVersionFound) {
  * should `SyncIt.advance()` be called.
  *
  * #### Parameters
- *
+ * 
  * * **@param {Array|null} `datasets`** An array of datasets which are acceptable, or null for any
  * * **@param {Function} `done`** Callback. Signature: Function(err, pathitem)
  *   * **@param {ErrorCode} `done.err`** See SyncIt_Constant.Error.
  *   * **@param {Pathitem} `done.pathitem`** The Pathitem.
  */
 SyncIt.prototype.getFirstInDatasets = function(datasets, done) {
-
+	
 	this._ps.getFirstPathitem(
 		datasets,
 		'a',
@@ -2775,7 +2623,7 @@ SyncIt.prototype.getFirstInDatasets = function(datasets, done) {
 			}.bind(this));
 		}.bind(this)
 	);
-
+	
 };
 
 SyncIt.prototype.getFirst = function(done) {
@@ -2785,11 +2633,11 @@ SyncIt.prototype.getFirst = function(done) {
 /**
 
  * ### SyncIt.getFull()
- *
+ * 
  * Will get ALL information for a *Dataset* / *Datakey* from SyncIt including metadata.
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Dataset} `dataset`**
  * * **@param {Datakey} `datakey`**
  * * **@param {Function} `whenDataRetrieved`** Signature: Function(err, jreadh)
@@ -2797,17 +2645,17 @@ SyncIt.prototype.getFirst = function(done) {
  *   * **@param {Jread} `whenDataRetrieved.jread`** The requsted information.
  */
 SyncIt.prototype.getFull = function(dataset, datakey, whenDataRetrieved) {
-
+	
 	var pathWatcher = this._getPathWatcher();
-
+	
 	this._ps.followPath(dataset,datakey,'a',pathWatcher.getWatcher(),function(err) {
-
+		
 		var fullData;
-
+		
 		if (err !== ERROR.OK) {
 			return whenDataRetrieved(err);
 		}
-
+		
 		fullData = this._addObviousInforation(dataset,datakey,null,pathWatcher.getReaditem());
 		if (fullData.r === true) {
 			err = ERROR.DATA_ALREADY_REMOVED;
@@ -2818,37 +2666,37 @@ SyncIt.prototype.getFull = function(dataset, datakey, whenDataRetrieved) {
 
 /**
  * ### SyncIt.getDatasetNames()
- *
+ * 
  * Lists all dataset names in the *Store*, *Queue* or both.
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Function} `whenDatasetsKnown`** Signature: `function(err, arrayOfNames)`
  *   * **@param {ErrorCode} `whenDatasetsKnown.err`** See `SyncIt_Constant.Error`.
  *   * **@param {Array} `whenDatasetsKnown.arrayOfNames`** An array of *dataset* names
  */
 SyncIt.prototype.getDatasetNames = function(whenDatasetsKnown) {
-
+	
 	this._ps.getDatasetNames(whenDatasetsKnown);
-
+	
 };
 
 /**
  * ### SyncIt.getDatakeysInDataset()
- *
+ * 
  * Lists Datakeys in a Dataset.
- *
+ * 
  * #### Parameters
- *
+ * 
  * * **@param {Dataset} `datasetName`**
  * * **@param {Function} `whenDatakeysKnown`** Signature: `function(err, arrayOfNames)`
  *   * **@param {ErrorCode} `whenDatakeysKnown.err`** See SyncIt_Constant.Error.
  *   * **@param {Array} `whenDatakeysKnown.arrayOfNames`** An array of *Datakey* names
  */
 SyncIt.prototype.getDatakeysInDataset = function(datasetName, whenDatakeysKnown) {
-
+	
 	this._ps.getDatakeysInDataset(datasetName, whenDatakeysKnown);
-
+	
 };
 
 /**
@@ -2877,7 +2725,7 @@ SyncIt.prototype.purge = function(dataset, next) {
  * ### SyncIt.clean()
  *
  * Will remove the remnants of conflict resolution, these __should__ only be
- * `cv` Info in Root of a Dataset/Datakey but should there be any
+ * `cv` Info in Root of a Dataset/Datakey but should there be any 
  * disconnected Pathitem from unsafe shutdowns it will remove those too. Note
  * that these disconnected Pathitem or old `cv` records in the Info of the
  * Dataset / Datakey Root's do not cause ill effects, except for the tiny
@@ -2893,9 +2741,9 @@ SyncIt.prototype.clean = function(done) {
 		done(ERROR.UNABLE_TO_PROCESS_BECAUSE_LOCKED);
 		return false;
 	}
-
+	
 	this._lockFor(LOCKING.CLEANING);
-
+	
 	var cleanDatakey = function(dataset,datakey,next) {
 
 		var pathWatcher = this._getPathWatcher();
@@ -2977,14 +2825,14 @@ SyncIt.prototype.clean = function(done) {
 				}.bind(this));
 			}
 		}.bind(this);
-		if (err !== ERROR.OK) {
+		if (err !== ERROR.OK) { 
 			this._unlockFor(LOCKING.CLEANING);
-			return done(err);
+			return done(err); 
 		}
 		for (i=todo-1; i>=0; i--) {
 			cleanDataset(datasets[i],cleanDatasetCallback);
 		}
-
+		
 	}.bind(this));
 
 };
@@ -2994,7 +2842,12 @@ addLocking(SyncIt,LOCKING.MAXIMUM_BIT_PATTERN);
 
 return SyncIt;
 
-}));
+}(
+	_dereq_('./Constant.js'),
+	_dereq_('add-events'),
+	_dereq_('./addLocking.js'),
+	_dereq_('./updateResult.js')
+));
 
 },{"./Constant.js":2,"./addLocking.js":8,"./updateResult.js":15,"add-events":12}],6:[function(_dereq_,module,exports){
 module.exports = (function (SyncItConstant, SyncIt) {
