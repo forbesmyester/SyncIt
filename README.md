@@ -308,7 +308,7 @@ I have worked really hard to keep this project seperate, which it still is but I
 
  * [SyncItBootstrap](https://github.com/forbesmyester/SyncItBootstrap) is a fully working base project with minimal dependencies outside of the SyncIt eco system so you can use it to start a Angular / React / Backbone / jQuery project.
 
- * [SyncItTodoMVC](https://github.com/forbesmyester/SyncItTodoMvc). Of course I wanted to do a [TodoMVC](http://todomvc.com/) project to prove the tech. The code in here was used as the basis for SyncItBootstrap.
+ * [SyncItTodoMVC](https://github.com/forbesmyester/SyncItBootstrap/tree/todomvc). Of course I wanted to do a [TodoMVC](http://todomvc.com/) project to prove the tech. The code in here was used as the basis for SyncItBootstrap.
 
 My advice would be to take SyncItBootstrap and customize it. It should be enough to get you going and it highlights really easily what you have to do to create a full application (or the dynamic offline part of a bigger project).
 
