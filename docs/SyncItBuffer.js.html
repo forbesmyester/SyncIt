@@ -40,17 +40,7 @@
 </div>
 
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// UMD from https://github.com/umdjs/umd/blob/master/returnExports.js</span>
-  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span>
-      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./Constant.js&#39;</span><span class="p">),</span>
-      <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./SyncIt.js&#39;</span><span class="p">)</span>
-    <span class="p">);</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;./Constant&#39;</span><span class="p">,</span> <span class="s1">&#39;./SyncIt&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">SyncItConstant</span><span class="p">,</span> <span class="nx">SyncIt</span><span class="p">)</span> <span class="p">{</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">SyncItConstant</span><span class="p">,</span> <span class="nx">SyncIt</span><span class="p">)</span> <span class="p">{</span>
   
 <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
 
@@ -123,7 +113,7 @@ that lock SyncIt and they will queue up. </p>
 <span class="p">};</span>
 
 <span class="kd">var</span> <span class="nx">k</span><span class="p">,</span>
-  <span class="nx">bufferedFuncs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="s1">&#39;remove&#39;</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;purge&#39;</span><span class="p">,</span> <span class="s1">&#39;clean&#39;</span><span class="p">,</span> <span class="s1">&#39;feed&#39;</span><span class="p">,</span> <span class="s1">&#39;advance&#39;</span><span class="p">];</span>
+  <span class="nx">bufferedFuncs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="s1">&#39;remove&#39;</span><span class="p">,</span> <span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;purge&#39;</span><span class="p">,</span> <span class="s1">&#39;clean&#39;</span><span class="p">,</span> <span class="s1">&#39;feed&#39;</span><span class="p">,</span> <span class="s1">&#39;advance&#39;</span><span class="p">,</span> <span class="s1">&#39;getFirst&#39;</span><span class="p">];</span>
 <span class="k">for</span> <span class="p">(</span><span class="nx">k</span> <span class="k">in</span> <span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">SyncIt</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">k</span><span class="p">))</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">k</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^_/</span><span class="p">))</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
@@ -137,7 +127,7 @@ that lock SyncIt and they will queue up. </p>
 
 <span class="k">return</span> <span class="nx">SyncItBuffer</span><span class="p">;</span>
 
-<span class="p">}));</span>
+<span class="p">}(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./Constant.js&#39;</span><span class="p">),</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./SyncIt.js&#39;</span><span class="p">)));</span>
 </pre></div>
         </td>
       </tr>

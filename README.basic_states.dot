@@ -1,0 +1,18 @@
+digraph a { 
+
+	Analyze -> Downloading -> AreThereChanges;
+	AreThereChanges -> Yes [dir=none];
+	Yes -> Uploading -> AreThereChanges;
+	AreThereChanges -> No [dir=none];
+	No -> Synched;
+
+	AreThereChanges [label="Local Changes?", shape=diamond];
+	Analyze [shape=box]
+	Downloading [shape=box]
+	Yes [shape=none]
+	No [shape=none]
+	Uploading [shape=box fillcolor=yellow style=filled]
+	Synched [shape=box]
+
+}
+

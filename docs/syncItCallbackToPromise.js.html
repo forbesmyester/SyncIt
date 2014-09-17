@@ -35,42 +35,9 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
 </div>
-<p>if the module has no dependencies, the above pattern can be simplified to</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
-  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span><span class="p">)</span> <span class="p">{</span>
 
-</pre></div>
         </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
-</div>
-<p>Node. Does not work with strict CommonJS, but
-only CommonJS-like enviroments that support module.exports,
-like Node.</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;when&#39;</span><span class="p">));</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
-</div>
-<p>AMD. Register as an anonymous module.</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;when&#39;</span><span class="p">],</span><span class="nx">factory</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">when</span><span class="p">)</span> <span class="p">{</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">when</span><span class="p">)</span> <span class="p">{</span>
 
   <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
   
@@ -92,7 +59,7 @@ like Node.</p>
     <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
   <span class="p">};</span>
   
-<span class="p">}));</span>
+<span class="p">}(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;when&#39;</span><span class="p">)));</span>
 </pre></div>
         </td>
       </tr>
