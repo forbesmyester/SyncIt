@@ -247,8 +247,9 @@ SyncIt.prototype.listenForConflictResolutionAddedToPath = function(listener) {
  * 
  * #### Parameters
  * 
- * * **@param {Function} `listener`** Signature: `function(newStoreRecord)`.
+ * * **@param {Function} `listener`** Signature: `function(newStoreRecord, queueitem)`.
  *   * **@param {Storerecord} `listener.newStorerecord`** The *storerecord* which is now stored.
+ *   * **@param {Pathitem} `listener.queueitem`** The *queueitem* which caused the update. Note this may not map to the Storerecord when conflict resolution is occuring.
  */
 SyncIt.prototype.listenForDataChange = function(listener) {
 	return this.listen('data_change', listener);
@@ -675,20 +676,21 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 							return ERROR.OK;
 						}
 						var storerecord = this._makeFullReaditem(conflictPathWatcher.getReaditem());
-						this._emit(
-							'conflict_resolution_items_added_to_queue',
-							dataset,
-							datakey,
-							this._addObviousInforation(
+						var queueitem = this._addObviousInforation(
 								dataset,
 								datakey,
 								storagekey.replace(/.*\./,''),
 								item,
 								{ b: baseV++ }
-							),
+							);
+						this._emit(
+							'conflict_resolution_items_added_to_queue',
+							dataset,
+							datakey,
+							queueitem,
 							storerecord
 						);
-						this._emit('data_change', storerecord);
+						this._emit('data_change', storerecord, queueitem);
 						return ERROR.OK;
 					}.bind(this),
 					function(err) {
@@ -729,7 +731,7 @@ SyncIt.prototype.feed = function(feedQueueitems, resolutionFunction, feedDone) {
 					feedQueue[0],
 					storerecord
 				);
-				this._emit('data_change', storerecord);
+				this._emit('data_change', storerecord, feedQueue[0]);
 				feedQueue.shift();
 				if (newRoot.v == info.cv) {
 					return joinCPathToA(dataset,datakey,newRoot.v,feedOne);
@@ -868,20 +870,29 @@ SyncIt.prototype._addToQueue = function(operation, dataset, datakey, update, whe
 		true,
 		pathWatcher.getWatcher(),
 		function(err,ref) {
-			var pathWatchedItem = pathWatcher.getReaditem(),
-				storerecord = this._makeFullReaditem(pathWatchedItem);
 			this._unlockFor(LOCKING.ADDING_TO_QUEUE);
 			if (err !== ERROR.OK) {
 				return whenAddedToQueue(err);
 			}
+
+			var pathWatchedItem = pathWatcher.getReaditem(),
+				storerecord = this._makeFullReaditem(pathWatchedItem),
+				emitQueueitem = this._addObviousInforation(
+					dataset,
+					datakey,
+					ref,
+					queueitem,
+					pathWatchedItem
+				);
+
 			this._emit(
 				'added_to_queue',
 				dataset,
 				datakey,
-				this._addObviousInforation(dataset,datakey,ref,queueitem,pathWatchedItem),
+				emitQueueitem,
 				storerecord
 			);
-			this._emit('data_change', storerecord);
+			this._emit('data_change', storerecord, emitQueueitem);
 			whenAddedToQueue(
 				err,
 				dataset,

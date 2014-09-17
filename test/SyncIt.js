@@ -570,18 +570,34 @@ describe('when feeding',function() {
 		var syncIt = getFreshSyncIt();
 		var eventOccuredCount = 0;
 		var expectedDataAt = [
-			{ wheels: 'black' },
-			{ wheels: 'black', dice: 'fluffy' },
-			{ wheels: 'black', seats: 'leather' },
-			{ wheels: 'black', seats: 'leather', dice: 'fluffy' }
+			{
+				queueitem: { o: 'set', m: 'bob', u: { wheels: 'black' } },
+				storerecord: { wheels: 'black' }
+			},
+			{
+				queueitem: { o: 'update', m: 'bob', u: { $set: { dice: 'fluffy' } } },
+				storerecord: { wheels: 'black', dice: 'fluffy' }
+			},
+			{
+				queueitem: { o: 'update', m: 'ben', u: { $set: { seats: 'leather' } } },
+				storerecord: { wheels: 'black', seats: 'leather' }
+			},
+			{
+				queueitem: { o: 'update', m: 'bob', u: { $set: { dice: 'fluffy' } } },
+				storerecord: { wheels: 'black', seats: 'leather', dice: 'fluffy' }
+			}
 		];
 		var dataChange = 0;
 		syncIt.listenForFed(function() {
 			eventOccuredCount = eventOccuredCount + 1;
 		});
-		syncIt.listenForDataChange(function(storerecord) {
+		syncIt.listenForDataChange(function(storerecord, queueitem) {
 			if (storerecord.k !== 'bmw') { return; }
-			expect(storerecord.i).to.eql(expectedDataAt[dataChange++]);
+			expect(storerecord.i).to.eql(expectedDataAt[dataChange].storerecord);
+			expect(queueitem.o).to.eql(expectedDataAt[dataChange].queueitem.o);
+			expect(queueitem.m).to.eql(expectedDataAt[dataChange].queueitem.m);
+			expect(queueitem.u).to.eql(expectedDataAt[dataChange].queueitem.u);
+			dataChange = dataChange + 1;
 		});
 		runSequence(
 			syncIt,
