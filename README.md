@@ -6,6 +6,8 @@ For an overview of the entire SyncIt project which comporises of this local vers
 
 Even if you do intend to use this project by itself I suggest you take a look at the [Factory class in SyncItBootstrap](https://github.com/forbesmyester/SyncItBootstrap/blob/master/public/js/SyncItFactory.js)
 
+I have also done a talk about this project for London Node.JS which is available on [YouTube](https://www.youtube.com/watch?v=wm_OoWabMPk&feature=youtu.be). If you want to follow along with the slides there is a copy [on Google Drive](https://docs.google.com/presentation/d/1K0gjRxzpZqkudUN376Alx-oI8NrGtS7DmqbjDlccNUo/edit?usp=sharing).
+
 ## What is it for? 
 
 SyncIt is a library to enable you to easily add synchronization to your (offline / phonegap or live) web Apps. This may be for allowing multiple users / devices to work offline or because the app has a live editing session with other users. 
@@ -233,28 +235,57 @@ Should all uploads be successfully applied your App is then fully synchronized w
 ### Your App can register to recieve events for all the three types of operations:
 
 ```javascript
-syncIt.listenForAddedToPath(
-	function(dataset, datakey, pathitem) {
-		// Redraw display for user
-		// or something else?
+/**
+ * Fired when data changes for any reason ( use this first! )
+ */
+syncIt.listenForDataChange(
+	function(resultingStorerecord, pathitem) {
+		// Redraw display for user or something else?
 	}
 );
 ```
 
 ```javascript
+/**
+ * Fired when locally requested changes cause data to change.
+ */
+syncIt.listenForAddedToPath(
+	function(dataset, datakey, pathitem, resultingStorerecord) {
+		// Redraw display for user or something else?
+	}
+);
+```
+
+```javascript
+/**
+ * Fired when conflict resolution causes data changes
+ */
+syncIt.listenForConflictResolutionAddedToPath(
+	function(dataset, datakey, pathitem, resultingStorerecord) {
+		// Redraw display for user or something else?
+	}
+);
+```
+
+
+```javascript
+/**
+ * Fired when remote changes cause stored data to change
+ */
 syncIt.listenForFed(
 	function(dataset, datakey, pathitem, resultingStorerecord) {
-		// Redraw display for user
-		// or something else?
+		// Redraw display for user or something else?
 	}
 );
 ```
 
 ```javascript
+/**
+ * When the SyncIt.advance() operation has completed.
+ */
 syncIt.listenForAdvanced(
 	function(dataset, datakey, pathitem, resultingStorerecord) {
-		// Redraw display for user
-		// or something else?
+		// Redraw display for user or something else?
 	}
 );
 ```
