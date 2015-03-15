@@ -149,7 +149,6 @@ SyncLocalStorage.prototype.findKeys = function(pattern) {
 	var l = 0,
 		i = 0,
 		k = '',
-		starIndex = -1,
 		r = [],
 		re = null;
 	

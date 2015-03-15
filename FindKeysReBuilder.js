@@ -1,7 +1,9 @@
 module.exports = (function () {
+	"use strict";
 	return function(pattern) {
 		var mustBeDot = [],
-			j = 0;
+			j = 0,
+			starIndex;
 		if (!pattern.match(/^[A-Za-z0-9_\.\*]/)) {
 			return false;
 		}

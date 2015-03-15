@@ -4,31 +4,48 @@
 
 var AsyncLocalStorage = require('../AsyncLocalStorage.js');
 var FakeLocalStorage = require('../FakeLocalStorage.js');
+var LocalForage = require('../LocalForage.js');
 var expect = require('expect.js');
 
-describe('AsyncLocalStorage',function() {
-	
-	it('can set an item, get an item then remove it',function(done) {
-		var localStorage = new FakeLocalStorage();
-		var asyncLocalStorage = new AsyncLocalStorage(
-			localStorage,
+var getMainInstance = function() {
+	if (false) { // Flip this to true to test LocalForage backed store (which must be ran in the browser).
+		var localForage = require('localforage');
+		localForage.clear();
+		return new LocalForage(
+			localForage,
 			'aa',
 			JSON.stringify,
 			JSON.parse
 		);
+	}
+	var localStorage = new FakeLocalStorage();
+	localStorage.clear();
+	return new AsyncLocalStorage(
+		localStorage,
+		'aa',
+		JSON.stringify,
+		JSON.parse
+	);
+};
 
-		var checkSet = function(then) {
-			then();
+describe('AsyncLocalStorage',function() {
+	
+	it('can set an item, get an item then remove it',function(done) {
+
+		var asyncLocalStorage = getMainInstance();
+
+		var performGet = function(then) {
+			asyncLocalStorage.getItem('car.bmw', then);
 		};
-
-		var performGet = function(then) { asyncLocalStorage.getItem('car.bmw', then); };
 
 		var checkGet = function(then, value) {
 			expect(value).to.eql({drive: 'rear'});
 			then();
 		};
 
-		var performRemove = function(then) { asyncLocalStorage.removeItem('car.bmw', then); };
+		var performRemove = function(then) {
+			asyncLocalStorage.removeItem('car.bmw', then);
+		};
 
 		var performRemovalCheck = function(then) {
 			asyncLocalStorage.getItem('car.bmw', then);
@@ -44,19 +61,13 @@ describe('AsyncLocalStorage',function() {
 		performRemove = performRemove.bind(this, performRemovalCheck);
 		checkGet = checkGet.bind(this, performRemove);
 		performGet = performGet.bind(this, checkGet);
-		checkSet = checkSet.bind(this, performGet);
 
-		asyncLocalStorage.setItem('car.bmw', {drive: 'rear'}, checkSet);
+		asyncLocalStorage.setItem('car.bmw', {drive: 'rear'}, performGet);
 	});
 
 	it('can find keys', function(done) {
-		var localStorage = new FakeLocalStorage();
-		var asyncLocalStorage = new AsyncLocalStorage(
-			localStorage,
-			'aa',
-			JSON.stringify,
-			JSON.parse
-		);
+
+		var asyncLocalStorage = getMainInstance();
 
 		var setItem = function(key, value, then) {
 			asyncLocalStorage.setItem(key, value, then);
@@ -80,7 +91,32 @@ describe('AsyncLocalStorage',function() {
 			then();
 		};
 
-		checkListBobby = checkListBobby.bind(this, done);
+		var checkGetLength = function(then, value) {
+			expect(value).to.equal(4);
+			then();
+		};
+
+		var performGetLength = function(then) {
+			asyncLocalStorage.getLength(then);
+		};
+
+		var checkKey = function(then, value) {
+			var valid = ['car.bobby', 'person.jack', 'car.bmw', 'person.bobby'];
+			expect(valid.indexOf(value)).to.be.greaterThan(-1);
+			then();
+		};
+
+		var performKey = function(then) {
+			asyncLocalStorage.key(0, then);
+		};
+
+
+
+		checkGetLength = checkGetLength.bind(this, done);
+		performGetLength = performGetLength.bind(this, checkGetLength);
+		checkKey = checkKey.bind(this, performGetLength);
+		performKey = performKey.bind(this, checkKey);
+		checkListBobby = checkListBobby.bind(this, performKey);
 		performListBobby = performListBobby.bind(this, checkListBobby);
 		checkListPeople = checkListPeople.bind(this, performListBobby);
 		performListPeople = performListPeople.bind(this, checkListPeople);
