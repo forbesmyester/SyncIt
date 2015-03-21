@@ -48,9 +48,10 @@ var getNewPathStore = function() {
 	);
 
 	var storage = asyncLocalStorage;
-	// if (process && process.env && process.env.USE_LOCALFORAGE) {
+	if (process && process.env && process.env.USE_LOCALFORAGE) {
+		console.log("F");
 		storage = myLocalForage;
-	// }
+	}
 
 	var pathStore = new SyncIt_Path_AsyncLocalStorage(
 		storage,
@@ -796,7 +797,7 @@ describe('when feeding',function() {
 											datakey + '.' +
 											startPathitem._n
 										);
-										startPathitem = postGet(syncLocalStorage.getItem(
+										startPathitem = postGetItem(syncLocalStorage.getItem(
 											prequel +
 											dataset + '.' +
 											datakey + '.' +
