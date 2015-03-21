@@ -49,7 +49,6 @@ var getNewPathStore = function() {
 
 	var storage = asyncLocalStorage;
 	if (process && process.env && process.env.USE_LOCALFORAGE) {
-		console.log("F");
 		storage = myLocalForage;
 	}
 
