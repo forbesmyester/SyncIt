@@ -33,6 +33,6 @@
     "url": "https://github.com/forbesmyester/SyncIt.git"
   },
   "scripts": {
-    "test": "mocha test/*.js test/Path/*.js"
+    "test": "mocha test/*.js test/Path/*.js; USE_LOCALFORAGE=1 mocha test/*.js test/Path/*.js"
   }
 }

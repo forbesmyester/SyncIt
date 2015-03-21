@@ -34,7 +34,7 @@ module.exports = (function () {
  * * **@param {Function} `classFunc`**
  * * **@param {Number} `asynchronousDelay`**
  */
-return function(classFunc,asynchronousDelay) {
+return function(classFunc,asynchronousDelay,nodeStyle) {
 
 	// This will create the constructor
 	var constructorFunc  = function() {
@@ -66,7 +66,11 @@ return function(classFunc,asynchronousDelay) {
 				return cb(func.apply(this._inst,args));
 			}
 			setTimeout(function() {
-				cb(func.apply(this._inst,args));
+				var r = [func.apply(this._inst,args)];
+				if (nodeStyle) {
+					r.unshift(null);
+				}
+				cb.apply(this, r);
 			}.bind(this),Math.floor(Math.random() * factor) + 1);
 		};
 	};

@@ -48,6 +48,7 @@ var SyncLocalStorage = function(localStorage,namespace,serialize,unserialize) {
 SyncLocalStorage.prototype.getLength = function() {
 	return this._ls.length;
 };
+SyncLocalStorage.prototype.length = SyncLocalStorage.prototype.getLength;
 
 /**
  * ## SyncLocalStorage.prototype.setItem()
@@ -105,6 +106,15 @@ SyncLocalStorage.prototype.key = function(i) {
 		return k.substr(k.indexOf('.')+1);
 	}
 	return null;
+};
+
+SyncLocalStorage.prototype.keys = function() {
+	var length = this.getLength();
+	var r = [], i;
+	for (i=0;i<length;i++) {
+		r.push(this.key(i));
+	}
+	return r;
 };
 
 /**
