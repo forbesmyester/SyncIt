@@ -2,6 +2,8 @@
 	expect,
 	SyncIt,
 	SyncIt_AsyncLocalStorage,
+	NodestyleAsyncLocalStorage,
+	SyncIt_LocalForage,
 	SyncIt_getTLIdEncoderDecoder,
 	SyncIt_Path_AsyncLocalStorage,
 	SyncIt_FakeLocalStorage,
@@ -21,10 +23,31 @@ var getNewPathStore = function() {
 		'aa',
 		JSON.stringify,
 		JSON.parse,
-		10
+		1
 	);
+
+	var nodestyleAsyncLocalStorage = new NodestyleAsyncLocalStorage(
+		localStorage,
+		'aa',
+		JSON.stringify,
+		JSON.parse
+	);
+
+	var myLocalForage = new SyncIt_LocalForage(
+		nodestyleAsyncLocalStorage,
+		'bb',
+		JSON.stringify,
+		JSON.parse,
+		1
+	);
+
+	var storage = asyncLocalStorage;
+	if (process && process.env && process.env.USE_LOCALFORAGE) {
+		storage = myLocalForage;
+	}
+
 	var pathStore = new SyncIt_Path_AsyncLocalStorage(
-		asyncLocalStorage,
+		storage,
 		new SyncIt_getTLIdEncoderDecoder(new Date(1980,1,1).getTime())
 	);
 	SyncIt_Unsupported_PathStorageAnalysis.visualizeData('graph',pathStore,localStorage,'aa');
@@ -80,6 +103,8 @@ describe('dontListLocallyDeletedDatakeys',function() {
 	require('expect.js'),
 	require('../SyncIt.js'),
 	require('../AsyncLocalStorage.js'),
+	require('../NodestyleAsyncLocalStorage.js'),
+	require('../LocalForage.js'),
 	require('get_tlid_encoder_decoder'),
 	require('../Path/AsyncLocalStorage.js'),
 	require('../FakeLocalStorage.js'),
