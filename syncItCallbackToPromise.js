@@ -1,23 +1,22 @@
-module.exports = (function (when) {
+"use strict";
 
-	"use strict";
-	
-	return function(ctx, func, successErrorCodes /*, params */) {
-		var params = Array.prototype.slice.call(arguments).slice(3),
-			deferred = when.defer();
-		
+module.exports = function(ctx, func, successErrorCodes /*, params */) {
+	var params = Array.prototype.slice.call(arguments).slice(3);
+
+	return new Promise(function(resolve, reject) {
+
 		params.push(function(err) {
 			if (successErrorCodes.indexOf(err) > -1) {
-				return deferred.resolve.apply(
+				return resolve.apply(
 					ctx,
 					Array.prototype.slice.call(arguments).slice(1)
 				);
 			}
-			return deferred.reject(err);
+			return reject(err);
 		});
+
 		func.apply(ctx, params);
-		
-		return deferred.promise;
-	};
-	
-}(require('when')));
+
+	});
+
+};
