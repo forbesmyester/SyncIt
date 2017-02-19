@@ -10,7 +10,7 @@ I have also done a talk about this project for London Node.JS which is available
 
 ## What is it for? 
 
-SyncIt is a library to enable you to easily add synchronization to your (offline / phonegap or live) web Apps. This may be for allowing multiple users / devices to work offline or because the app has a live editing session with other users. 
+SyncIt is a library to enable you to easily add synchronization to your (normal) live or offline (Cordova / Ionic / Phonegap / HTML5 / Other) web Apps. This may be for allowing multiple users / devices to work offline or because the app has a live editing session with other users. 
 
 ## What does it do?
 
